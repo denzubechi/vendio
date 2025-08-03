@@ -15,6 +15,7 @@ export function Footer() {
             viewport={{ once: true }}
             className="text-center space-y-8"
           >
+            {/* Logo */}
             <div className="flex items-center justify-center space-x-2">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S</span>
@@ -22,11 +23,13 @@ export function Footer() {
               <span className="font-bold text-xl">Selar</span>
             </div>
 
+            {/* Description */}
             <p className="text-muted-foreground max-w-md mx-auto">
               The future of e-commerce is onchain. Start selling your digital
               products with crypto payments today.
             </p>
 
+            {/* Links */}
             <div className="flex items-center justify-center space-x-8 text-sm">
               <button
                 onClick={() =>
@@ -58,20 +61,15 @@ export function Footer() {
               >
                 Benefits
               </button>
-              <Link
-                href="/privacy"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+              {/* <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Privacy
               </Link>
-              <Link
-                href="/terms"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
                 Terms
-              </Link>
+              </Link> */}
             </div>
 
+            {/* Copyright */}
             <div className="pt-8 border-t">
               <p className="text-muted-foreground text-sm">
                 &copy; 2025 Vendio. All rights reserved. Built on Base.

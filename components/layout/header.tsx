@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Menu, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { Menu, X } from "lucide-react"
+import { motion } from "framer-motion"
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
+    const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" })
     }
-    setIsMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -28,20 +28,20 @@ export function Header() {
           <span className="font-bold text-xl">Selar</span>
         </Link>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <button
-            onClick={() => scrollToSection("how-it-works")}
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            How it Works
-          </button>
           <button
             onClick={() => scrollToSection("features")}
             className="text-sm font-medium hover:text-primary transition-colors"
           >
             Features
           </button>
-
+          <button
+            onClick={() => scrollToSection("how-it-works")}
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            How it Works
+          </button>
           <button
             onClick={() => scrollToSection("benefits")}
             className="text-sm font-medium hover:text-primary transition-colors"
@@ -62,7 +62,7 @@ export function Header() {
             <Button variant="ghost">Sign In</Button>
           </Link>
           <Link href="/auth/signup">
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
               Start Selling
             </Button>
           </Link>
@@ -71,20 +71,13 @@ export function Header() {
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center space-x-2">
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
 
+      {/* Mobile Navigation */}
       {isMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -124,14 +117,12 @@ export function Header() {
                 </Button>
               </Link>
               <Link href="/auth/signup" className="block">
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                  Start Selling
-                </Button>
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600">Start Selling</Button>
               </Link>
             </div>
           </nav>
         </motion.div>
       )}
     </header>
-  );
+  )
 }

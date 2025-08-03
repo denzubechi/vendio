@@ -105,6 +105,7 @@ export function FeaturesSection() {
             </motion.div>
           </div>
 
+          {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
@@ -115,7 +116,8 @@ export function FeaturesSection() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <Card className="h-full overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                  {/* Feature Image */}
                   <div className="relative h-48 overflow-hidden">
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-90`}
@@ -123,11 +125,13 @@ export function FeaturesSection() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <feature.icon className="w-16 h-16 text-white" />
                     </div>
+                    {/* Floating Stats Badge */}
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
                         {feature.stats}
                       </Badge>
                     </div>
+                    {/* Animated Overlay */}
                     <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
@@ -147,6 +151,7 @@ export function FeaturesSection() {
                         {feature.description}
                       </p>
 
+                      {/* Feature Highlights */}
                       <div className="flex items-center space-x-4 pt-2">
                         <div className="flex items-center space-x-1">
                           <div className="w-2 h-2 bg-green-500 rounded-full" />
@@ -184,7 +189,7 @@ export function FeaturesSection() {
           >
             <div className="inline-flex items-center space-x-2 text-sm text-muted-foreground">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>All features included in every plan</span>
+              <span>Enjoy All Features!</span>
             </div>
           </motion.div>
         </div>

@@ -1,36 +1,120 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
-import { DashboardContent } from "@/components/dashboard/dashboard-content";
 import { useAccount } from "wagmi";
-import { useRouter } from "next/navigation";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { ModernSidebar } from "@/components/dashboard/modern-sidebar";
+import { ModernNavbar } from "@/components/dashboard/modern-navbar";
+import { DashboardContent } from "@/components/dashboard/dashboard-content";
+
+interface UserData {
+  id?: string;
+  name: string;
+  email: string;
+  username: string;
+  avatar: string;
+  walletAddress: string;
+  store?: {
+    id: string;
+    slug: string;
+  } | null;
+}
 
 export default function DashboardPage() {
+  const { address, isConnected } = useAccount();
   const [activeTab, setActiveTab] = useState("overview");
-  // const { isConnected } = useAccount()
-  // const router = useRouter()
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     router.push("/auth/signup")
-  //   }
-  // }, [isConnected, router])
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!address || !isConnected) {
+        setLoading(false);
+        return;
+      }
 
-  // if (!isConnected) {
-  //   return <div>Loading...</div>
-  // }
+      try {
+        const response = await fetch("/api/auth/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ walletAddress: address }),
+        });
+
+        if (response.ok) {
+          const userData: UserData = await response.json();
+          setUser(userData);
+        } else {
+          setUser({
+            name: `Creator ${address.slice(0, 6)}`,
+            email: `${address.slice(0, 8)}@selar.app`,
+            username: address.slice(0, 10),
+            avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
+              0,
+              2
+            )}`,
+            walletAddress: address,
+            store: null,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUser({
+          name: `Creator ${address.slice(0, 6)}`,
+          email: `${address.slice(0, 8)}@selar.app`,
+          username: address.slice(0, 10),
+          avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
+            0,
+            2
+          )}`,
+          walletAddress: address,
+          store: null,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [address, isConnected]);
+
+  if (!isConnected) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Connect Your Wallet</h1>
+          <p className="text-muted-foreground">
+            Please connect your wallet to access the dashboard.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader />
-      <div className="flex">
-        <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <main className="flex-1 p-6">
-          <DashboardContent activeTab={activeTab} />
-        </main>
+    <SidebarProvider defaultOpen={true}>
+      <div className="flex min-h-screen w-full">
+        <ModernSidebar
+          user={user}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+        <SidebarInset className="flex flex-col">
+          <ModernNavbar />
+          <main className="flex-1 p-6">
+            <DashboardContent activeTab={activeTab} />
+          </main>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }

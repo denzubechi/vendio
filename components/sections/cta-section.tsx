@@ -29,10 +29,10 @@ export function CTASection() {
                 <div className="relative z-10 space-y-8">
                   {/* Header */}
                   <div className="space-y-4">
-                    <div className="inline-flex items-center rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                    {/* <div className="inline-flex items-center rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
                       <Sparkles className="mr-2 h-4 w-4" />
                       Ready to start your journey?
-                    </div>
+                    </div> */}
                     <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
                       Ready to start selling onchain?
                     </h2>
@@ -43,7 +43,7 @@ export function CTASection() {
                   </div>
 
                   {/* Features */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+                  {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
                     <div className="flex items-center justify-center space-x-2 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
                       <Zap className="w-5 h-5" />
                       <span className="text-sm font-medium">5min setup</span>
@@ -60,7 +60,7 @@ export function CTASection() {
                         Instant payouts
                       </span>
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

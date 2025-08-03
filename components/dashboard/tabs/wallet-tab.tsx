@@ -1,90 +1,78 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Wallet,
-  Copy,
-  ExternalLink,
-  ArrowDownLeft,
-  ArrowUpRight,
-  TrendingUp,
-  DollarSign,
-} from "lucide-react";
-import { useAccount, useBalance } from "wagmi";
-import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Wallet, Copy, ExternalLink, ArrowDownLeft, ArrowUpRight, TrendingUp, DollarSign } from "lucide-react"
+import { useAccount, useBalance } from "wagmi"
+import { toast } from "sonner"
+import { motion } from "framer-motion"
 
 interface Transaction {
-  id: string;
-  type: "received" | "sent";
-  amount: number;
-  currency: string;
-  from?: string;
-  to?: string;
-  txHash: string;
-  timestamp: string;
-  description: string;
-  status: "completed" | "pending" | "failed";
+  id: string
+  type: "received" | "sent"
+  amount: number
+  currency: string
+  from?: string
+  to?: string
+  txHash: string
+  timestamp: string
+  description: string
+  status: "completed" | "pending" | "failed"
 }
 
 export function WalletTab() {
-  const { address, isConnected } = useAccount();
-  const { data: ethBalance } = useBalance({ address });
+  const { address, isConnected } = useAccount()
+  const { data: ethBalance } = useBalance({ address })
   const { data: usdcBalance } = useBalance({
     address,
     token: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
-  });
+  })
 
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalEarnings: 0,
     monthlyEarnings: 0,
     transactionCount: 0,
     averageTransaction: 0,
-  });
+  })
 
   useEffect(() => {
     if (address) {
-      fetchWalletData();
+      fetchWalletData()
     }
-  }, [address]);
+  }, [address])
 
   const fetchWalletData = async () => {
-    if (!address) return;
+    if (!address) return
 
     try {
-      const response = await fetch(
-        `/api/dashboard/wallet?walletAddress=${address}`
-      );
+      const response = await fetch(`/api/dashboard/wallet?walletAddress=${address}`)
       if (response.ok) {
-        const data = await response.json();
-        setTransactions(data.transactions);
-        setStats(data.stats);
+        const data = await response.json()
+        setTransactions(data.transactions)
+        setStats(data.stats)
       }
     } catch (error) {
-      console.error("Failed to fetch wallet data:", error);
+      console.error("Failed to fetch wallet data:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const copyAddress = () => {
     if (address) {
-      navigator.clipboard.writeText(address);
-      toast.success("Address copied to clipboard");
+      navigator.clipboard.writeText(address)
+      toast.success("Address copied to clipboard")
     }
-  };
+  }
 
   const openInExplorer = (txHash?: string) => {
-    const url = txHash
-      ? `https://basescan.org/tx/${txHash}`
-      : `https://basescan.org/address/${address}`;
-    window.open(url, "_blank");
-  };
+    const url = txHash ? `https://basescan.org/tx/${txHash}` : `https://basescan.org/address/${address}`
+    window.open(url, "_blank")
+  }
 
   if (!isConnected) {
     return (
@@ -104,7 +92,7 @@ export function WalletTab() {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
@@ -119,25 +107,17 @@ export function WalletTab() {
 
       {/* Wallet Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-green-700 dark:text-green-300">
-                Total Earnings
-              </CardTitle>
+              <CardTitle className="text-sm font-medium text-green-700 dark:text-green-300">Total Earnings</CardTitle>
               <DollarSign className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-700 dark:text-green-300">
                 ${stats.totalEarnings.toFixed(2)}
               </div>
-              <p className="text-xs text-green-600 dark:text-green-400">
-                All time revenue
-              </p>
+              <p className="text-xs text-green-600 dark:text-green-400">All time revenue</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -149,18 +129,14 @@ export function WalletTab() {
         >
           <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200 dark:border-blue-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                This Month
-              </CardTitle>
+              <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">This Month</CardTitle>
               <TrendingUp className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
                 ${stats.monthlyEarnings.toFixed(2)}
               </div>
-              <p className="text-xs text-blue-600 dark:text-blue-400">
-                Monthly earnings
-              </p>
+              <p className="text-xs text-blue-600 dark:text-blue-400">Monthly earnings</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -172,18 +148,14 @@ export function WalletTab() {
         >
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                USDC Balance
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">USDC Balance</CardTitle>
               <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
                 <span className="text-white text-xs font-bold">$</span>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {usdcBalance
-                  ? Number.parseFloat(usdcBalance.formatted).toFixed(2)
-                  : "0.00"}
+                {usdcBalance ? Number.parseFloat(usdcBalance.formatted).toFixed(2) : "0.00"}
               </div>
               <p className="text-xs text-muted-foreground">USDC</p>
             </CardContent>
@@ -204,9 +176,7 @@ export function WalletTab() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {ethBalance
-                  ? Number.parseFloat(ethBalance.formatted).toFixed(4)
-                  : "0.0000"}
+                {ethBalance ? Number.parseFloat(ethBalance.formatted).toFixed(4) : "0.0000"}
               </div>
               <p className="text-xs text-muted-foreground">ETH</p>
             </CardContent>
@@ -227,9 +197,7 @@ export function WalletTab() {
               </div>
               <div>
                 <p className="font-mono text-sm">{address}</p>
-                <p className="text-xs text-muted-foreground">
-                  Your Base wallet address
-                </p>
+                <p className="text-xs text-muted-foreground">Your Base wallet address</p>
               </div>
             </div>
             <Button size="sm" variant="outline" onClick={copyAddress}>
@@ -252,9 +220,7 @@ export function WalletTab() {
             {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                <p className="text-muted-foreground mt-2">
-                  Loading transactions...
-                </p>
+                <p className="text-muted-foreground mt-2">Loading transactions...</p>
               </div>
             ) : transactions.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -273,9 +239,7 @@ export function WalletTab() {
                   <div className="flex items-center space-x-4">
                     <div
                       className={`p-2 rounded-full ${
-                        tx.type === "received"
-                          ? "bg-green-100 dark:bg-green-900/20"
-                          : "bg-red-100 dark:bg-red-900/20"
+                        tx.type === "received" ? "bg-green-100 dark:bg-green-900/20" : "bg-red-100 dark:bg-red-900/20"
                       }`}
                     >
                       {tx.type === "received" ? (
@@ -288,16 +252,15 @@ export function WalletTab() {
                       <p className="font-medium">{tx.description}</p>
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         <span>
-                          {tx.type === "received" ? "From" : "To"}:{" "}
-                          {tx.from || tx.to}
+                          {tx.type === "received" ? "From" : "To"}: {tx.from || tx.to}
                         </span>
                         <Badge
                           variant={
                             tx.status === "completed"
                               ? "default"
                               : tx.status === "pending"
-                              ? "secondary"
-                              : "destructive"
+                                ? "secondary"
+                                : "destructive"
                           }
                           className="text-xs"
                         >
@@ -307,20 +270,11 @@ export function WalletTab() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p
-                      className={`font-medium ${
-                        tx.type === "received"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {tx.type === "received" ? "+" : "-"}$
-                      {tx.amount.toFixed(2)} {tx.currency}
+                    <p className={`font-medium ${tx.type === "received" ? "text-green-600" : "text-red-600"}`}>
+                      {tx.type === "received" ? "+" : "-"}${tx.amount.toFixed(2)} {tx.currency}
                     </p>
                     <div className="flex items-center space-x-2">
-                      <p className="text-sm text-muted-foreground">
-                        {new Date(tx.timestamp).toLocaleDateString()}
-                      </p>
+                      <p className="text-sm text-muted-foreground">{new Date(tx.timestamp).toLocaleDateString()}</p>
                       <Button
                         size="sm"
                         variant="ghost"
@@ -338,5 +292,5 @@ export function WalletTab() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

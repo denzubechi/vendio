@@ -1,74 +1,61 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Search,
-  Mail,
-  MapPin,
-  DollarSign,
-  ShoppingBag,
-  Filter,
-} from "lucide-react";
-import { useAccount } from "wagmi";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Search, Mail, MapPin, DollarSign, ShoppingBag, Filter } from "lucide-react"
+import { useAccount } from "wagmi"
 
 interface Customer {
-  id: string;
-  name: string | null;
-  email: string | null;
-  walletAddress: string | null;
-  totalSpent: number;
-  orderCount: number;
-  lastOrderDate: string;
-  location?: string;
-  avatar?: string;
+  id: string
+  name: string | null
+  email: string | null
+  walletAddress: string | null
+  totalSpent: number
+  orderCount: number
+  lastOrderDate: string
+  location?: string
+  avatar?: string
 }
 
 export function CustomersTab() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const { address } = useAccount();
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const { address } = useAccount()
 
   useEffect(() => {
-    fetchCustomers();
-  }, [address]);
+    fetchCustomers()
+  }, [address])
 
   const fetchCustomers = async () => {
-    if (!address) return;
+    if (!address) return
 
     try {
-      const response = await fetch(
-        `/api/dashboard/customers?walletAddress=${address}`
-      );
+      const response = await fetch(`/api/dashboard/customers?walletAddress=${address}`)
       if (response.ok) {
-        const data = await response.json();
-        setCustomers(data);
+        const data = await response.json()
+        setCustomers(data)
       }
     } catch (error) {
-      console.error("Failed to fetch customers:", error);
+      console.error("Failed to fetch customers:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const filteredCustomers = customers.filter(
     (customer) =>
       customer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.walletAddress?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      customer.walletAddress?.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        Loading customers...
-      </div>
-    );
+    return <div className="flex items-center justify-center h-64">Loading customers...</div>
   }
 
   return (
@@ -99,9 +86,7 @@ export function CustomersTab() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Customers
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
             <ShoppingBag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -111,9 +96,7 @@ export function CustomersTab() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Avg Order Value
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -121,14 +104,8 @@ export function CustomersTab() {
               $
               {customers.length > 0
                 ? (
-                    customers.reduce(
-                      (sum, customer) => sum + customer.totalSpent,
-                      0
-                    ) /
-                      customers.reduce(
-                        (sum, customer) => sum + customer.orderCount,
-                        0
-                      ) || 0
+                    customers.reduce((sum, customer) => sum + customer.totalSpent, 0) /
+                      customers.reduce((sum, customer) => sum + customer.orderCount, 0) || 0
                   ).toFixed(2)
                 : "0.00"}
             </div>
@@ -137,15 +114,11 @@ export function CustomersTab() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Repeat Customers
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Repeat Customers</CardTitle>
             <Badge className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {customers.filter((customer) => customer.orderCount > 1).length}
-            </div>
+            <div className="text-2xl font-bold">{customers.filter((customer) => customer.orderCount > 1).length}</div>
           </CardContent>
         </Card>
 
@@ -156,10 +129,7 @@ export function CustomersTab() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              $
-              {customers
-                .reduce((sum, customer) => sum + customer.totalSpent, 0)
-                .toFixed(2)}
+              ${customers.reduce((sum, customer) => sum + customer.totalSpent, 0).toFixed(2)}
             </div>
           </CardContent>
         </Card>
@@ -171,18 +141,13 @@ export function CustomersTab() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No customers yet</h3>
-            <p className="text-muted-foreground">
-              Your customers will appear here once they start buying
-            </p>
+            <p className="text-muted-foreground">Your customers will appear here once they start buying</p>
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCustomers.map((customer) => (
-            <Card
-              key={customer.id}
-              className="hover:shadow-lg transition-shadow"
-            >
+            <Card key={customer.id} className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4 mb-4">
                   <Avatar>
@@ -193,17 +158,12 @@ export function CustomersTab() {
                             .split(" ")
                             .map((n) => n[0])
                             .join("")
-                        : customer.walletAddress?.slice(0, 2).toUpperCase() ||
-                          "??"}
+                        : customer.walletAddress?.slice(0, 2).toUpperCase() || "??"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <h3 className="font-semibold">
-                      {customer.name ||
-                        `${customer.walletAddress?.slice(
-                          0,
-                          6
-                        )}...${customer.walletAddress?.slice(-4)}`}
+                      {customer.name || `${customer.walletAddress?.slice(0, 6)}...${customer.walletAddress?.slice(-4)}`}
                     </h3>
                     {customer.email && (
                       <div className="flex items-center text-sm text-muted-foreground">
@@ -216,26 +176,16 @@ export function CustomersTab() {
 
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Total Spent
-                    </span>
-                    <span className="font-semibold">
-                      ${customer.totalSpent.toFixed(2)}
-                    </span>
+                    <span className="text-sm text-muted-foreground">Total Spent</span>
+                    <span className="font-semibold">${customer.totalSpent.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Orders
-                    </span>
+                    <span className="text-sm text-muted-foreground">Orders</span>
                     <Badge variant="secondary">{customer.orderCount}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Last Order
-                    </span>
-                    <span className="text-sm">
-                      {new Date(customer.lastOrderDate).toLocaleDateString()}
-                    </span>
+                    <span className="text-sm text-muted-foreground">Last Order</span>
+                    <span className="text-sm">{new Date(customer.lastOrderDate).toLocaleDateString()}</span>
                   </div>
                   {customer.location && (
                     <div className="flex items-center text-sm text-muted-foreground">
@@ -250,5 +200,5 @@ export function CustomersTab() {
         </div>
       )}
     </div>
-  );
+  )
 }

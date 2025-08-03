@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import { Heart, Globe, Zap, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { motion } from "framer-motion"
+import { Heart, Globe, Zap, Shield } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export function ShowLoveSection() {
   return (
@@ -25,8 +25,8 @@ export function ShowLoveSection() {
                 Give your fans an easy way to show love!
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-                Show Love enables you to easily accept tips and donations from
-                your supporters and fans from all over the world.
+                Show Love enables you to easily accept tips and donations from your supporters and fans from all over
+                the world.
               </p>
               <Link href="/learn">
                 <Button size="lg" variant="outline" className="bg-transparent">
@@ -51,9 +51,7 @@ export function ShowLoveSection() {
                     <Globe className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Global Reach</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Accept tips from supporters worldwide
-                  </p>
+                  <p className="text-sm text-muted-foreground">Accept tips from supporters worldwide</p>
                 </div>
 
                 <div className="text-center p-6 bg-white/50 dark:bg-gray-900/50 rounded-2xl backdrop-blur-sm">
@@ -61,9 +59,7 @@ export function ShowLoveSection() {
                     <Zap className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Instant Payments</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Receive tips instantly on the blockchain
-                  </p>
+                  <p className="text-sm text-muted-foreground">Receive tips instantly on the blockchain</p>
                 </div>
 
                 <div className="text-center p-6 bg-white/50 dark:bg-gray-900/50 rounded-2xl backdrop-blur-sm">
@@ -71,9 +67,7 @@ export function ShowLoveSection() {
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Secure & Transparent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    All transactions on Base blockchain
-                  </p>
+                  <p className="text-sm text-muted-foreground">All transactions on Base blockchain</p>
                 </div>
 
                 <div className="text-center p-6 bg-white/50 dark:bg-gray-900/50 rounded-2xl backdrop-blur-sm">
@@ -81,9 +75,7 @@ export function ShowLoveSection() {
                     <Heart className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Show Appreciation</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Let fans support your work directly
-                  </p>
+                  <p className="text-sm text-muted-foreground">Let fans support your work directly</p>
                 </div>
               </div>
             </motion.div>
@@ -98,15 +90,13 @@ export function ShowLoveSection() {
             >
               <div className="relative max-w-sm w-full">
                 {/* Main Tip Card */}
-                <div className="bg-gradient-to-br from-pink-500 via-purple-600 to-blue-600 rounded-2xl p-8 text-white shadow-sm">
+                <div className="bg-gradient-to-br from-pink-500 via-purple-600 to-blue-600 rounded-2xl p-8 text-white shadow-2xl">
                   <div className="text-center mb-6">
                     <div className="w-20 h-20 rounded-full bg-white/20 mx-auto mb-4 flex items-center justify-center">
                       <span className="text-2xl font-bold">JD</span>
                     </div>
                     <h3 className="text-xl font-bold">John Doe</h3>
-                    <p className="text-purple-100 mt-1">
-                      Digital Creator & Entrepreneur
-                    </p>
+                    <p className="text-purple-100 mt-1">Digital Creator & Entrepreneur</p>
                   </div>
 
                   <div className="space-y-3 mb-6">
@@ -125,58 +115,35 @@ export function ShowLoveSection() {
                   </div>
 
                   <div className="text-center pt-4 border-t border-white/20">
-                    <p className="text-purple-100 text-sm">
-                      Powered by Selar Onchain
-                    </p>
+                    <p className="text-purple-100 text-sm">Powered by Selar Onchain</p>
                   </div>
                 </div>
 
                 {/* Floating Tip Notifications */}
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
                   className="absolute -top-4 -right-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 w-48"
                 >
                   <div className="flex items-center space-x-2 mb-2">
                     <Heart className="w-5 h-5 text-pink-500" />
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">
-                      Tip Received!
-                    </div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">Tip Received!</div>
                   </div>
-                  <div className="text-lg font-bold text-pink-600">
-                    +$25 ETH
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    From @supporter123
-                  </div>
+                  <div className="text-lg font-bold text-pink-600">+$25 ETH</div>
+                  <div className="text-xs text-gray-500">From @supporter123</div>
                 </motion.div>
 
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
-                  transition={{
-                    duration: 4,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                    delay: 1.5,
-                  }}
+                  transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", delay: 1.5 }}
                   className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 w-44"
                 >
-                  <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                    New Supporter
-                  </div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">New Supporter</div>
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"></div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Emma from Canada
-                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Emma from Canada</div>
                   </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    "Love your content!"
-                  </div>
+                  <div className="text-xs text-gray-500 mt-1">"Love your content!"</div>
                 </motion.div>
               </div>
             </motion.div>
@@ -184,5 +151,5 @@ export function ShowLoveSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
