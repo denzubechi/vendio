@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createPayment, checkPaymentStatus } from "@/lib/base-account";
 import { sendEmail, emailTemplates } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
-    const { productId, buyerAddress, buyerEmail, buyerName } =
-      await request.json();
+    const {
+      productId,
+      buyerAddress,
+      buyerEmail,
+      buyerName,
+      paymentIdFromClient,
+    } = await request.json();
 
     const product = await prisma.product.findUnique({
       where: { id: productId },
@@ -27,6 +31,7 @@ export async function POST(request: Request) {
         buyerName,
         buyerAddress,
         sellerId: product.userId,
+        paymentHash: paymentIdFromClient,
         items: {
           create: {
             productId: product.id,
@@ -44,85 +49,37 @@ export async function POST(request: Request) {
       },
     });
 
-    const payment = await createPayment({
-      amount: product.price,
-      to: product.user.walletAddress!,
-      message: `Payment for ${product.name} (Order: ${order.orderNumber})`,
-    });
-
-    if (payment.success) {
-      const { id } = payment;
-      const updatedOrder = await prisma.order.update({
-        where: { id: order.id },
-        data: {
-          paymentHash: id,
-          status: "COMPLETED",
-        },
-        include: {
-          items: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
-
-      try {
-        if (buyerEmail) {
-          const confirmationEmail = emailTemplates.orderConfirmation(
-            updatedOrder,
-            {
-              name: buyerName,
-              email: buyerEmail,
-            }
-          );
-          await sendEmail({
-            to: buyerEmail,
-            ...confirmationEmail,
-          });
-        }
-
-        const sellerEmail = emailTemplates.sellerNotification(
-          updatedOrder,
-          product.user
-        );
-        await sendEmail({
-          to: product.user.email,
-          ...sellerEmail,
+    try {
+      if (buyerEmail) {
+        const confirmationEmail = emailTemplates.orderConfirmation(order, {
+          name: buyerName,
+          email: buyerEmail,
         });
-
-        const paymentEmail = emailTemplates.paymentReceived(
-          {
-            amount: product.price,
-            currency: product.currency,
-            txHash: payment.id,
-          },
-          product.user
-        );
         await sendEmail({
-          to: product.user.email,
-          ...paymentEmail,
+          to: buyerEmail,
+          ...confirmationEmail,
         });
-      } catch (emailError) {
-        console.error("Failed to send payment emails:", emailError);
       }
-      return NextResponse.json({
-        orderId: order.id,
-        paymentId: id,
-        amount: product.price,
-        currency: product.currency,
-      });
-    } else {
-      const { error } = payment;
-      console.error("Payment creation failed:", error);
-      return NextResponse.json(
-        { error: `Payment failed: ${error || "Unknown error"}` },
-        { status: 500 }
+    } catch (emailError) {
+      console.error(
+        "Failed to send initial order confirmation email:",
+        emailError
       );
     }
+
+    return NextResponse.json({
+      orderId: order.id,
+      paymentId: paymentIdFromClient,
+      amount: product.price,
+      currency: product.currency,
+      message: "Order created. Payment pending confirmation.",
+    });
   } catch (error) {
-    console.error("Payment creation failed:", error);
-    return NextResponse.json({ error: "Payment failed" }, { status: 500 });
+    console.error("Order creation failed:", error);
+    return NextResponse.json(
+      { error: "Order creation failed" },
+      { status: 500 }
+    );
   }
 }
 
@@ -138,20 +95,22 @@ export async function GET(request: Request) {
       );
     }
 
-    const status = await checkPaymentStatus(paymentId);
+    const order = await prisma.order.findFirst({
+      where: { paymentHash: paymentId },
+    });
 
-    if (status.status === "completed") {
-      await prisma.order.updateMany({
-        where: { paymentHash: paymentId },
-        data: { status: "COMPLETED" },
-      });
+    if (!order) {
+      return NextResponse.json(
+        { error: "Order not found for this payment ID" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(status);
+    return NextResponse.json({ status: order.status, orderId: order.id });
   } catch (error) {
-    console.error("Error checking payment status:", error);
+    console.error("Error checking order status:", error);
     return NextResponse.json(
-      { error: "Failed to check payment status" },
+      { error: "Failed to check order status" },
       { status: 500 }
     );
   }
