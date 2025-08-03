@@ -3,7 +3,7 @@
 import { OverviewTab } from "./tabs/overview-tab";
 import { ProductsTab } from "./tabs/products-tab";
 import { OrdersTab } from "./tabs/orders-tab";
-// import { CustomersTab } from "./tabs/customers-tab"
+import { CustomersTab } from "./tabs/customers-tab";
 import { StorefrontTab } from "./tabs/storefront-tab";
 import { LinkInBioTab } from "./tabs/link-in-bio-tab";
 import { AnalyticsTab } from "./tabs/analytics-tab";
@@ -22,8 +22,8 @@ export function DashboardContent({ activeTab }: DashboardContentProps) {
       return <ProductsTab />;
     case "orders":
       return <OrdersTab />;
-    // case "customers":
-    //   return <CustomersTab />
+    case "customers":
+      return <CustomersTab />;
     case "storefront":
       return <StorefrontTab />;
     case "link-in-bio":

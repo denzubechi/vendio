@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
-import { DashboardContent } from "@/components/dashboard/dashboard-content"
-import { useAccount } from "wagmi"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
+import { DashboardContent } from "@/components/dashboard/dashboard-content";
+import { useAccount } from "wagmi";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState("overview")
-  const { isConnected } = useAccount()
-  const router = useRouter()
+  const [activeTab, setActiveTab] = useState("overview");
+  // const { isConnected } = useAccount()
+  // const router = useRouter()
 
-  useEffect(() => {
-    if (!isConnected) {
-      router.push("/auth/signup")
-    }
-  }, [isConnected, router])
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     router.push("/auth/signup")
+  //   }
+  // }, [isConnected, router])
 
-  if (!isConnected) {
-    return <div>Loading...</div>
-  }
+  // if (!isConnected) {
+  //   return <div>Loading...</div>
+  // }
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,5 +32,5 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
