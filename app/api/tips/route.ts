@@ -1,50 +1,51 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { sendEmail, emailTemplates } from "@/lib/email"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { sendEmail, emailTemplates } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
-    const { creatorUsername, amount, message, tipperName, tipperEmail } = await request.json()
+    const { creatorUsername, amount, message, tipperName, tipperEmail } =
+      await request.json();
 
-    // Find the creator
     const creator = await prisma.user.findUnique({
       where: { username: creatorUsername },
-    })
+    });
 
     if (!creator) {
-      return NextResponse.json({ error: "Creator not found" }, { status: 404 })
+      return NextResponse.json({ error: "Creator not found" }, { status: 404 });
     }
 
-    // Create tip record (you might want to add a tips table to your schema)
     const tip = {
       id: `tip-${Date.now()}`,
       amount,
       currency: "USDC",
       message,
       createdAt: new Date(),
-    }
+    };
 
-    // Send tip received email to creator
     try {
       const tipEmail = emailTemplates.tipReceived(tip, creator, {
         name: tipperName,
         email: tipperEmail,
-      })
+      });
       await sendEmail({
         to: creator.email,
         ...tipEmail,
-      })
+      });
     } catch (emailError) {
-      console.error("Failed to send tip email:", emailError)
+      console.error("Failed to send tip email:", emailError);
     }
 
     return NextResponse.json({
       success: true,
       tipId: tip.id,
       message: "Tip sent successfully!",
-    })
+    });
   } catch (error) {
-    console.error("Tip processing failed:", error)
-    return NextResponse.json({ error: "Failed to process tip" }, { status: 500 })
+    console.error("Tip processing failed:", error);
+    return NextResponse.json(
+      { error: "Failed to process tip" },
+      { status: 500 }
+    );
   }
 }

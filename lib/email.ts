@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number.parseInt(process.env.SMTP_PORT || "587"),
   secure: false,
@@ -8,13 +8,13 @@ const transporter = nodemailer.createTransporter({
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
-})
+});
 
 export interface EmailTemplate {
-  to: string
-  subject: string
-  html: string
-  text?: string
+  to: string;
+  subject: string;
+  html: string;
+  text?: string;
 }
 
 export async function sendEmail({ to, subject, html, text }: EmailTemplate) {
@@ -25,13 +25,13 @@ export async function sendEmail({ to, subject, html, text }: EmailTemplate) {
       subject,
       html,
       text: text || html.replace(/<[^>]*>/g, ""), // Strip HTML for text version
-    })
+    });
 
-    console.log("Email sent:", info.messageId)
-    return { success: true, messageId: info.messageId }
-  } catch (error) {
-    console.error("Email sending failed:", error)
-    return { success: false, error: error.message }
+    console.log("Email sent:", info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error: any) {
+    console.error("Email sending failed:", error);
+    return { success: false, error: error.message };
   }
 }
 
@@ -141,21 +141,25 @@ export const emailTemplates = {
               
               <div class="order-details">
                 <h3>Order #${order.orderNumber}</h3>
-                <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+                <p><strong>Order Date:</strong> ${new Date(
+                  order.createdAt
+                ).toLocaleDateString()}</p>
                 <p><strong>Payment Status:</strong> <span style="color: #10b981;">✅ Paid</span></p>
                 
                 <h4>Items Ordered:</h4>
                 ${order.items
                   .map(
-                    (item) => `
+                    (item: any) => `
                   <div class="item">
                     <div>
                       <strong>${item.product.name}</strong><br>
                       <small>Quantity: ${item.quantity}</small>
                     </div>
-                    <div>$${(item.price * item.quantity).toFixed(2)} ${order.currency}</div>
+                    <div>$${(item.price * item.quantity).toFixed(2)} ${
+                      order.currency
+                    }</div>
                   </div>
-                `,
+                `
                   )
                   .join("")}
                 
@@ -176,7 +180,9 @@ export const emailTemplates = {
               
               <p>Your digital products will be available for download shortly. If you have any questions, please don't hesitate to contact us.</p>
               
-              <a href="https://selar-onchain.vercel.app/orders/${order.id}" class="button">View Order Details</a>
+              <a href="https://selar-onchain.vercel.app/orders/${
+                order.id
+              }" class="button">View Order Details</a>
             </div>
             
             <div class="footer">
@@ -222,17 +228,25 @@ export const emailTemplates = {
               <div class="sale-details">
                 <h3>💰 Sale Summary</h3>
                 <p><strong>Order:</strong> #${order.orderNumber}</p>
-                <p><strong>Amount:</strong> $${order.totalAmount.toFixed(2)} ${order.currency}</p>
-                <p><strong>Customer:</strong> ${order.buyerName || order.buyerEmail || "Anonymous"}</p>
-                <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
+                <p><strong>Amount:</strong> $${order.totalAmount.toFixed(2)} ${
+      order.currency
+    }</p>
+                <p><strong>Customer:</strong> ${
+                  order.buyerName || order.buyerEmail || "Anonymous"
+                }</p>
+                <p><strong>Date:</strong> ${new Date(
+                  order.createdAt
+                ).toLocaleDateString()}</p>
                 
                 <h4>Items Sold:</h4>
                 <ul>
                   ${order.items
                     .map(
-                      (item) => `
-                    <li>${item.product.name} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}</li>
-                  `,
+                      (item: any) => `
+                    <li>${item.product.name} (Qty: ${item.quantity}) - $${(
+                        item.price * item.quantity
+                      ).toFixed(2)}</li>
+                  `
                     )
                     .join("")}
                 </ul>
@@ -287,9 +301,15 @@ export const emailTemplates = {
               
               <div class="payment-details">
                 <h3>💳 Payment Details</h3>
-                <p><strong>Amount:</strong> $${payment.amount.toFixed(2)} ${payment.currency}</p>
+                <p><strong>Amount:</strong> $${payment.amount.toFixed(2)} ${
+      payment.currency
+    }</p>
                 <p><strong>Transaction Hash:</strong><br>
-                <a href="https://basescan.org/tx/${payment.txHash}" style="font-family: monospace; word-break: break-all;">${payment.txHash}</a></p>
+                <a href="https://basescan.org/tx/${
+                  payment.txHash
+                }" style="font-family: monospace; word-break: break-all;">${
+      payment.txHash
+    }</a></p>
                 <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
                 <p><strong>Status:</strong> <span style="color: #10b981;">✅ Confirmed</span></p>
               </div>
@@ -342,9 +362,13 @@ export const emailTemplates = {
               <div class="product-details">
                 <h3>📦 Product Details</h3>
                 <p><strong>Name:</strong> ${product.name}</p>
-                <p><strong>Price:</strong> $${product.price.toFixed(2)} ${product.currency}</p>
+                <p><strong>Price:</strong> $${product.price.toFixed(2)} ${
+      product.currency
+    }</p>
                 <p><strong>Type:</strong> ${product.type}</p>
-                <p><strong>Status:</strong> ${product.isActive ? "✅ Active" : "⏸️ Draft"}</p>
+                <p><strong>Status:</strong> ${
+                  product.isActive ? "✅ Active" : "⏸️ Draft"
+                }</p>
                 <p><strong>Description:</strong> ${product.description}</p>
               </div>
               
@@ -401,9 +425,17 @@ export const emailTemplates = {
               
               <div class="tip-details">
                 <h3>💖 Tip Details</h3>
-                <p><strong>Amount:</strong> $${tip.amount.toFixed(2)} ${tip.currency}</p>
-                <p><strong>From:</strong> ${tipper.name || "Anonymous supporter"}</p>
-                ${tip.message ? `<p><strong>Message:</strong> "${tip.message}"</p>` : ""}
+                <p><strong>Amount:</strong> $${tip.amount.toFixed(2)} ${
+      tip.currency
+    }</p>
+                <p><strong>From:</strong> ${
+                  tipper.name || "Anonymous supporter"
+                }</p>
+                ${
+                  tip.message
+                    ? `<p><strong>Message:</strong> "${tip.message}"</p>`
+                    : ""
+                }
                 <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
               </div>
               
@@ -423,4 +455,4 @@ export const emailTemplates = {
       </html>
     `,
   }),
-}
+};

@@ -14,7 +14,7 @@ model User {
   username      String?   @unique
   bio           String?
   avatar        String?
-  walletAddress String?
+walletAddress   String?   @unique
   isVerified    Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

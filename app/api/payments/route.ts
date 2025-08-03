@@ -1,23 +1,22 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { createPayment, getPaymentStatus } from "@/lib/base-account"
-import { sendEmail, emailTemplates } from "@/lib/email"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { createPayment, checkPaymentStatus } from "@/lib/base-account";
+import { sendEmail, emailTemplates } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
-    const { productId, buyerAddress, buyerEmail, buyerName } = await request.json()
+    const { productId, buyerAddress, buyerEmail, buyerName } =
+      await request.json();
 
-    // Get product details
     const product = await prisma.product.findUnique({
       where: { id: productId },
       include: { user: true },
-    })
+    });
 
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Create order
     const order = await prisma.order.create({
       data: {
         orderNumber: `ORD-${Date.now()}`,
@@ -43,108 +42,117 @@ export async function POST(request: Request) {
           },
         },
       },
-    })
+    });
 
-    // Create payment with Base Account SDK
     const payment = await createPayment({
       amount: product.price,
-      currency: product.currency,
-      recipient: product.user.walletAddress!,
-      metadata: {
-        orderId: order.id,
-        productId: product.id,
-      },
-    })
+      to: product.user.walletAddress!,
+      message: `Payment for ${product.name} (Order: ${order.orderNumber})`,
+    });
 
-    // Update order with payment hash
-    const updatedOrder = await prisma.order.update({
-      where: { id: order.id },
-      data: {
-        paymentHash: payment.id,
-        status: "COMPLETED", // Assuming payment is successful
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
+    if (payment.success) {
+      const { id } = payment;
+      const updatedOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          paymentHash: id,
+          status: "COMPLETED",
+        },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    })
+      });
 
-    // Send emails
-    try {
-      // Send order confirmation to buyer
-      if (buyerEmail) {
-        const confirmationEmail = emailTemplates.orderConfirmation(updatedOrder, {
-          name: buyerName,
-          email: buyerEmail,
-        })
+      try {
+        if (buyerEmail) {
+          const confirmationEmail = emailTemplates.orderConfirmation(
+            updatedOrder,
+            {
+              name: buyerName,
+              email: buyerEmail,
+            }
+          );
+          await sendEmail({
+            to: buyerEmail,
+            ...confirmationEmail,
+          });
+        }
+
+        const sellerEmail = emailTemplates.sellerNotification(
+          updatedOrder,
+          product.user
+        );
         await sendEmail({
-          to: buyerEmail,
-          ...confirmationEmail,
-        })
+          to: product.user.email,
+          ...sellerEmail,
+        });
+
+        const paymentEmail = emailTemplates.paymentReceived(
+          {
+            amount: product.price,
+            currency: product.currency,
+            txHash: payment.id,
+          },
+          product.user
+        );
+        await sendEmail({
+          to: product.user.email,
+          ...paymentEmail,
+        });
+      } catch (emailError) {
+        console.error("Failed to send payment emails:", emailError);
       }
-
-      // Send sale notification to seller
-      const sellerEmail = emailTemplates.sellerNotification(updatedOrder, product.user)
-      await sendEmail({
-        to: product.user.email,
-        ...sellerEmail,
-      })
-
-      // Send payment received notification to seller
-      const paymentEmail = emailTemplates.paymentReceived(
-        {
-          amount: product.price,
-          currency: product.currency,
-          txHash: payment.id,
-        },
-        product.user,
-      )
-      await sendEmail({
-        to: product.user.email,
-        ...paymentEmail,
-      })
-    } catch (emailError) {
-      console.error("Failed to send payment emails:", emailError)
+      return NextResponse.json({
+        orderId: order.id,
+        paymentId: id,
+        amount: product.price,
+        currency: product.currency,
+      });
+    } else {
+      const { error } = payment;
+      console.error("Payment creation failed:", error);
+      return NextResponse.json(
+        { error: `Payment failed: ${error || "Unknown error"}` },
+        { status: 500 }
+      );
     }
-
-    return NextResponse.json({
-      orderId: order.id,
-      paymentId: payment.id,
-      amount: product.price,
-      currency: product.currency,
-    })
   } catch (error) {
-    console.error("Payment creation failed:", error)
-    return NextResponse.json({ error: "Payment failed" }, { status: 500 })
+    console.error("Payment creation failed:", error);
+    return NextResponse.json({ error: "Payment failed" }, { status: 500 });
   }
 }
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const paymentId = searchParams.get("id")
+    const { searchParams } = new URL(request.url);
+    const paymentId = searchParams.get("id");
 
     if (!paymentId) {
-      return NextResponse.json({ error: "Payment ID required" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Payment ID required" },
+        { status: 400 }
+      );
     }
 
-    // Check payment status with Base Account SDK
-    const status = await getPaymentStatus(paymentId)
+    const status = await checkPaymentStatus(paymentId);
 
-    // Update order status if payment is completed
     if (status.status === "completed") {
       await prisma.order.updateMany({
         where: { paymentHash: paymentId },
         data: { status: "COMPLETED" },
-      })
+      });
     }
 
-    return NextResponse.json(status)
+    return NextResponse.json(status);
   } catch (error) {
-    console.error("Error checking payment status:", error)
-    return NextResponse.json({ error: "Failed to check payment status" }, { status: 500 })
+    console.error("Error checking payment status:", error);
+    return NextResponse.json(
+      { error: "Failed to check payment status" },
+      { status: 500 }
+    );
   }
 }
