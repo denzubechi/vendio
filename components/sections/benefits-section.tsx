@@ -148,7 +148,7 @@ export function BenefitsSection() {
                 <Link href="/auth/signup">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
                   >
                     Start Building Your Empire
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -175,7 +175,7 @@ export function BenefitsSection() {
                     viewport={{ once: true }}
                     className="group"
                   >
-                    <Card className="h-full overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                    <Card className="h-full overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
                       <CardContent className="p-6">
                         <div className="space-y-4">
                           <div

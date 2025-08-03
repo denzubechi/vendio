@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: "Selar Onchain - Sell Digital Products with Crypto",
   description:
     "Create your digital storefront and sell products with cryptocurrency payments on Base",
-  generator: "v0.dev",
 };
 
 export default function RootLayout({

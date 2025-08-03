@@ -28,20 +28,20 @@ export function Header() {
           <span className="font-bold text-xl">Selar</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <button
-            onClick={() => scrollToSection("features")}
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            Features
-          </button>
           <button
             onClick={() => scrollToSection("how-it-works")}
             className="text-sm font-medium hover:text-primary transition-colors"
           >
             How it Works
           </button>
+          <button
+            onClick={() => scrollToSection("features")}
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            Features
+          </button>
+
           <button
             onClick={() => scrollToSection("benefits")}
             className="text-sm font-medium hover:text-primary transition-colors"
@@ -85,7 +85,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}

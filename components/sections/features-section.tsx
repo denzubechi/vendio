@@ -115,7 +115,7 @@ export function FeaturesSection() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <Card className="h-full overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                <Card className="h-full overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
                   <div className="relative h-48 overflow-hidden">
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-90`}

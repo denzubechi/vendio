@@ -31,7 +31,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section className="py-24 bg-background">
+    <section id="how-it-works" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -88,7 +88,7 @@ export function HowItWorksSection() {
                 <Link href="/auth/signup">
                   <Button
                     size="lg"
-                    className="bg-purple-600 hover:bg-purple-700"
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
                   >
                     Get Started Now
                     <CheckCircle className="ml-2 h-5 w-5" />
