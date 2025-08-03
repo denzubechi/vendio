@@ -1,14 +1,14 @@
-import { pay, getPaymentStatus, createBaseAccountSDK } from "@base-org/account"
+import { pay, getPaymentStatus, createBaseAccountSDK } from "@base-org/account";
 
 export const baseAccount = createBaseAccountSDK({
   appName: "Selar Onchain",
-})
+});
 
 export async function createPayment(params: {
-  amount: number
-  to: string
-  message?: string
-  testnet?: boolean
+  amount: number;
+  to: string;
+  message?: string;
+  testnet?: boolean;
 }) {
   try {
     const paymentResult = await pay({
@@ -22,21 +22,21 @@ export async function createPayment(params: {
         ],
         callbackURL: `${window.location.origin}/api/payment-callback`,
       },
-    })
+    });
 
-    return paymentResult
+    return paymentResult;
   } catch (error) {
-    console.error("Payment creation failed:", error)
-    throw error
+    console.error("Payment creation failed:", error);
+    throw error;
   }
 }
 
 export async function checkPaymentStatus(paymentId: string) {
   try {
-    const status = await getPaymentStatus(paymentId)
-    return status
+    const status = await getPaymentStatus({ id: paymentId });
+    return status;
   } catch (error) {
-    console.error("Failed to get payment status:", error)
-    throw error
+    console.error("Failed to get payment status:", error);
+    throw error;
   }
 }
