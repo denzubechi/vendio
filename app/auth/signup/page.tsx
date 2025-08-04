@@ -23,7 +23,7 @@ import {
   TrendingUp,
   Crown,
 } from "lucide-react";
-import logo from "@/public/logo.png";
+import logo from "@/logo.png";
 const walletOptions = [
   {
     id: "coinbaseWallet",

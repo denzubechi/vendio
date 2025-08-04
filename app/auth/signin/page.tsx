@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image"; // Import the Next.js Image component
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAccount, useConnect } from "wagmi";
@@ -17,7 +17,7 @@ import {
   CheckCircle,
   Crown,
 } from "lucide-react";
-import logo from "@/public/logo.png";
+import logo from "@/logo.png";
 const walletOptions = [
   {
     id: "coinbaseWallet",

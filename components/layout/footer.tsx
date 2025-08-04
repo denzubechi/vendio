@@ -1,6 +1,6 @@
 "use client";
 
-import logo from "@/public/logo.png";
+import logo from "@/logo.png";
 import { motion } from "framer-motion";
 import Image from "next/image";
 export function Footer() {
