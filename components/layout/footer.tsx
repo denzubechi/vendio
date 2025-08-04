@@ -78,7 +78,7 @@ export function Footer() {
             {/* Copyright */}
             <div className="pt-8 border-t">
               <p className="text-muted-foreground text-sm">
-                &copy; 2025 Vendio. All rights reserved. Built with ❤️ on Base.
+                &copy; 2025 Vendio. All rights reserved. Built with ❤️.
               </p>
             </div>
           </motion.div>
