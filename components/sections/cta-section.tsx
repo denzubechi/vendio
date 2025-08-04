@@ -38,7 +38,7 @@ export function CTASection() {
                     </h2>
                     <p className="text-xl text-purple-100 max-w-2xl mx-auto">
                       Join thousands of creators who are already building their
-                      digital empire with Selar Onchain.
+                      digital empire with Vendio.
                     </p>
                   </div>
 

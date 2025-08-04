@@ -7,7 +7,7 @@ export function getConfig() {
     chains: [base, baseSepolia],
     connectors: [
       coinbaseWallet({
-        appName: "Selar Onchain",
+        appName: "Vendio",
       }),
       metaMask(),
     ],

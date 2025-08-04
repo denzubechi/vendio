@@ -182,7 +182,7 @@ export function ModernNavbar() {
           </div>
 
           {/* Center Section - Search */}
-          <div className="flex-1 max-w-md mx-4">
+          {/* <div className="flex-1 max-w-md mx-4">
             <Button
               variant="outline"
               className="w-full justify-start text-muted-foreground hover:bg-muted/50 bg-transparent"
@@ -199,7 +199,7 @@ export function ModernNavbar() {
                 </kbd>
               </div>
             </Button>
-          </div>
+          </div> */}
 
           {/* Right Section */}
           <div className="flex items-center space-x-3">
@@ -261,13 +261,13 @@ export function ModernNavbar() {
             {/* Actions */}
             <div className="flex items-center gap-2">
               {/* Add Product Button */}
-              <Button
+              {/* <Button
                 size="sm"
                 className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Product
-              </Button>
+              </Button> */}
 
               {/* Notifications */}
               <DropdownMenu
@@ -337,9 +337,9 @@ export function ModernNavbar() {
               </DropdownMenu>
 
               {/* Help */}
-              <Button variant="ghost" size="icon">
+              {/* <Button variant="ghost" size="icon">
                 <HelpCircle className="h-4 w-4" />
-              </Button>
+              </Button> */}
 
               {/* Theme Toggle */}
               <ThemeToggle />

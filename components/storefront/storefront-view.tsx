@@ -1,48 +1,57 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ShoppingCart, Star, Plus, Search, Filter, Heart, Share2, TrendingUp } from "lucide-react"
-import { useStore } from "@/lib/store"
-import { CartDrawer } from "@/components/storefront/cart-drawer"
-import { CheckoutModal } from "@/components/storefront/checkout-modal"
-import { toast } from "sonner"
-import { motion } from "framer-motion"
-import Image from "next/image"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  ShoppingCart,
+  Star,
+  Plus,
+  Search,
+  Filter,
+  Heart,
+  Share2,
+  TrendingUp,
+} from "lucide-react";
+import { useStore } from "@/lib/store";
+import { CartDrawer } from "@/components/storefront/cart-drawer";
+import { CheckoutModal } from "@/components/storefront/checkout-modal";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface StorefrontViewProps {
   store: {
-    id: string
-    name: string
-    description: string | null
-    logo: string | null
-    banner: string | null
+    id: string;
+    name: string;
+    description: string | null;
+    logo: string | null;
+    banner: string | null;
     user: {
-      name: string | null
-      avatar: string | null
-      walletAddress: string | null
-    }
+      name: string | null;
+      avatar: string | null;
+      walletAddress: string | null;
+    };
     products: Array<{
-      id: string
-      name: string
-      description: string
-      price: number
-      currency: string
-      type: string
-      images: string[]
-    }>
-  }
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      currency: string;
+      type: string;
+      imageUrls: string[];
+    }>;
+  };
 }
 
 export function StorefrontView({ store }: StorefrontViewProps) {
-  const [cartOpen, setCartOpen] = useState(false)
-  const [checkoutOpen, setCheckoutOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const { cart, addToCart, getCartCount } = useStore()
+  const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const { cart, addToCart, getCartCount } = useStore();
 
   const handleAddToCart = (product: any) => {
     addToCart({
@@ -53,35 +62,42 @@ export function StorefrontView({ store }: StorefrontViewProps) {
       currency: product.currency,
       storeId: store.id,
       storeName: store.name,
-    })
-    toast.success(`${product.name} added to cart! 🛒`)
-  }
+    });
+    toast.success(`${product.name} added to cart! 🛒`);
+  };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href)
-    toast.success("Store link copied to clipboard! 📋")
-  }
+    navigator.clipboard.writeText(window.location.href);
+    toast.success("Store link copied to clipboard! 📋");
+  };
 
-  const cartCount = getCartCount()
-  const categories = ["all", ...new Set(store.products.map((p) => p.type.toLowerCase()))]
+  const cartCount = getCartCount();
+  const categories = [
+    "all",
+    ...new Set(store.products.map((p) => p.type.toLowerCase())),
+  ];
 
   const filteredProducts = store.products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || product.type.toLowerCase() === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" ||
+      product.type.toLowerCase() === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   if (!store.user.walletAddress) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Store Configuration Error</h1>
-          <p className="text-muted-foreground">This store owner hasn't configured their wallet address yet.</p>
+          <p className="text-muted-foreground">
+            This store owner hasn't configured their wallet address yet.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -117,7 +133,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                         className="rounded-2xl"
                       />
                     ) : (
-                      <span className="text-3xl font-bold">{store.name.charAt(0)}</span>
+                      <span className="text-3xl font-bold">
+                        {store.name.charAt(0)}
+                      </span>
                     )}
                   </div>
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
@@ -127,7 +145,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
 
                 <div>
                   <h1 className="text-4xl font-bold mb-2">{store.name}</h1>
-                  <p className="text-purple-100 text-lg mb-4 max-w-md">{store.description}</p>
+                  <p className="text-purple-100 text-lg mb-4 max-w-md">
+                    {store.description}
+                  </p>
 
                   {/* Store Stats */}
                   <div className="flex items-center space-x-6">
@@ -208,7 +228,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                 {categories.map((category) => (
                   <Button
                     key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
+                    variant={
+                      selectedCategory === category ? "default" : "outline"
+                    }
                     onClick={() => setSelectedCategory(category)}
                     className="capitalize"
                   >
@@ -225,10 +247,16 @@ export function StorefrontView({ store }: StorefrontViewProps) {
       <div className="container px-4 pb-16">
         <div className="max-w-6xl mx-auto">
           {filteredProducts.length === 0 ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-16"
+            >
               <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-2">
-                {searchTerm || selectedCategory !== "all" ? "No products found" : "No products available"}
+                {searchTerm || selectedCategory !== "all"
+                  ? "No products found"
+                  : "No products available"}
               </h3>
               <p className="text-muted-foreground">
                 {searchTerm || selectedCategory !== "all"
@@ -249,9 +277,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                   <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/80 backdrop-blur-sm">
                     {/* Product Image */}
                     <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
-                      {product.images.length > 0 ? (
+                      {product.imageUrls.length > 0 ? (
                         <Image
-                          src={product.images[0] || "/placeholder.svg"}
+                          src={product.imageUrls[0] || "/placeholder.svg"}
                           alt={product.name}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -260,19 +288,27 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                         <div className="flex items-center justify-center h-full">
                           <div className="text-center">
                             <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                            <p className="text-gray-500 capitalize">{product.type}</p>
+                            <p className="text-gray-500 capitalize">
+                              {product.type}
+                            </p>
                           </div>
                         </div>
                       )}
 
                       {/* Product Type Badge */}
                       <div className="absolute top-4 left-4">
-                        <Badge className="bg-black/50 text-white border-0 backdrop-blur-sm">{product.type}</Badge>
+                        <Badge className="bg-black/50 text-white border-0 backdrop-blur-sm">
+                          {product.type}
+                        </Badge>
                       </div>
 
                       {/* Wishlist Button */}
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button size="sm" variant="outline" className="bg-white/80 backdrop-blur-sm border-0">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-white/80 backdrop-blur-sm border-0"
+                        >
                           <Heart className="w-4 h-4" />
                         </Button>
                       </div>
@@ -288,7 +324,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                         </CardTitle>
                         <div className="flex items-center space-x-1 text-yellow-400">
                           <Star className="w-4 h-4 fill-current" />
-                          <span className="text-sm text-muted-foreground">4.8</span>
+                          <span className="text-sm text-muted-foreground">
+                            4.8
+                          </span>
                         </div>
                       </div>
                     </CardHeader>
@@ -303,7 +341,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                           <div className="text-2xl font-bold text-purple-600">
                             ${product.price} {product.currency}
                           </div>
-                          <div className="text-xs text-muted-foreground">Instant delivery</div>
+                          <div className="text-xs text-muted-foreground">
+                            Instant delivery
+                          </div>
                         </div>
 
                         <div className="flex space-x-2">
@@ -331,7 +371,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                             <span>Instant</span>
                           </div>
                         </div>
-                        <div className="text-xs text-muted-foreground">23 sold</div>
+                        <div className="text-xs text-muted-foreground">
+                          23 sold
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -347,8 +389,8 @@ export function StorefrontView({ store }: StorefrontViewProps) {
         open={cartOpen}
         onOpenChange={setCartOpen}
         onCheckout={() => {
-          setCartOpen(false)
-          setCheckoutOpen(true)
+          setCartOpen(false);
+          setCheckoutOpen(true);
         }}
       />
 
@@ -361,5 +403,5 @@ export function StorefrontView({ store }: StorefrontViewProps) {
         creatorAddress={store.user.walletAddress!}
       />
     </div>
-  )
+  );
 }

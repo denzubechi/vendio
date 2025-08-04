@@ -1,11 +1,11 @@
-import { prisma } from "@/lib/prisma"
-import { StorefrontView } from "@/components/storefront/storefront-view"
-import { notFound } from "next/navigation"
+import { prisma } from "@/lib/prisma";
+import { StorefrontView } from "@/components/storefront/storefront-view";
+import { notFound } from "next/navigation";
 
 interface StorePageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
 export default async function StorePage({ params }: StorePageProps) {
@@ -18,11 +18,11 @@ export default async function StorePage({ params }: StorePageProps) {
         orderBy: { createdAt: "desc" },
       },
     },
-  })
+  });
 
   if (!store) {
-    notFound()
+    notFound();
   }
 
-  return <StorefrontView store={store} />
+  return <StorefrontView store={store} />;
 }

@@ -53,7 +53,7 @@ export function CheckoutModal({
 
   // Initialize Base Account SDK
   const sdk = createBaseAccountSDK({
-    appName: "Selar Onchain",
+    appName: "Vendio",
   });
 
   const handleSignIn = async () => {

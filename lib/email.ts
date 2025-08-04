@@ -20,7 +20,7 @@ export interface EmailTemplate {
 export async function sendEmail({ to, subject, html, text }: EmailTemplate) {
   try {
     const info = await transporter.sendMail({
-      from: `"Selar Onchain" <${process.env.SMTP_USER}>`,
+      from: `"Vendio" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
@@ -38,14 +38,14 @@ export async function sendEmail({ to, subject, html, text }: EmailTemplate) {
 // Email Templates
 export const emailTemplates = {
   welcome: (name: string, username: string) => ({
-    subject: "🎉 Welcome to Selar Onchain - Your Digital Store is Ready!",
+    subject: "🎉 Welcome to Vendio - Your Digital Store is Ready!",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Welcome to Selar Onchain</title>
+          <title>Welcome to Vendio</title>
           <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
@@ -60,19 +60,19 @@ export const emailTemplates = {
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🎉 Welcome to Selar Onchain!</h1>
+              <h1 style="margin: 0; font-size: 28px;">🎉 Welcome to Vendio!</h1>
               <p style="margin: 10px 0 0 0; opacity: 0.9;">Your digital store is ready to go</p>
             </div>
             
             <div class="content">
               <h2>Hi ${name}! 👋</h2>
-              <p>Congratulations on joining Selar Onchain! Your digital store has been created and you're ready to start selling your products with crypto payments.</p>
+              <p>Congratulations on joining Vendio! Your digital store has been created and you're ready to start selling your products with crypto payments.</p>
               
               <div class="feature">
                 <div class="feature-icon">🏪</div>
                 <div>
                   <strong>Your Store URL:</strong><br>
-                  <a href="https://selar-onchain.vercel.app/store/${username}">selar-onchain.vercel.app/store/${username}</a>
+                  <a href="https://tryvendio.vercel.app/store/${username}">tryvendio.vercel.app/store/${username}</a>
                 </div>
               </div>
               
@@ -80,7 +80,7 @@ export const emailTemplates = {
                 <div class="feature-icon">🔗</div>
                 <div>
                   <strong>Link in Bio:</strong><br>
-                  <a href="https://selar-onchain.vercel.app/bio/${username}">selar-onchain.vercel.app/bio/${username}</a>
+                  <a href="https://tryvendio.vercel.app/bio/${username}">tryvendio.vercel.app/bio/${username}</a>
                 </div>
               </div>
               
@@ -92,14 +92,14 @@ export const emailTemplates = {
                 <li>✅ Start accepting crypto payments</li>
               </ul>
               
-              <a href="https://selar-onchain.vercel.app/dashboard" class="button">Go to Dashboard</a>
+              <a href="https://tryvendio.vercel.app/dashboard" class="button">Go to Dashboard</a>
               
               <p>Need help getting started? Reply to this email and we'll be happy to assist you!</p>
             </div>
             
             <div class="footer">
-              <p>Happy selling! 🚀<br>The Selar Onchain Team</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>Happy selling! 🚀<br>The Vendio Team</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>
@@ -180,14 +180,14 @@ export const emailTemplates = {
               
               <p>Your digital products will be available for download shortly. If you have any questions, please don't hesitate to contact us.</p>
               
-              <a href="https://selar-onchain.vercel.app/orders/${
+              <a href="https://tryvendio.vercel.app/orders/${
                 order.id
               }" class="button">View Order Details</a>
             </div>
             
             <div class="footer">
-              <p>Thank you for choosing Selar Onchain! 🚀</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>Thank you for choosing Vendio! 🚀</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>
@@ -254,14 +254,14 @@ export const emailTemplates = {
               
               <p>The payment has been processed and will be available in your connected wallet shortly.</p>
               
-              <a href="https://selar-onchain.vercel.app/dashboard" class="button">View in Dashboard</a>
+              <a href="https://tryvendio.vercel.app/dashboard" class="button">View in Dashboard</a>
               
               <p>Keep up the great work! 🚀</p>
             </div>
             
             <div class="footer">
-              <p>Happy selling!<br>The Selar Onchain Team</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>Happy selling!<br>The Vendio Team</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>
@@ -316,12 +316,12 @@ export const emailTemplates = {
               
               <p>The payment has been confirmed on the Base blockchain and is now available in your wallet.</p>
               
-              <a href="https://selar-onchain.vercel.app/dashboard?tab=wallet" class="button">View Wallet</a>
+              <a href="https://tryvendio.vercel.app/dashboard?tab=wallet" class="button">View Wallet</a>
             </div>
             
             <div class="footer">
-              <p>Powered by Base blockchain 🔗<br>The Selar Onchain Team</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>Powered by Base blockchain 🔗<br>The Vendio Team</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>
@@ -380,12 +380,12 @@ export const emailTemplates = {
                 <li>📊 Monitor your sales analytics</li>
               </ul>
               
-              <a href="https://selar-onchain.vercel.app/dashboard?tab=products" class="button">Manage Products</a>
+              <a href="https://tryvendio.vercel.app/dashboard?tab=products" class="button">Manage Products</a>
             </div>
             
             <div class="footer">
-              <p>Keep building your digital empire! 🚀<br>The Selar Onchain Team</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>Keep building your digital empire! 🚀<br>The Vendio Team</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>
@@ -441,14 +441,14 @@ export const emailTemplates = {
               
               <p>This tip has been sent directly to your wallet. Keep creating amazing content!</p>
               
-              <a href="https://selar-onchain.vercel.app/dashboard?tab=wallet" class="button">View Wallet</a>
+              <a href="https://tryvendio.vercel.app/dashboard?tab=wallet" class="button">View Wallet</a>
               
               <p>Your supporters love what you do. Keep up the fantastic work! 🌟</p>
             </div>
             
             <div class="footer">
-              <p>You're making a difference! 💫<br>The Selar Onchain Team</p>
-              <p><a href="https://selar-onchain.vercel.app">selar-onchain.vercel.app</a></p>
+              <p>You're making a difference! 💫<br>The Vendio Team</p>
+              <p><a href="https://tryvendio.vercel.app">tryvendio.vercel.app</a></p>
             </div>
           </div>
         </body>

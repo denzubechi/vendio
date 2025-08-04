@@ -1,34 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Menu, X } from "lucide-react"
-import { motion } from "framer-motion"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-    setIsMenuOpen(false)
-  }
+    setIsMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto max-w-7xl flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">S</span>
+          <div className="h-8 w-8 relative">
+            <Image
+              src="/logo.png"
+              alt="Vendio Logo"
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+            />
           </div>
-          <span className="font-bold text-xl">Selar</span>
+          <span className="font-bold text-xl">Vendio</span>
         </Link>
-
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <button
             onClick={() => scrollToSection("features")}
@@ -71,8 +76,16 @@ export function Header() {
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center space-x-2">
           <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -117,12 +130,14 @@ export function Header() {
                 </Button>
               </Link>
               <Link href="/auth/signup" className="block">
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600">Start Selling</Button>
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600">
+                  Start Selling
+                </Button>
               </Link>
             </div>
           </nav>
         </motion.div>
       )}
     </header>
-  )
+  );
 }

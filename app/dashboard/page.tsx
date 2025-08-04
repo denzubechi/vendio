@@ -41,14 +41,14 @@ export default function DashboardPage() {
           },
           body: JSON.stringify({ walletAddress: address }),
         });
-
+        console.log("User data response:", response);
         if (response.ok) {
           const userData: UserData = await response.json();
           setUser(userData);
         } else {
           setUser({
             name: `Creator ${address.slice(0, 6)}`,
-            email: `${address.slice(0, 8)}@selar.app`,
+            email: `${address.slice(0, 8)}@https://tryvendio.vercel.app`,
             username: address.slice(0, 10),
             avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
               0,
@@ -62,7 +62,7 @@ export default function DashboardPage() {
         console.error("Error fetching user data:", error);
         setUser({
           name: `Creator ${address.slice(0, 6)}`,
-          email: `${address.slice(0, 8)}@selar.app`,
+          email: `${address.slice(0, 8)}@https://tryvendio.vercel.app`,
           username: address.slice(0, 10),
           avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
             0,
@@ -79,18 +79,18 @@ export default function DashboardPage() {
     fetchUserData();
   }, [address, isConnected]);
 
-  if (!isConnected) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Connect Your Wallet</h1>
-          <p className="text-muted-foreground">
-            Please connect your wallet to access the dashboard.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (!isConnected) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center">
+  //       <div className="text-center">
+  //         <h1 className="text-2xl font-bold mb-4">Connect Your Wallet</h1>
+  //         <p className="text-muted-foreground">
+  //           Please connect your wallet to access the dashboard.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (loading || !user) {
     return (

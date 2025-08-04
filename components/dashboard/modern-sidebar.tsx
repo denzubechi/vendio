@@ -31,6 +31,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 
+import { AddProductDialog } from "@/components/dashboard/add-product-dialog";
 interface User {
   name: string;
   email: string;
@@ -60,7 +61,7 @@ export function ModernSidebar({
   const { address } = useAccount();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [showAddDialog, setShowAddDialog] = useState(false);
   useEffect(() => {
     const fetchStats = async () => {
       if (!address) return;
@@ -99,6 +100,19 @@ export function ModernSidebar({
     fetchStats();
   }, [address]);
 
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`/api/products?walletAddress=${address}`);
+      if (response.ok) {
+        const data = await response.json();
+        //  setProducts(data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -271,7 +285,8 @@ export function ModernSidebar({
         <div className="space-y-3">
           <Button
             size="sm"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            onClick={() => setShowAddDialog(true)}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Product
@@ -290,6 +305,12 @@ export function ModernSidebar({
       </SidebarFooter>
 
       <SidebarRail />
+
+      <AddProductDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        onProductAdded={fetchProducts}
+      />
     </Sidebar>
   );
 }

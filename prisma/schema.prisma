@@ -14,7 +14,7 @@ model User {
   username      String?   @unique
   bio           String?
   avatar        String?
-walletAddress   String?   @unique
+  walletAddress String?    @unique
   isVerified    Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -57,7 +57,7 @@ model Product {
   currency    String      @default("USDC")
   type        ProductType
   category    String?
-  images      String[]
+  imageUrls   String[]
   files       String[]    // For digital products
   isActive    Boolean     @default(true)
   inventory   Int?        // For physical products

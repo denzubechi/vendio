@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image"; // Import the Next.js Image component
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAccount, useConnect } from "wagmi";
@@ -22,15 +23,15 @@ const walletOptions = [
     id: "coinbaseWallet",
     name: "Coinbase Wallet",
     description: "Connect with Coinbase Wallet",
-    icon: "/wallet-icons/coinbase.svg",
+    icon: "🔵",
     color: "from-blue-500 to-blue-600",
     popular: true,
   },
   {
-    id: "metaMask",
+    id: "walletConnect",
     name: "Trust Wallet",
     description: "Connect with Trust Wallet",
-    icon: "/wallet-icons/trust.svg",
+    icon: "🛡️",
     color: "from-blue-600 to-purple-600",
     popular: false,
   },
@@ -50,7 +51,8 @@ export default function SignInPage() {
         c.name.toLowerCase().includes(walletId.toLowerCase()) ||
         (walletId === "coinbaseWallet" &&
           c.name.toLowerCase().includes("coinbase")) ||
-        (walletId === "metaMask" && c.name.toLowerCase().includes("metamask"))
+        (walletId === "walletConnect" &&
+          c.name.toLowerCase().includes("walletconnect"))
     );
 
     if (connector) {
@@ -97,7 +99,6 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950/20 dark:via-blue-950/20 dark:to-indigo-950/20 relative overflow-hidden">
-      {/* Background Effects */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
       <div className="absolute top-20 right-10 w-32 h-32 bg-blue-200/30 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-20 left-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -106,14 +107,13 @@ export default function SignInPage() {
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
-            {/* Left Side - Welcome Back */}
+            {/* Left Side - Welcome Back (hidden on small screens) */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-8 hidden lg:block"
             >
-              {/* Logo & Title */}
               <div className="text-center lg:text-left">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -121,12 +121,18 @@ export default function SignInPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="inline-flex items-center space-x-3 mb-6"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
-                    <Sparkles className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
+                    <Image
+                      src="/logo.png"
+                      alt="Vendio Logo"
+                      fill
+                      style={{ objectFit: "contain" }}
+                      priority
+                    />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                      Selar Onchain
+                      Vendio
                     </h1>
                     <p className="text-sm text-muted-foreground">
                       Creator Economy Platform
@@ -153,7 +159,6 @@ export default function SignInPage() {
                 </motion.div>
               </div>
 
-              {/* Platform Benefits */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -161,7 +166,7 @@ export default function SignInPage() {
                 className="space-y-6"
               >
                 <h3 className="font-semibold text-lg">
-                  Why creators choose Selar Onchain
+                  Why creators choose Vendio
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">

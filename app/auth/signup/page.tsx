@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image"; // Import the Next.js Image component
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,7 +61,6 @@ export default function SignUpPage() {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
-  // Move to step 2 when wallet is connected
   useEffect(() => {
     if (isConnected && step === 1) {
       setStep(2);
@@ -116,7 +116,6 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 dark:from-purple-950/20 dark:via-blue-950/20 dark:to-indigo-950/20 relative overflow-hidden">
-      {/* Background Effects */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
       <div className="absolute top-20 left-10 w-32 h-32 bg-purple-200/30 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -125,14 +124,12 @@ export default function SignUpPage() {
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
-            {/* Left Side - Branding & Features */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-8 hidden lg:block"
             >
-              {/* Logo & Title */}
               <div className="text-center lg:text-left">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -140,12 +137,19 @@ export default function SignUpPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="inline-flex items-center space-x-3 mb-6"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
-                    <Sparkles className="w-6 h-6 text-white" />
+                  {/* Replaced the text 'S' div with Next.js Image component */}
+                  <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
+                    <Image
+                      src="/logo.png" // Path to your logo.png in the public folder
+                      alt="Vendio Logo"
+                      fill // Makes the image fill the parent div
+                      style={{ objectFit: "contain" }} // Ensures the image scales correctly within the div
+                      priority // Prioritize loading for LCP
+                    />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                      Selar Onchain
+                      Vendio
                     </h1>
                     <p className="text-sm text-muted-foreground">
                       Creator Economy Platform
@@ -172,7 +176,6 @@ export default function SignUpPage() {
                 </motion.div>
               </div>
 
-              {/* Features Grid */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -193,16 +196,13 @@ export default function SignUpPage() {
                 ))}
               </motion.div>
 
-              {/* Value Propositions */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="space-y-4"
               >
-                <h3 className="font-semibold text-lg">
-                  Why choose Selar Onchain?
-                </h3>
+                <h3 className="font-semibold text-lg">Why choose Vendio?</h3>
                 <div className="space-y-3">
                   <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">
                     <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center mt-0.5">
@@ -242,7 +242,6 @@ export default function SignUpPage() {
                 </div>
               </motion.div>
 
-              {/* Stats */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -279,7 +278,6 @@ export default function SignUpPage() {
             >
               <Card className="shadow-2xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
                 <CardContent className="p-8">
-                  {/* Progress Indicator */}
                   <div className="flex items-center justify-center mb-8">
                     <div className="flex items-center space-x-4">
                       <div
@@ -344,11 +342,18 @@ export default function SignUpPage() {
                                 <div
                                   className={`w-12 h-12 rounded-xl bg-gradient-to-r ${wallet.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
                                 >
-                                  {selectedWallet === wallet.id ? (
-                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                                  {/* Conditionally render Image or text based on icon type */}
+                                  {wallet.icon.startsWith("/") ? (
+                                    <Image
+                                      src={wallet.icon}
+                                      alt={`${wallet.name} icon`}
+                                      width={32}
+                                      height={32}
+                                      className="object-contain"
+                                    />
                                   ) : (
                                     <span className="text-white font-bold text-lg">
-                                      {wallet.name.charAt(0)}
+                                      {wallet.icon}
                                     </span>
                                   )}
                                 </div>
@@ -468,7 +473,8 @@ export default function SignUpPage() {
                               required
                             />
                             <p className="text-xs text-muted-foreground">
-                              This will be your store URL: selar.app/store/
+                              This will be your store URL:
+                              https://tryvendio.vercel.app/store/
                               {formData.username || "username"}
                             </p>
                           </div>

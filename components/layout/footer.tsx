@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-
+import Image from "next/image";
 export function Footer() {
   return (
     <footer className="border-t bg-background">
@@ -17,10 +17,16 @@ export function Footer() {
           >
             {/* Logo */}
             <div className="flex items-center justify-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
+              <div className="h-8 w-8 relative">
+                <Image
+                  src="/logo.png"
+                  alt="Vendio Logo"
+                  fill
+                  style={{ objectFit: "contain" }}
+                  priority
+                />
               </div>
-              <span className="font-bold text-xl">Selar</span>
+              <span className="font-bold text-xl">Vendio</span>
             </div>
 
             {/* Description */}
@@ -72,7 +78,7 @@ export function Footer() {
             {/* Copyright */}
             <div className="pt-8 border-t">
               <p className="text-muted-foreground text-sm">
-                &copy; 2025 Vendio. All rights reserved. Built on Base.
+                &copy; 2025 Vendio. All rights reserved. Built with ❤️ on Base.
               </p>
             </div>
           </motion.div>

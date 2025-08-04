@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,22 +21,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ImageUpload } from "@/components/ui/image-upload";
+import { ImageUpload } from "../ui/image-upload";
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
 import { useStore } from "@/lib/store";
 
-interface AddProductDialogProps {
+interface EditProductDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onProductAdded: () => void;
+  product: any;
+  onProductUpdated: () => void;
 }
 
-export function AddProductDialog({
+export function EditProductDialog({
   open,
   onOpenChange,
-  onProductAdded,
-}: AddProductDialogProps) {
+  product,
+  onProductUpdated,
+}: EditProductDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -47,44 +48,49 @@ export function AddProductDialog({
     isActive: true,
   });
   const [loading, setLoading] = useState(false);
-  const { address } = useAccount();
-  const { addProduct } = useStore();
+  const { updateProduct } = useStore();
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name || "",
+        description: product.description || "",
+        price: product.price?.toString() || "",
+        type: product.type || "",
+        category: product.category || "",
+        imageUrls: product.imageUrls || [],
+        isActive: product.isActive ?? true,
+      });
+    }
+  }, [product]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!product) return;
+
     setLoading(true);
 
     try {
-      const response = await fetch("/api/products", {
-        method: "POST",
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...formData,
           price: Number.parseFloat(formData.price),
-          walletAddress: address,
         }),
       });
 
       if (response.ok) {
-        const newProduct = await response.json();
-        addProduct(newProduct);
-        toast.success("Product added successfully!");
+        const updatedProduct = await response.json();
+        updateProduct(product.id, updatedProduct);
+        toast.success("Product updated successfully!");
         onOpenChange(false);
-        onProductAdded();
-        setFormData({
-          name: "",
-          description: "",
-          price: "",
-          type: "",
-          category: "",
-          imageUrls: [],
-          isActive: true,
-        });
+        onProductUpdated();
       } else {
         const error = await response.json();
-        toast.error(error.message || "Failed to add product");
+        toast.error(error.message || "Failed to update product");
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -93,11 +99,13 @@ export function AddProductDialog({
     }
   };
 
+  if (!product) return null;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Product</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -189,7 +197,7 @@ export function AddProductDialog({
           </div>
 
           <div className="flex items-center justify-between">
-            <Label htmlFor="active">Publish immediately</Label>
+            <Label htmlFor="active">Product is active</Label>
             <Switch
               id="active"
               checked={formData.isActive}
@@ -208,7 +216,7 @@ export function AddProductDialog({
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Adding..." : "Add Product"}
+              {loading ? "Updating..." : "Update Product"}
             </Button>
           </div>
         </form>

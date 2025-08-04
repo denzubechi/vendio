@@ -93,7 +93,7 @@ export function BenefitsSection() {
               <div>
                 <Badge variant="outline" className="mb-4 px-4 py-2">
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Why Choose Selar
+                  Why Choose Vendio
                 </Badge>
                 <h2 className="text-4xl font-bold tracking-tight sm:text-5xl mb-6">
                   Built for the

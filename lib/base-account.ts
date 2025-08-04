@@ -1,7 +1,7 @@
 import { pay, getPaymentStatus, createBaseAccountSDK } from "@base-org/account";
 
 export const baseAccount = createBaseAccountSDK({
-  appName: "Selar Onchain",
+  appName: "Vendio",
 });
 
 export async function createPayment(params: {

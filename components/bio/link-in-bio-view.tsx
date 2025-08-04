@@ -68,7 +68,7 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
   const store = user.stores[0];
 
   const sdk = createBaseAccountSDK({
-    appName: "Selar Onchain",
+    appName: "Vendio",
   });
 
   const handleTip = async () => {
@@ -366,9 +366,7 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
             transition={{ duration: 0.5, delay: 1 }}
             className="text-center pt-6 border-t border-white/20"
           >
-            <p className="text-purple-100 text-sm">
-              Powered by Selar Onchain ⚡
-            </p>
+            <p className="text-purple-100 text-sm">Powered by Vendio ⚡</p>
           </motion.div>
         </motion.div>
       </div>
