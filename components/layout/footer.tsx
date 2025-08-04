@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import logo from "@/public/logo.png";
 import { motion } from "framer-motion";
 import Image from "next/image";
 export function Footer() {
@@ -19,7 +19,7 @@ export function Footer() {
             <div className="flex items-center justify-center space-x-2">
               <div className="h-8 w-8 relative">
                 <Image
-                  src="/logo.png"
+                  src={logo}
                   alt="Vendio Logo"
                   fill
                   style={{ objectFit: "contain" }}

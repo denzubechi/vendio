@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import logo from "@/public/logo.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -25,7 +26,7 @@ export function Header() {
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 relative">
             <Image
-              src="/logo.png"
+              src={logo}
               alt="Vendio Logo"
               fill
               style={{ objectFit: "contain" }}
@@ -67,7 +68,7 @@ export function Header() {
             <Button variant="ghost">Sign In</Button>
           </Link>
           <Link href="/auth/signup">
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
               Start Selling
             </Button>
           </Link>

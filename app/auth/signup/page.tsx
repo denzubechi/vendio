@@ -23,7 +23,7 @@ import {
   TrendingUp,
   Crown,
 } from "lucide-react";
-
+import logo from "@/public/logo.png";
 const walletOptions = [
   {
     id: "coinbaseWallet",
@@ -137,14 +137,13 @@ export default function SignUpPage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="inline-flex items-center space-x-3 mb-6"
                 >
-                  {/* Replaced the text 'S' div with Next.js Image component */}
                   <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
                     <Image
-                      src="/logo.png" // Path to your logo.png in the public folder
+                      src={logo}
                       alt="Vendio Logo"
-                      fill // Makes the image fill the parent div
-                      style={{ objectFit: "contain" }} // Ensures the image scales correctly within the div
-                      priority // Prioritize loading for LCP
+                      fill
+                      style={{ objectFit: "contain" }}
+                      priority
                     />
                   </div>
                   <div>

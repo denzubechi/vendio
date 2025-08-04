@@ -17,7 +17,7 @@ import {
   CheckCircle,
   Crown,
 } from "lucide-react";
-
+import logo from "@/public/logo.png";
 const walletOptions = [
   {
     id: "coinbaseWallet",
@@ -123,7 +123,7 @@ export default function SignInPage() {
                 >
                   <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
                     <Image
-                      src="/logo.png"
+                      src={logo}
                       alt="Vendio Logo"
                       fill
                       style={{ objectFit: "contain" }}
