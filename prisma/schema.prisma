@@ -116,7 +116,10 @@ model LinkInBio {
   description String?
   avatar      String?
   theme       Json?
-  links       Json[]   // Array of link objects
+
+    links       Json          @default("[]")
+  projects    Json          @default("[]")
+  socialUrls  Json          @default("{}")
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

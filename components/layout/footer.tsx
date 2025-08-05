@@ -19,7 +19,7 @@ export function Footer() {
             <div className="flex items-center justify-center space-x-2">
               <div className="h-8 w-8 relative">
                 <Image
-                  src={logo}
+                  src={"/logo.png"}
                   alt="Vendio Logo"
                   fill
                   style={{ objectFit: "contain" }}

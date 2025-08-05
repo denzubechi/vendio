@@ -23,7 +23,7 @@ const walletOptions = [
     id: "coinbaseWallet",
     name: "Coinbase Wallet",
     description: "Connect with Coinbase Wallet",
-    icon: "🔵",
+    icon: "https://raw.githubusercontent.com/gist/taycaldwell/2291907115c0bb5589bc346661435007/raw/280eafdc84cb80ed0c60e36b4d0c563f6dca6b3e/cbw.svg",
     color: "from-blue-500 to-blue-600",
     popular: true,
   },
@@ -123,7 +123,7 @@ export default function SignInPage() {
                 >
                   <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
                     <Image
-                      src={logo}
+                      src={"/logo.png"}
                       alt="Vendio Logo"
                       fill
                       style={{ objectFit: "contain" }}

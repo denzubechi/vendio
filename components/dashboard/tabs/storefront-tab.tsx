@@ -142,9 +142,9 @@ export function StorefrontTab() {
     }
   };
 
-  const storeUrl = `https://tryvendio.vercel.app/store/${
-    user?.username || "store"
-  }`;
+  const storeUrl = `${
+    typeof window !== "undefined" ? window.location.origin : ""
+  }/store/${store?.slug || user?.username || "store"}`;
 
   const copyStoreUrl = () => {
     navigator.clipboard.writeText(storeUrl);

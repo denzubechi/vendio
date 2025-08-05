@@ -97,7 +97,6 @@ export function HowItWorksSection() {
               </motion.div>
             </div>
 
-            {/* Right Content - Wallet Connection Demo */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -106,7 +105,6 @@ export function HowItWorksSection() {
               className="relative flex justify-center"
             >
               <div className="relative max-w-md w-full">
-                {/* Main Card */}
                 <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 p-8">
                   <div className="text-center mb-6">
                     <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">

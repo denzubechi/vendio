@@ -3,7 +3,13 @@ import { jwtVerify } from "jose";
 
 const JWT_SECRET_KEY = "your-super-secret-jwt-key-here";
 
-const PUBLIC_PATHS_EXACT = ["/", "/bounties", "/projects"];
+const PUBLIC_PATHS_EXACT = [
+  "/",
+  "/favicon.ico",
+  "/logo.png",
+  "/bounties",
+  "/projects",
+];
 
 const PUBLIC_PATHS_DYNAMIC_PREFIXES = ["/bio/", "/store/"];
 
@@ -81,5 +87,15 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (your favicon)
+     * - Any file with a common static asset extension
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|js|css|map|json)$).*)",
+  ],
 };

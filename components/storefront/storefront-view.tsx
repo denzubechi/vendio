@@ -29,6 +29,16 @@ interface StorefrontViewProps {
     description: string | null;
     logo: string | null;
     banner: string | null;
+    theme: {
+      id: string;
+      name: string;
+      preview: string;
+      colors: {
+        primary: string;
+        secondary: string;
+        accent: string;
+      };
+    } | null;
     user: {
       name: string | null;
       avatar: string | null;
@@ -45,6 +55,21 @@ interface StorefrontViewProps {
     }>;
   };
 }
+
+const getThemeClasses = (theme: any) => {
+  if (!theme) return "bg-gradient-to-r from-blue-500 to-purple-600";
+
+  const themeClasses = {
+    modern: "bg-gradient-to-r from-indigo-500 to-purple-600",
+    minimal: "bg-gradient-to-r from-gray-900 to-gray-600",
+    vibrant: "bg-gradient-to-r from-pink-500 to-orange-500",
+    nature: "bg-gradient-to-r from-emerald-600 to-teal-600",
+  };
+
+  return (
+    themeClasses[theme.id as keyof typeof themeClasses] || themeClasses.modern
+  );
+};
 
 export function StorefrontView({ store }: StorefrontViewProps) {
   const [cartOpen, setCartOpen] = useState(false);
@@ -89,9 +114,11 @@ export function StorefrontView({ store }: StorefrontViewProps) {
 
   if (!store.user.walletAddress) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Store Configuration Error</h1>
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <h1 className="text-xl sm:text-2xl font-bold mb-4">
+            Store Configuration Error
+          </h1>
           <p className="text-muted-foreground">
             This store owner hasn't configured their wallet address yet.
           </p>
@@ -100,68 +127,85 @@ export function StorefrontView({ store }: StorefrontViewProps) {
     );
   }
 
+  const themeClass = getThemeClasses(store.theme);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950/30">
       {/* Enhanced Store Header */}
       <div className="relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600" />
+        {/* Background with custom banner or theme */}
+        <div className={`absolute inset-0 ${themeClass}`} />
+        {store.banner && (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${store.banner})` }}
+          />
+        )}
+        <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
 
         {/* Floating Elements */}
         <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse" />
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-blue-300/20 rounded-full blur-xl animate-pulse delay-1000" />
 
-        <div className="container relative z-10 px-4 py-16">
+        <div className="container relative z-10 px-4 py-12 sm:py-16">
           <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
               {/* Store Info */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex items-center space-x-6 text-white"
+                className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 text-white text-center sm:text-left"
               >
-                <div className="relative">
-                  <div className="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                <div className="relative flex-shrink-0">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 overflow-hidden">
                     {store.logo ? (
                       <Image
                         src={store.logo || "/placeholder.svg"}
                         alt={store.name}
                         width={96}
                         height={96}
-                        className="rounded-2xl"
+                        className="w-full h-full object-cover rounded-2xl"
                       />
                     ) : (
-                      <span className="text-3xl font-bold">
+                      <span className="text-2xl sm:text-3xl font-bold">
                         {store.name.charAt(0)}
                       </span>
                     )}
                   </div>
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-                    <div className="w-3 h-3 bg-white rounded-full" />
+                  <div className="absolute -bottom-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full" />
                   </div>
                 </div>
 
-                <div>
-                  <h1 className="text-4xl font-bold mb-2">{store.name}</h1>
-                  <p className="text-purple-100 text-lg mb-4 max-w-md">
-                    {store.description}
-                  </p>
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-3xl sm:text-4xl font-bold mb-2 break-words">
+                    {store.name}
+                  </h1>
+                  {store.description && (
+                    <p className="text-purple-100 text-base sm:text-lg mb-4 max-w-md break-words">
+                      {store.description}
+                    </p>
+                  )}
 
                   {/* Store Stats */}
-                  <div className="flex items-center space-x-6">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-6">
                     <div className="flex items-center space-x-1">
-                      <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">4.9</span>
-                      <span className="text-purple-100">(127 reviews)</span>
+                      <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold text-sm sm:text-base">
+                        4.9
+                      </span>
+                      <span className="text-purple-100 text-sm">
+                        (127 reviews)
+                      </span>
                     </div>
-                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
                       {store.products.length} Products
                     </Badge>
                     <div className="flex items-center space-x-1 text-purple-100">
-                      <TrendingUp className="w-4 h-4" />
-                      <span className="text-sm">Trending</span>
+                      <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="text-xs sm:text-sm">Trending</span>
                     </div>
                   </div>
                 </div>
@@ -172,12 +216,12 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="flex items-center space-x-4"
+                className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto"
               >
                 <Button
                   variant="outline"
                   onClick={handleShare}
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm w-full sm:w-auto"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   Share Store
@@ -185,12 +229,12 @@ export function StorefrontView({ store }: StorefrontViewProps) {
 
                 <Button
                   onClick={() => setCartOpen(true)}
-                  className="relative bg-white text-purple-600 hover:bg-gray-100 font-semibold"
+                  className="relative bg-white text-purple-600 hover:bg-gray-100 font-semibold w-full sm:w-auto"
                 >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   Cart
                   {cartCount > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 sm:h-6 sm:w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
                       {cartCount}
                     </Badge>
                   )}
@@ -202,28 +246,28 @@ export function StorefrontView({ store }: StorefrontViewProps) {
       </div>
 
       {/* Search and Filter Section */}
-      <div className="container px-4 py-8">
+      <div className="container px-4 py-6 sm:py-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col md:flex-row gap-4 mb-8"
+            className="flex flex-col gap-4 mb-6 sm:mb-8"
           >
             {/* Search */}
-            <div className="relative flex-1">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 bg-white/80 backdrop-blur-sm border-0 shadow-lg"
+                className="pl-10 h-11 sm:h-12 bg-white/80 backdrop-blur-sm border-0 shadow-lg"
               />
             </div>
 
             {/* Category Filter */}
-            <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-muted-foreground" />
+            <div className="flex items-center gap-2 overflow-x-auto pb-2">
+              <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
               <div className="flex space-x-2">
                 {categories.map((category) => (
                   <Button
@@ -232,7 +276,8 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                       selectedCategory === category ? "default" : "outline"
                     }
                     onClick={() => setSelectedCategory(category)}
-                    className="capitalize"
+                    className="capitalize whitespace-nowrap text-sm"
+                    size="sm"
                   >
                     {category}
                   </Button>
@@ -244,28 +289,28 @@ export function StorefrontView({ store }: StorefrontViewProps) {
       </div>
 
       {/* Products Grid */}
-      <div className="container px-4 pb-16">
+      <div className="container px-4 pb-12 sm:pb-16">
         <div className="max-w-6xl mx-auto">
           {filteredProducts.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16"
+              className="text-center py-12 sm:py-16"
             >
-              <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">
+              <ShoppingCart className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">
                 {searchTerm || selectedCategory !== "all"
                   ? "No products found"
                   : "No products available"}
               </h3>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm sm:text-base">
                 {searchTerm || selectedCategory !== "all"
                   ? "Try adjusting your search or filter criteria"
                   : "This store hasn't added any products yet."}
               </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {filteredProducts.map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -287,8 +332,8 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                       ) : (
                         <div className="flex items-center justify-center h-full">
                           <div className="text-center">
-                            <ShoppingCart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                            <p className="text-gray-500 capitalize">
+                            <ShoppingCart className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-2" />
+                            <p className="text-gray-500 capitalize text-sm">
                               {product.type}
                             </p>
                           </div>
@@ -296,20 +341,20 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                       )}
 
                       {/* Product Type Badge */}
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-black/50 text-white border-0 backdrop-blur-sm">
+                      <div className="absolute top-3 left-3">
+                        <Badge className="bg-black/50 text-white border-0 backdrop-blur-sm text-xs">
                           {product.type}
                         </Badge>
                       </div>
 
                       {/* Wishlist Button */}
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="bg-white/80 backdrop-blur-sm border-0"
+                          className="bg-white/80 backdrop-blur-sm border-0 h-8 w-8 p-0"
                         >
-                          <Heart className="w-4 h-4" />
+                          <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </div>
 
@@ -317,14 +362,14 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
 
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg line-clamp-2 group-hover:text-purple-600 transition-colors">
+                    <CardHeader className="pb-2 sm:pb-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <CardTitle className="text-base sm:text-lg line-clamp-2 group-hover:text-purple-600 transition-colors">
                           {product.name}
                         </CardTitle>
-                        <div className="flex items-center space-x-1 text-yellow-400">
-                          <Star className="w-4 h-4 fill-current" />
-                          <span className="text-sm text-muted-foreground">
+                        <div className="flex items-center space-x-1 text-yellow-400 flex-shrink-0">
+                          <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
+                          <span className="text-xs sm:text-sm text-muted-foreground">
                             4.8
                           </span>
                         </div>
@@ -332,13 +377,13 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                     </CardHeader>
 
                     <CardContent className="pt-0">
-                      <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">
+                      <p className="text-muted-foreground mb-3 sm:mb-4 line-clamp-2 text-xs sm:text-sm leading-relaxed">
                         {product.description}
                       </p>
 
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-2">
                         <div className="space-y-1">
-                          <div className="text-2xl font-bold text-purple-600">
+                          <div className="text-lg sm:text-2xl font-bold text-purple-600">
                             ${product.price} {product.currency}
                           </div>
                           <div className="text-xs text-muted-foreground">
@@ -346,22 +391,20 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                           </div>
                         </div>
 
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleAddToCart(product)}
-                            className="bg-transparent hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-all duration-300"
-                          >
-                            <Plus className="w-4 h-4 mr-1" />
-                            Add to Cart
-                          </Button>
-                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-transparent hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-all duration-300 text-xs sm:text-sm"
+                        >
+                          <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          Add to Cart
+                        </Button>
                       </div>
 
                       {/* Product Features */}
-                      <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                      <div className="flex items-center justify-between mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
+                        <div className="flex items-center space-x-3 sm:space-x-4 text-xs text-muted-foreground">
                           <div className="flex items-center space-x-1">
                             <div className="w-2 h-2 bg-green-500 rounded-full" />
                             <span>Digital</span>

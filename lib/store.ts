@@ -61,6 +61,8 @@ interface LinkInBio {
     url: string;
     isActive: boolean;
   }>;
+  projects: any;
+  socialUrls: any;
   isActive: boolean;
 }
 

@@ -1,13 +1,18 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const walletAddress = searchParams.get("walletAddress")
+    // const { searchParams } = new URL(request.url)
+    // const walletAddress = searchParams.get("walletAddress")
+    const body = await request.json();
+    const walletAddress = body.walletAddress;
 
     if (!walletAddress) {
-      return NextResponse.json({ error: "Wallet address required" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Wallet address required" },
+        { status: 400 }
+      );
     }
 
     const user = await prisma.user.findUnique({
@@ -24,55 +29,84 @@ export async function GET(request: Request) {
           orderBy: { createdAt: "desc" },
         },
       },
-    })
+    });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Calculate overview metrics
-    const completedOrders = user.orders.filter((order) => order.status === "COMPLETED")
-    const totalRevenue = completedOrders.reduce((sum, order) => sum + order.totalAmount, 0)
-    const totalOrders = completedOrders.length
+    const completedOrders = user.orders.filter(
+      (order) => order.status === "COMPLETED"
+    );
+    const totalRevenue = completedOrders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
+    const totalOrders = completedOrders.length;
 
     // Get unique customers
     const uniqueCustomers = new Set(
-      completedOrders.map((order) => order.buyerEmail || order.buyerAddress).filter(Boolean),
-    ).size
+      completedOrders
+        .map((order) => order.buyerEmail || order.buyerAddress)
+        .filter(Boolean)
+    ).size;
 
     // Calculate conversion rate (rough estimate)
-    const totalVisitors = totalOrders * 15 // Rough estimate
-    const conversionRate = totalVisitors > 0 ? (totalOrders / totalVisitors) * 100 : 0
+    const totalVisitors = totalOrders * 15; // Rough estimate
+    const conversionRate =
+      totalVisitors > 0 ? (totalOrders / totalVisitors) * 100 : 0;
 
     // Calculate month-over-month changes
-    const currentMonth = new Date()
-    const previousMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    const currentMonthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
+    const currentMonth = new Date();
+    const previousMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() - 1,
+      1
+    );
+    const currentMonthStart = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    );
 
     const previousMonthOrders = completedOrders.filter(
-      (order) => order.createdAt >= previousMonth && order.createdAt < currentMonthStart,
-    )
-    const currentMonthOrders = completedOrders.filter((order) => order.createdAt >= currentMonthStart)
+      (order) =>
+        order.createdAt >= previousMonth && order.createdAt < currentMonthStart
+    );
+    const currentMonthOrders = completedOrders.filter(
+      (order) => order.createdAt >= currentMonthStart
+    );
 
-    const previousMonthRevenue = previousMonthOrders.reduce((sum, order) => sum + order.totalAmount, 0)
-    const currentMonthRevenue = currentMonthOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+    const previousMonthRevenue = previousMonthOrders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
+    const currentMonthRevenue = currentMonthOrders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
 
     const revenueChange =
       previousMonthRevenue > 0
-        ? ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100
+        ? ((currentMonthRevenue - previousMonthRevenue) /
+            previousMonthRevenue) *
+          100
         : currentMonthRevenue > 0
-          ? 100
-          : 0
+        ? 100
+        : 0;
 
     const ordersChange =
       previousMonthOrders.length > 0
-        ? ((currentMonthOrders.length - previousMonthOrders.length) / previousMonthOrders.length) * 100
+        ? ((currentMonthOrders.length - previousMonthOrders.length) /
+            previousMonthOrders.length) *
+          100
         : currentMonthOrders.length > 0
-          ? 100
-          : 0
+        ? 100
+        : 0;
 
     // Get recent orders (last 5)
-    const recentOrders = user.orders.slice(0, 5)
+    const recentOrders = user.orders.slice(0, 5);
 
     return NextResponse.json({
       totalRevenue,
@@ -83,9 +117,12 @@ export async function GET(request: Request) {
       customersChange: 0, // Would need historical data
       conversionRate,
       recentOrders,
-    })
+    });
   } catch (error) {
-    console.error("Error fetching overview data:", error)
-    return NextResponse.json({ error: "Failed to fetch overview data" }, { status: 500 })
+    console.error("Error fetching overview data:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch overview data" },
+      { status: 500 }
+    );
   }
 }

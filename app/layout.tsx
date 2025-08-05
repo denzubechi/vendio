@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Vendio",
     images: [
       {
-        url: "/favicon.ico",
+        url: "./favicon.ico",
         width: 1200,
         height: 630,
         alt: "Vendio Digital Product Platform",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Vendio - Sell Digital Products with Crypto",
     description:
       "Create your digital storefront and sell products with cryptocurrency payments on Base blockchain. Instant, secure, and global.",
-    images: ["/favicon.ico"],
+    images: ["./favicon.ico"],
   },
   robots: {
     index: true,
