@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
-
+import logo from "@/public/vendio.png";
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export function Header() {
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 relative">
             <Image
-              src={"/logo.png"}
+              src={logo}
               alt="Vendio Logo"
               fill
               style={{ objectFit: "contain" }}
