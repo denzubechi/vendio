@@ -23,7 +23,7 @@ import {
   TrendingUp,
   Crown,
 } from "lucide-react";
-import logo from "@/logo.png";
+import logo from "@/public/vendio.png";
 const walletOptions = [
   {
     id: "coinbaseWallet",
@@ -139,7 +139,7 @@ export default function SignUpPage() {
                 >
                   <div className="w-12 h-12 relative rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
                     <Image
-                      src={"/logo.png"}
+                      src={logo}
                       alt="Vendio Logo"
                       fill
                       style={{ objectFit: "contain" }}
