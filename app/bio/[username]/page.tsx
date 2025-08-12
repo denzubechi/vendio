@@ -56,8 +56,7 @@ export default async function BioPage({ params }: BioPageProps) {
     );
     notFound();
   }
-
-  // Create a new, type-safe user object for the component
+  
   const userWithTypedData = {
     ...user,
     linkInBio: user.linkInBio

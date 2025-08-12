@@ -43,14 +43,14 @@ export function ModernNavbar() {
 
       try {
         const ordersResponse = await fetch("/api/dashboard/orders", {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            walletAddress: address,
-            limit: 5,
-          }),
+          // body: JSON.stringify({
+          //   walletAddress: address,
+          //   limit: 5,
+          // }),
         });
 
         if (ordersResponse.ok) {
@@ -63,7 +63,7 @@ export function ModernNavbar() {
                 order.amount || "0.00"
               }`,
               time: formatTimeAgo(new Date(order.createdAt || Date.now())),
-              unread: index < 2, // Mark first 2 as unread
+              unread: index < 2, 
             })) || [];
 
           setNotifications(recentNotifications);

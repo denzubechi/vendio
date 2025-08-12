@@ -44,7 +44,8 @@ export async function middleware(req: NextRequest) {
     if (token) {
       try {
         await jwtVerify(token, new TextEncoder().encode(JWT_SECRET_KEY));
-        return NextResponse.redirect(new URL("/", req.url));
+        // Redirect to /dashboard if a valid token is found on an auth page
+        return NextResponse.redirect(new URL("/dashboard", req.url));
       } catch (err) {
         return NextResponse.next();
       }
@@ -88,14 +89,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (your favicon)
-     * - Any file with a common static asset extension
-     */
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|js|css|map|json)$).*)",
   ],
 };

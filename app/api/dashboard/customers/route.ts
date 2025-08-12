@@ -1,29 +1,21 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const walletAddress = searchParams.get("walletAddress");
-
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address required" },
-        { status: 400 }
-      );
-    }
+    const userId = await requireAuth(request);
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
+      where: { id: userId },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get all orders for this seller
     const orders = await prisma.order.findMany({
-      where: { sellerId: user.id },
+      where: { sellerId: userId },
       include: {
         items: {
           include: {
@@ -33,12 +25,15 @@ export async function GET(request: Request) {
       },
     });
 
-    // Group orders by customer and calculate stats
     const customerMap = new Map();
 
     orders.forEach((order) => {
       const customerId = order.buyerEmail || order.buyerAddress || order.id;
       const customerKey = order.buyerEmail || order.buyerAddress;
+
+      if (!customerKey) {
+        return;
+      }
 
       if (!customerMap.has(customerKey)) {
         customerMap.set(customerKey, {
@@ -58,7 +53,6 @@ export async function GET(request: Request) {
       customer.orderCount += 1;
       customer.orders.push(order);
 
-      // Update last order date if this order is more recent
       if (new Date(order.createdAt) > new Date(customer.lastOrderDate)) {
         customer.lastOrderDate = order.createdAt;
       }
@@ -71,6 +65,12 @@ export async function GET(request: Request) {
     return NextResponse.json(customers);
   } catch (error) {
     console.error("Error fetching customers:", error);
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to fetch customers" },
       { status: 500 }

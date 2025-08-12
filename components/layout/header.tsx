@@ -53,12 +53,12 @@ export function Header() {
           >
             Benefits
           </button>
-          <button
+          {/* <button
             onClick={() => scrollToSection("testimonials")}
             className="text-sm font-medium hover:text-primary transition-colors"
           >
             Reviews
-          </button>
+          </button> */}
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
@@ -73,7 +73,6 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center space-x-2">
           <ThemeToggle />
           <Button
@@ -90,7 +89,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}

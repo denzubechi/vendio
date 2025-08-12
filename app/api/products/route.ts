@@ -1,21 +1,14 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendEmail, emailTemplates } from "@/lib/email";
+import { requireAuth } from "@/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const walletAddress = searchParams.get("walletAddress");
-
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address required" },
-        { status: 400 }
-      );
-    }
+    const userId = await requireAuth(request);
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
+      where: { id: userId },
       include: {
         products: {
           orderBy: { createdAt: "desc" },
@@ -30,6 +23,12 @@ export async function GET(request: Request) {
     return NextResponse.json(user.products);
   } catch (error) {
     console.error("Error fetching products:", error);
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to fetch products" },
       { status: 500 }
@@ -37,20 +36,15 @@ export async function GET(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const {
-      name,
-      description,
-      price,
-      type,
-      category,
-      isActive,
-      walletAddress,
-    } = await request.json();
+    const userId = await requireAuth(request);
+
+    const { name, description, price, type, category, isActive } =
+      await request.json();
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
+      where: { id: userId },
       include: { stores: true },
     });
 
@@ -58,7 +52,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const store = user.stores[0]; // Use first store
+    const store = user.stores[0];
     if (!store) {
       return NextResponse.json({ error: "Store not found" }, { status: 404 });
     }
@@ -84,7 +78,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send product added email
     try {
       const productEmail = emailTemplates.productAdded(product, user);
       await sendEmail({
@@ -98,6 +91,12 @@ export async function POST(request: Request) {
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to create product" },
       { status: 500 }

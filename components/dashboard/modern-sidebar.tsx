@@ -68,11 +68,10 @@ export function ModernSidebar({
 
       try {
         const response = await fetch("/api/dashboard/overview", {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ walletAddress: address }),
         });
 
         if (response.ok) {

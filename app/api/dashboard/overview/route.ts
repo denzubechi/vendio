@@ -1,22 +1,13 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    // const { searchParams } = new URL(request.url)
-    // const walletAddress = searchParams.get("walletAddress")
-    const body = await request.json();
-    const walletAddress = body.walletAddress;
-
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address required" },
-        { status: 400 }
-      );
-    }
+    const userId = await requireAuth(request);
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
+      where: { id: userId },
       include: {
         orders: {
           include: {
@@ -53,7 +44,7 @@ export async function GET(request: Request) {
     ).size;
 
     // Calculate conversion rate (rough estimate)
-    const totalVisitors = totalOrders * 15; // Rough estimate
+    const totalVisitors = totalOrders * 15;
     const conversionRate =
       totalVisitors > 0 ? (totalOrders / totalVisitors) * 100 : 0;
 
@@ -114,12 +105,18 @@ export async function GET(request: Request) {
       totalOrders,
       ordersChange,
       totalCustomers: uniqueCustomers,
-      customersChange: 0, // Would need historical data
+      customersChange: 0,
       conversionRate,
       recentOrders,
     });
   } catch (error) {
     console.error("Error fetching overview data:", error);
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to fetch overview data" },
       { status: 500 }

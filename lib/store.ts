@@ -55,6 +55,7 @@ interface LinkInBio {
   description?: string;
   avatar?: string;
   theme?: any;
+  slug: string;
   links: Array<{
     id: string;
     title: string;

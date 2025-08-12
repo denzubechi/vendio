@@ -18,7 +18,7 @@ const benefits = [
   {
     icon: CheckCircle,
     title: "No monthly fees",
-    description: "Only pay when you sell - 2.9% per transaction",
+    description: "Only pay when you sell - 1.3% per transaction",
     highlight: "Save $300+/year",
     color: "from-green-500 to-emerald-500",
   },

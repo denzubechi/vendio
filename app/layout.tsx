@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers/providers";
+import logo from "@/public/vendio.png";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
     "Vendio.co",
     "onchain",
   ],
+  icons: {
+    icon: "/vendio.png",
+  },
   authors: [{ name: "Vendio Team" }],
   openGraph: {
     title: "Vendio - Sell Digital Products with Crypto",
@@ -43,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "Vendio",
     images: [
       {
-        url: "./favicon.ico",
+        url: "/vendio.png",
         width: 1200,
         height: 630,
         alt: "Vendio Digital Product Platform",
@@ -57,7 +61,7 @@ export const metadata: Metadata = {
     title: "Vendio - Sell Digital Products with Crypto",
     description:
       "Create your digital storefront and sell products with cryptocurrency payments on Base blockchain. Instant, secure, and global.",
-    images: ["./favicon.ico"],
+    images: ["/vendio.png"],
   },
   robots: {
     index: true,
@@ -79,6 +83,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/vendio.png" sizes="any" />
+      </head>
       <body className={inter.className}>
         <Providers>
           <ThemeProvider

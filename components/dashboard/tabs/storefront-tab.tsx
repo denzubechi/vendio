@@ -94,7 +94,7 @@ export function StorefrontTab() {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/store?walletAddress=${address}`);
+      const response = await fetch(`/api/store`);
       if (response.ok) {
         const storeData = await response.json();
         setStore(storeData);

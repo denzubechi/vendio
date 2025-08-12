@@ -1,21 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { walletAddress } = await request.json();
+    const userId = await requireAuth(request);
 
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address is required" },
-        { status: 400 }
-      );
-    }
-
-    // Find user by wallet address
+    // Find user by the authenticated userId
     const user = await prisma.user.findUnique({
       where: {
-        walletAddress: walletAddress.toLowerCase(),
+        id: userId,
       },
       select: {
         id: true,
@@ -52,17 +46,9 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const { walletAddress, name, email, username, avatar } =
-      await request.json();
+    const userId = await requireAuth(request);
+    const { name, email, username, avatar } = await request.json();
 
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address is required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate username format if provided
     if (username) {
       const usernameRegex = /^[a-zA-Z0-9_]+$/;
       if (!usernameRegex.test(username)) {
@@ -75,12 +61,11 @@ export async function PUT(request: NextRequest) {
         );
       }
 
-      // Check if username is already taken by another user
       const existingUser = await prisma.user.findFirst({
         where: {
           username: username,
-          walletAddress: {
-            not: walletAddress.toLowerCase(),
+          id: {
+            not: userId, 
           },
         },
       });
@@ -95,10 +80,9 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // Update user
     const updatedUser = await prisma.user.update({
       where: {
-        walletAddress: walletAddress.toLowerCase(),
+        id: userId, 
       },
       data: {
         name: name || null,
@@ -123,7 +107,6 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error("Error updating user:", error);
 
-    // Handle unique constraint violation
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return NextResponse.json(
         {

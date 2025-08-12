@@ -45,9 +45,7 @@ export function OverviewTab() {
     if (!address) return;
 
     try {
-      const response = await fetch(
-        `/api/dashboard/overview?walletAddress=${address}`
-      );
+      const response = await fetch(`/api/dashboard/overview`);
       if (response.ok) {
         const data = await response.json();
         setOverviewData(data);

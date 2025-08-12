@@ -1,77 +1,81 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Eye, ExternalLink } from "lucide-react"
-import { useAccount } from "wagmi"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye, ExternalLink } from "lucide-react";
+import { useAccount } from "wagmi";
 
 interface Order {
-  id: string
-  orderNumber: string
-  totalAmount: number
-  currency: string
-  status: string
-  paymentHash: string | null
-  buyerEmail: string | null
-  buyerName: string | null
-  buyerAddress: string | null
-  createdAt: string
+  id: string;
+  orderNumber: string;
+  totalAmount: number;
+  currency: string;
+  status: string;
+  paymentHash: string | null;
+  buyerEmail: string | null;
+  buyerName: string | null;
+  buyerAddress: string | null;
+  createdAt: string;
   items: Array<{
     product: {
-      name: string
-    }
-    quantity: number
-    price: number
-  }>
+      name: string;
+    };
+    quantity: number;
+    price: number;
+  }>;
 }
 
 export function OrdersTab() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const { address } = useAccount()
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { address } = useAccount();
 
   useEffect(() => {
-    fetchOrders()
-  }, [address])
+    fetchOrders();
+  }, [address]);
 
   const fetchOrders = async () => {
-    if (!address) return
+    if (!address) return;
 
     try {
-      const response = await fetch(`/api/dashboard/orders?walletAddress=${address}`)
+      const response = await fetch(`/api/dashboard/orders`);
       if (response.ok) {
-        const data = await response.json()
-        setOrders(data)
+        const data = await response.json();
+        setOrders(data);
       }
     } catch (error) {
-      console.error("Failed to fetch orders:", error)
+      console.error("Failed to fetch orders:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "COMPLETED":
-        return "default"
+        return "default";
       case "PENDING":
-        return "secondary"
+        return "secondary";
       case "CANCELLED":
       case "REFUNDED":
-        return "destructive"
+        return "destructive";
       default:
-        return "secondary"
+        return "secondary";
     }
-  }
+  };
 
   const openTransactionInExplorer = (txHash: string) => {
-    window.open(`https://basescan.org/tx/${txHash}`, "_blank")
-  }
+    window.open(`https://basescan.org/tx/${txHash}`, "_blank");
+  };
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64">Loading orders...</div>
+    return (
+      <div className="flex items-center justify-center h-64">
+        Loading orders...
+      </div>
+    );
   }
 
   return (
@@ -86,7 +90,9 @@ export function OrdersTab() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-2">No orders yet</h3>
-              <p className="text-muted-foreground mb-4">Your orders will appear here once customers start buying</p>
+              <p className="text-muted-foreground mb-4">
+                Your orders will appear here once customers start buying
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -96,8 +102,12 @@ export function OrdersTab() {
             <Card key={order.id}>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Order #{order.orderNumber}</CardTitle>
-                  <Badge variant={getStatusColor(order.status)}>{order.status}</Badge>
+                  <CardTitle className="text-lg">
+                    Order #{order.orderNumber}
+                  </CardTitle>
+                  <Badge variant={getStatusColor(order.status)}>
+                    {order.status}
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -118,7 +128,10 @@ export function OrdersTab() {
                     <p className="text-xs text-muted-foreground">
                       {order.buyerEmail ||
                         (order.buyerAddress
-                          ? `${order.buyerAddress.slice(0, 6)}...${order.buyerAddress.slice(-4)}`
+                          ? `${order.buyerAddress.slice(
+                              0,
+                              6
+                            )}...${order.buyerAddress.slice(-4)}`
                           : "N/A")}
                     </p>
                   </div>
@@ -127,7 +140,9 @@ export function OrdersTab() {
                     <p className="font-medium">
                       ${order.totalAmount.toFixed(2)} {order.currency}
                     </p>
-                    <p className="text-xs text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
                   <div className="flex space-x-2">
                     <Button size="sm" variant="outline">
@@ -135,7 +150,13 @@ export function OrdersTab() {
                       View
                     </Button>
                     {order.paymentHash && (
-                      <Button size="sm" variant="outline" onClick={() => openTransactionInExplorer(order.paymentHash!)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          openTransactionInExplorer(order.paymentHash!)
+                        }
+                      >
                         <ExternalLink className="h-4 w-4 mr-1" />
                         Tx
                       </Button>
@@ -148,5 +169,5 @@ export function OrdersTab() {
         </div>
       )}
     </div>
-  )
+  );
 }

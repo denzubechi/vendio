@@ -116,7 +116,7 @@ model LinkInBio {
   description String?
   avatar      String?
   theme       Json?
-
+slug        String   @unique
     links       Json          @default("[]")
   projects    Json          @default("[]")
   socialUrls  Json          @default("{}")

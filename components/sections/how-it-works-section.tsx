@@ -1,182 +1,123 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Wallet, ShoppingBag, Share, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { UserPlus, Store, CreditCard, TrendingUp } from "lucide-react";
 
 const steps = [
   {
-    icon: Wallet,
-    title: "Sign up and connect your wallet",
+    icon: UserPlus,
+    title: "Sign Up & Connect",
     description:
-      "Create your account and connect your Base wallet to get started with onchain payments",
-    color: "from-purple-500 to-purple-600",
+      "Create your account and connect your crypto wallet in seconds. No complex setup required.",
+    color: "text-blue-500",
+    bgColor: "bg-blue-50 dark:bg-blue-900/20",
   },
   {
-    icon: ShoppingBag,
-    title: "Set up your store and upload your products",
+    icon: Store,
+    title: "Create Your Store",
     description:
-      "Build your digital storefront, add products, and customize your theme without any coding",
-    color: "from-blue-500 to-blue-600",
+      "Add your products, courses, or services. Upload files, set prices, and customize your storefront.",
+    color: "text-purple-500",
+    bgColor: "bg-purple-50 dark:bg-purple-900/20",
   },
   {
-    icon: Share,
-    title: "Share your store link with customers",
+    icon: CreditCard,
+    title: "Start Selling",
     description:
-      "Share your store link and start getting paid right away with instant crypto payments",
-    color: "from-green-500 to-green-600",
+      "Share your store link, payment links, or link-in-bio. Accept crypto payments instantly from anywhere.",
+    color: "text-green-500",
+    bgColor: "bg-green-50 dark:bg-green-900/20",
+  },
+  {
+    icon: TrendingUp,
+    title: "Scale & Grow",
+    description:
+      "Track your performance, engage with customers, and grow your business with powerful analytics.",
+    color: "text-orange-500",
+    bgColor: "bg-orange-50 dark:bg-orange-900/20",
   },
 ];
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Content */}
-            <div className="space-y-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">
-                  Get started in 3 simple steps
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Launch your digital store and start accepting crypto payments
-                  in minutes
-                </p>
-              </motion.div>
+    <section
+      className="py-24 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800"
+      id="howitworks"
+    >
+      <div className="container px-4 mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            How It{" "}
+            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Works
+            </span>
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Get started in minutes and begin monetizing your skills with crypto
+            payments. It's simple, fast, and powerful.
+          </p>
+        </motion.div>
 
-              <div className="space-y-6">
-                {steps.map((step, index) => (
-                  <motion.div
-                    key={step.title}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="flex items-start space-x-4"
-                  >
-                    <div
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center flex-shrink-0`}
-                    >
-                      <step.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2">
-                        {step.title}
-                      </h3>
-                      <p className="text-muted-foreground">
-                        {step.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                viewport={{ once: true }}
-              >
-                <Link href="/auth/signup">
-                  <Button
-                    size="lg"
-                    className="bg-purple-600 hover:bg-purple-700 text-white"
-                  >
-                    Get Started Now
-                    <CheckCircle className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </motion.div>
-            </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {steps.map((step, index) => (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
+              key={step.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="relative flex justify-center"
+              className="relative"
             >
-              <div className="relative max-w-md w-full">
-                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 p-8">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Wallet className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      Connect Your Wallet
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Choose your preferred wallet to get started
-                    </p>
-                  </div>
+              {/* Connection Line */}
+              {index < steps.length - 1 && (
+                <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-gray-300 to-transparent dark:from-gray-600 z-0" />
+              )}
 
-                  <div className="space-y-3">
-                    <div className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                        <span className="text-white font-bold text-sm">CB</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 dark:text-white">
-                          Coinbase Wallet
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          Connect with Coinbase
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
-                      <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
-                        <span className="text-white font-bold text-sm">MM</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 dark:text-white">
-                          MetaMask
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          Connect with MetaMask
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center justify-center text-sm text-gray-500">
-                      <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                      Secured by Base blockchain
-                    </div>
-                  </div>
+              <div className="relative z-10 text-center p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                {/* Step Number */}
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  {index + 1}
                 </div>
 
-                {/* Floating Success Card */}
-                <motion.div
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute -top-4 -right-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 shadow-lg"
+                {/* Icon */}
+                <div
+                  className={`w-16 h-16 mx-auto mb-6 rounded-2xl ${step.bgColor} flex items-center justify-center mt-4`}
                 >
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                    <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                      Connected!
-                    </span>
-                  </div>
-                </motion.div>
+                  <step.icon className={`w-8 h-8 ${step.color}`} />
+                </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {step.description}
+                </p>
               </div>
             </motion.div>
-          </div>
+          ))}
         </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 rounded-full">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              ⚡ Get started in under 5 minutes
+            </span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

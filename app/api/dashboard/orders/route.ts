@@ -1,25 +1,20 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const walletAddress = searchParams.get("walletAddress")
-
-    if (!walletAddress) {
-      return NextResponse.json({ error: "Wallet address required" }, { status: 400 })
-    }
+    const userId = await requireAuth(request);
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
-    })
+      where: { id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-
     const orders = await prisma.order.findMany({
-      where: { sellerId: user.id },
+      where: { sellerId: userId },
       include: {
         items: {
           include: {
@@ -28,11 +23,22 @@ export async function GET(request: Request) {
         },
       },
       orderBy: { createdAt: "desc" },
-    })
+    });
 
-    return NextResponse.json(orders)
+    return NextResponse.json(orders);
   } catch (error) {
-    console.error("Error fetching orders:", error)
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 })
+    console.error("Error fetching orders:", error);
+
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: "Failed to fetch orders" },
+      { status: 500 }
+    );
   }
 }

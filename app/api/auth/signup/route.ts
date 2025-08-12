@@ -1,20 +1,23 @@
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { sendEmail, emailTemplates } from "@/lib/email"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { sendEmail, emailTemplates } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, username, walletAddress } = await request.json()
+    const { name, email, username, walletAddress } = await request.json();
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [{ email }, { username }, { walletAddress }],
       },
-    })
+    });
 
     if (existingUser) {
-      return NextResponse.json({ message: "User already exists with this email, username, or wallet" }, { status: 400 })
+      return NextResponse.json(
+        { message: "User already exists with this email, username, or wallet" },
+        { status: 400 }
+      );
     }
 
     // Create new user
@@ -25,7 +28,7 @@ export async function POST(request: Request) {
         username,
         walletAddress,
       },
-    })
+    });
 
     // Create default store
     const store = await prisma.store.create({
@@ -35,27 +38,28 @@ export async function POST(request: Request) {
         description: `Welcome to ${name}'s digital store`,
         userId: user.id,
       },
-    })
+    });
 
     // Create default link in bio
     await prisma.linkInBio.create({
       data: {
         title: name,
+        slug: username,
         description: `Digital Creator & Entrepreneur`,
         links: [],
         userId: user.id,
       },
-    })
+    });
 
     // Send welcome email
     try {
-      const welcomeEmail = emailTemplates.welcome(name, username)
+      const welcomeEmail = emailTemplates.welcome(name, username);
       await sendEmail({
         to: email,
         ...welcomeEmail,
-      })
+      });
     } catch (emailError) {
-      console.error("Failed to send welcome email:", emailError)
+      console.error("Failed to send welcome email:", emailError);
       // Don't fail the signup if email fails
     }
 
@@ -70,9 +74,12 @@ export async function POST(request: Request) {
         id: store.id,
         slug: store.slug,
       },
-    })
+    });
   } catch (error) {
-    console.error("Signup error:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Signup error:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

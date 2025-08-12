@@ -1,20 +1,13 @@
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const walletAddress = searchParams.get("walletAddress");
-
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: "Wallet address required" },
-        { status: 400 }
-      );
-    }
+    const userId = await requireAuth(request);
 
     const user = await prisma.user.findUnique({
-      where: { walletAddress },
+      where: { id: userId },
       include: {
         orders: {
           where: { status: "COMPLETED" },
@@ -79,6 +72,12 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Error fetching wallet data:", error);
+    if (error instanceof Error && error.message === "Authentication required") {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to fetch wallet data" },
       { status: 500 }

@@ -46,7 +46,7 @@ export function ProductsTab() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/products?walletAddress=${address}`);
+      const response = await fetch(`/api/products`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -255,14 +255,14 @@ export function ProductsTab() {
                   </div>
 
                   <div className="flex space-x-2 pt-4">
-                    <Button
+                    {/* <Button
                       size="sm"
                       variant="outline"
                       className="flex-1 bg-transparent"
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View
-                    </Button>
+                    </Button> */}
                     <Button
                       size="sm"
                       variant="outline"
