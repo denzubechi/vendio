@@ -42,7 +42,7 @@ export function Header() {
             Features
           </button>
           <button
-            onClick={() => scrollToSection("how-it-works")}
+            onClick={() => scrollToSection("howitworks")}
             className="text-sm font-medium hover:text-primary transition-colors"
           >
             How it Works
@@ -62,7 +62,7 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <Link href="/auth/signin">
             <Button variant="ghost">Sign In</Button>
           </Link>
