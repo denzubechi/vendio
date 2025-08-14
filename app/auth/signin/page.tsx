@@ -23,7 +23,7 @@ const walletOptions = [
     popular: true,
   },
   {
-    id: "walletConnect",
+    id: "metaMask",
     name: "MetaMask",
     description: "Connect with MetaMask",
     icon: metamaskLogo,

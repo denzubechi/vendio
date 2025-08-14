@@ -39,7 +39,7 @@ export function CTASection() {
             className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
           >
             Ready to Start{" "}
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r bg-purple-300 dark:bg-purple-900 bg-clip-text text-transparent">
               Earning
             </span>{" "}
             with Crypto?
