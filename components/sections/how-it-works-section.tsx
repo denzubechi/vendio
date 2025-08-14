@@ -53,10 +53,10 @@ export function HowItWorksSection() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            How It{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Works
-            </span>
+            How It Works
+            {/* <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              
+            </span> */}
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             Get started in minutes and begin monetizing your skills with crypto
@@ -81,7 +81,7 @@ export function HowItWorksSection() {
 
               <div className="relative z-10 text-center p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
                 {/* Step Number */}
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white border border-gray-300 rounded-full flex items-center justify-center text-black text-sm font-bold">
                   {index + 1}
                 </div>
 

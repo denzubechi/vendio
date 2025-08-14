@@ -230,7 +230,7 @@ export function HeroSection() {
                 <Link href="/auth/signup">
                   <Button
                     size="lg"
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 text-lg w-full sm:w-auto"
+                    className="bg-black text-white px-8 py-4 text-lg w-full sm:w-auto"
                   >
                     Start Selling for Free
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -332,7 +332,7 @@ export function HeroSection() {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg"></div>
+                          {/* <div className="w-10 h-10 bg-gray-100 rounded-lg"></div> */}
                           <div>
                             <div className="font-medium text-gray-900 dark:text-white">
                               Digital Course

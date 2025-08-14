@@ -13,7 +13,9 @@ import {
   Filter,
   Heart,
   Share2,
-  TrendingUp,
+  MapPin,
+  Shield,
+  Zap,
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { CartDrawer } from "@/components/storefront/cart-drawer";
@@ -56,21 +58,6 @@ interface StorefrontViewProps {
   };
 }
 
-const getThemeClasses = (theme: any) => {
-  if (!theme) return "bg-gradient-to-r from-blue-500 to-purple-600";
-
-  const themeClasses = {
-    modern: "bg-gradient-to-r from-indigo-500 to-purple-600",
-    minimal: "bg-gradient-to-r from-gray-900 to-gray-600",
-    vibrant: "bg-gradient-to-r from-pink-500 to-orange-500",
-    nature: "bg-gradient-to-r from-emerald-600 to-teal-600",
-  };
-
-  return (
-    themeClasses[theme.id as keyof typeof themeClasses] || themeClasses.modern
-  );
-};
-
 export function StorefrontView({ store }: StorefrontViewProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -88,12 +75,12 @@ export function StorefrontView({ store }: StorefrontViewProps) {
       storeId: store.id,
       storeName: store.name,
     });
-    toast.success(`${product.name} added to cart! 🛒`);
+    toast.success(`${product.name} added to cart!`);
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast.success("Store link copied to clipboard! 📋");
+    toast.success("Store link copied to clipboard!");
   };
 
   const cartCount = getCartCount();
@@ -114,317 +101,291 @@ export function StorefrontView({ store }: StorefrontViewProps) {
 
   if (!store.user.walletAddress) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center max-w-md">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4">
-            Store Configuration Error
+          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Shield className="w-8 h-8 text-gray-400" />
+          </div>
+          <h1 className="text-2xl font-semibold text-gray-900 mb-3">
+            Store Setup Required
           </h1>
-          <p className="text-muted-foreground">
-            This store owner hasn't configured their wallet address yet.
+          <p className="text-gray-600 leading-relaxed">
+            This store owner needs to configure their wallet address to start
+            selling.
           </p>
         </div>
       </div>
     );
   }
 
-  const themeClass = getThemeClasses(store.theme);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950/30">
-      {/* Enhanced Store Header */}
-      <div className="relative overflow-hidden">
-        {/* Background with custom banner or theme */}
-        <div className={`absolute inset-0 ${themeClass}`} />
-        {store.banner && (
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${store.banner})` }}
-          />
-        )}
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
-
-        {/* Floating Elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-blue-300/20 rounded-full blur-xl animate-pulse delay-1000" />
-
-        <div className="container relative z-10 px-4 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
-              {/* Store Info */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 text-white text-center sm:text-left"
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 overflow-hidden">
-                    {store.logo ? (
-                      <Image
-                        src={store.logo || "/placeholder.svg"}
-                        alt={store.name}
-                        width={96}
-                        height={96}
-                        className="w-full h-full object-cover rounded-2xl"
-                      />
-                    ) : (
-                      <span className="text-2xl sm:text-3xl font-bold">
-                        {store.name.charAt(0)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full" />
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h1 className="text-3xl sm:text-4xl font-bold mb-2 break-words">
-                    {store.name}
-                  </h1>
-                  {store.description && (
-                    <p className="text-purple-100 text-base sm:text-lg mb-4 max-w-md break-words">
-                      {store.description}
-                    </p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            {/* Store Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex items-start space-x-6"
+            >
+              <div className="relative flex-shrink-0">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden">
+                  {store.logo ? (
+                    <Image
+                      src={store.logo || "/placeholder.svg"}
+                      alt={store.name}
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl font-semibold text-gray-600">
+                      {store.name.charAt(0)}
+                    </span>
                   )}
-
-                  {/* Store Stats */}
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-6">
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold text-sm sm:text-base">
-                        4.9
-                      </span>
-                      <span className="text-purple-100 text-sm">
-                        (127 reviews)
-                      </span>
-                    </div>
-                    <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
-                      {store.products.length} Products
-                    </Badge>
-                    <div className="flex items-center space-x-1 text-purple-100">
-                      <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span className="text-xs sm:text-sm">Trending</span>
-                    </div>
-                  </div>
                 </div>
-              </motion.div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full" />
+                </div>
+              </div>
 
-              {/* Action Buttons */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto"
+              <div className="flex-1 min-w-0">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                  {store.name}
+                </h1>
+                {store.description && (
+                  <p className="text-lg text-gray-600 mb-4 max-w-2xl leading-relaxed">
+                    {store.description}
+                  </p>
+                )}
+
+                {/* Store Stats */}
+                <div className="flex flex-wrap items-center gap-6">
+                  <Badge
+                    variant="secondary"
+                    className="bg-gray-100 text-gray-700"
+                  >
+                    {store.products.length} Products
+                  </Badge>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex items-center space-x-3"
+            >
+              <Button
+                variant="outline"
+                onClick={handleShare}
+                className="border-gray-200 hover:bg-gray-50 bg-transparent"
               >
-                <Button
-                  variant="outline"
-                  onClick={handleShare}
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm w-full sm:w-auto"
-                >
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Store
-                </Button>
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
 
-                <Button
-                  onClick={() => setCartOpen(true)}
-                  className="relative bg-white text-purple-600 hover:bg-gray-100 font-semibold w-full sm:w-auto"
-                >
-                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Cart
-                  {cartCount > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 sm:h-6 sm:w-6 rounded-full p-0 flex items-center justify-center text-xs bg-red-500">
-                      {cartCount}
-                    </Badge>
-                  )}
-                </Button>
-              </motion.div>
-            </div>
+              <Button
+                onClick={() => setCartOpen(true)}
+                className="relative bg-gray-900 hover:bg-gray-800 text-white"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Cart
+                {cartCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-blue-600">
+                    {cartCount}
+                  </Badge>
+                )}
+              </Button>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Search and Filter Section */}
-      <div className="container px-4 py-6 sm:py-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-col sm:flex-row gap-4 mb-8"
+        >
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 h-12 bg-white border-gray-200 focus:border-gray-300 focus:ring-0"
+            />
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div className="flex space-x-2 overflow-x-auto">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
+                  onClick={() => setSelectedCategory(category)}
+                  className={`capitalize whitespace-nowrap ${
+                    selectedCategory === category
+                      ? "bg-gray-900 hover:bg-gray-800 text-white"
+                      : "border-gray-200 hover:bg-gray-50"
+                  }`}
+                  size="sm"
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        {filteredProducts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col gap-4 mb-6 sm:mb-8"
+            className="text-center py-16"
           >
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-11 sm:h-12 bg-white/80 backdrop-blur-sm border-0 shadow-lg"
-              />
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <ShoppingCart className="w-8 h-8 text-gray-400" />
             </div>
-
-            {/* Category Filter */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2">
-              <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-              <div className="flex space-x-2">
-                {categories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={
-                      selectedCategory === category ? "default" : "outline"
-                    }
-                    onClick={() => setSelectedCategory(category)}
-                    className="capitalize whitespace-nowrap text-sm"
-                    size="sm"
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              {searchTerm || selectedCategory !== "all"
+                ? "No products found"
+                : "No products available"}
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+              {searchTerm || selectedCategory !== "all"
+                ? "Try adjusting your search or filter criteria to find what you're looking for."
+                : "This store hasn't added any products yet. Check back soon!"}
+            </p>
           </motion.div>
-        </div>
-      </div>
-
-      {/* Products Grid */}
-      <div className="container px-4 pb-12 sm:pb-16">
-        <div className="max-w-6xl mx-auto">
-          {filteredProducts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-12 sm:py-16"
-            >
-              <ShoppingCart className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg sm:text-xl font-semibold mb-2">
-                {searchTerm || selectedCategory !== "all"
-                  ? "No products found"
-                  : "No products available"}
-              </h3>
-              <p className="text-muted-foreground text-sm sm:text-base">
-                {searchTerm || selectedCategory !== "all"
-                  ? "Try adjusting your search or filter criteria"
-                  : "This store hasn't added any products yet."}
-              </p>
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {filteredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="group"
-                >
-                  <Card className="h-full overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/80 backdrop-blur-sm">
-                    {/* Product Image */}
-                    <div className="relative aspect-video bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
-                      {product.imageUrls.length > 0 ? (
-                        <Image
-                          src={product.imageUrls[0] || "/placeholder.svg"}
-                          alt={product.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <div className="text-center">
-                            <ShoppingCart className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-2" />
-                            <p className="text-gray-500 capitalize text-sm">
-                              {product.type}
-                            </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.05 }}
+                className="group"
+              >
+                <Card className="h-full overflow-hidden border-gray-200 hover:shadow-lg transition-all duration-300 bg-white">
+                  {/* Product Image */}
+                  <div className="relative aspect-square bg-gray-50 overflow-hidden">
+                    {product.imageUrls.length > 0 ? (
+                      <Image
+                        src={product.imageUrls[0] || "/placeholder.svg"}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <ShoppingCart className="w-6 h-6 text-gray-400" />
                           </div>
+                          <p className="text-gray-500 capitalize text-sm font-medium">
+                            {product.type}
+                          </p>
                         </div>
-                      )}
-
-                      {/* Product Type Badge */}
-                      <div className="absolute top-3 left-3">
-                        <Badge className="bg-black/50 text-white border-0 backdrop-blur-sm text-xs">
-                          {product.type}
-                        </Badge>
                       </div>
+                    )}
 
-                      {/* Wishlist Button */}
-                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="bg-white/80 backdrop-blur-sm border-0 h-8 w-8 p-0"
-                        >
-                          <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </Button>
-                      </div>
-
-                      {/* Overlay on Hover */}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Product Type Badge */}
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-white/90 text-gray-700 border-0 text-xs font-medium">
+                        {product.type}
+                      </Badge>
                     </div>
 
-                    <CardHeader className="pb-2 sm:pb-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base sm:text-lg line-clamp-2 group-hover:text-purple-600 transition-colors">
-                          {product.name}
-                        </CardTitle>
-                        <div className="flex items-center space-x-1 text-yellow-400 flex-shrink-0">
-                          <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
-                          <span className="text-xs sm:text-sm text-muted-foreground">
-                            4.8
+                    {/* Wishlist Button */}
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white/90 border-gray-200 h-8 w-8 p-0 hover:bg-white"
+                      >
+                        <Heart className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-2 leading-tight">
+                        {product.name}
+                      </CardTitle>
+                      <div className="flex items-center space-x-1 flex-shrink-0">
+                        <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                        <span className="text-sm text-gray-600 font-medium">
+                          4.8
+                        </span>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 mb-4 line-clamp-2 text-sm leading-relaxed">
+                      {product.description}
+                    </p>
+
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <div>
+                        <div className="text-2xl font-bold text-gray-900">
+                          ${product.price}
+                        </div>
+                        <div className="text-xs text-gray-500 font-medium">
+                          {product.currency} • Instant delivery
+                        </div>
+                      </div>
+
+                      <Button
+                        size="sm"
+                        onClick={() => handleAddToCart(product)}
+                        className="bg-gray-900 hover:bg-gray-800 text-white"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add
+                      </Button>
+                    </div>
+
+                    {/* Product Features */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1">
+                          <Zap className="w-3 h-3 text-emerald-500" />
+                          <span className="text-xs text-gray-600 font-medium">
+                            Digital
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Shield className="w-3 h-3 text-blue-500" />
+                          <span className="text-xs text-gray-600 font-medium">
+                            Secure
                           </span>
                         </div>
                       </div>
-                    </CardHeader>
-
-                    <CardContent className="pt-0">
-                      <p className="text-muted-foreground mb-3 sm:mb-4 line-clamp-2 text-xs sm:text-sm leading-relaxed">
-                        {product.description}
-                      </p>
-
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="space-y-1">
-                          <div className="text-lg sm:text-2xl font-bold text-purple-600">
-                            ${product.price} {product.currency}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Instant delivery
-                          </div>
-                        </div>
-
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAddToCart(product)}
-                          className="bg-transparent hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-all duration-300 text-xs sm:text-sm"
-                        >
-                          <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                          Add to Cart
-                        </Button>
-                      </div>
-
-                      {/* Product Features */}
-                      <div className="flex items-center justify-between mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
-                        <div className="flex items-center space-x-3 sm:space-x-4 text-xs text-muted-foreground">
-                          <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 bg-green-500 rounded-full" />
-                            <span>Digital</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full" />
-                            <span>Instant</span>
-                          </div>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          23 sold
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
+                      <div className="text-xs text-gray-500">23 sold</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Cart Drawer */}

@@ -74,7 +74,7 @@ export function Header() {
         </div>
 
         <div className="md:hidden flex items-center space-x-2">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           <Button
             variant="ghost"
             size="icon"

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function CTASection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-purple-600 via-blue-600 to-purple-700 relative overflow-hidden mx-2 rounded-2xl">
+    <section className="py-24 bg-black relative overflow-hidden mx-2 rounded-2xl">
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
@@ -102,7 +102,7 @@ export function CTASection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 bg-transparent"
+                className="border-2 border-white/30 text-white  backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 bg-transparent"
               >
                 Sign In
               </Button>

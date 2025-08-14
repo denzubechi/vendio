@@ -9,30 +9,24 @@ import { useAccount, useConnect } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Wallet,
-  ArrowRight,
-  Sparkles,
-  Shield,
-  CheckCircle,
-  Crown,
-} from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 import logo from "@/public/vendio.png";
+import coinbaseLogo from "@/public/wallet/coinbase.svg";
+import metamaskLogo from "@/public/wallet/metamask.svg";
+
 const walletOptions = [
   {
     id: "coinbaseWallet",
     name: "Coinbase Wallet",
     description: "Connect with Coinbase Wallet",
-    icon: "https://raw.githubusercontent.com/gist/taycaldwell/2291907115c0bb5589bc346661435007/raw/280eafdc84cb80ed0c60e36b4d0c563f6dca6b3e/cbw.svg",
-    color: "from-blue-500 to-blue-600",
+    icon: coinbaseLogo,
     popular: true,
   },
   {
     id: "walletConnect",
-    name: "Trust Wallet",
-    description: "Connect with Trust Wallet",
-    icon: "🛡️",
-    color: "from-blue-600 to-purple-600",
+    name: "MetaMask",
+    description: "Connect with MetaMask",
+    icon: metamaskLogo,
     popular: false,
   },
 ];
@@ -84,7 +78,7 @@ export default function SignInPage() {
       });
 
       if (response.ok) {
-        toast.success("Welcome back! 🎉");
+        toast.success("Welcome back!");
         router.push("/dashboard");
       } else {
         const error = await response.json();
@@ -98,276 +92,131 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950/20 dark:via-blue-950/20 dark:to-indigo-950/20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
-      <div className="absolute top-20 right-10 w-32 h-32 bg-blue-200/30 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 left-10 w-40 h-40 bg-purple-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
-      <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-indigo-200/30 rounded-full blur-2xl animate-pulse delay-2000" />
+    <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="w-10 h-10 relative">
+              <Image
+                src={logo || "/placeholder.svg"}
+                alt="Vendio Logo"
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+              Vendio
+            </h1>
+          </div>
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+            Welcome back
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400">
+            Connect your wallet to continue
+          </p>
+        </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
-            {/* Left Side - Welcome Back (hidden on small screens) */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8 hidden lg:block"
-            >
-              <div className="text-center lg:text-left">
+        <Card className="border border-slate-200 dark:border-slate-800">
+          <CardContent className="p-6">
+            <AnimatePresence mode="wait">
+              {!isConnected ? (
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="inline-flex items-center space-x-3 mb-6"
+                  key="connect"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-4"
                 >
-                  <div className="w-12 h-12 relative rounded-2xl bg-transparent flex items-center justify-center shadow-lg">
-                    <Image
-                      src={logo}
-                      alt="Vendio Logo"
-                      fill
-                      style={{ objectFit: "contain" }}
-                      priority
-                    />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                      Vendio
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                      Creator Economy Platform
+                  {walletOptions.map((wallet) => (
+                    <motion.button
+                      key={wallet.id}
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => handleWalletConnect(wallet.id)}
+                      disabled={selectedWallet === wallet.id}
+                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 relative">
+                          {selectedWallet === wallet.id ? (
+                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-slate-600"></div>
+                          ) : (
+                            <Image
+                              src={wallet.icon || "/placeholder.svg"}
+                              alt={`${wallet.name} icon`}
+                              fill
+                              style={{ objectFit: "contain" }}
+                            />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-slate-900 dark:text-white">
+                            {wallet.name}
+                          </div>
+                          <div className="text-sm text-slate-600 dark:text-slate-400">
+                            {wallet.description}
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                      </div>
+                    </motion.button>
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="signin"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center">
+                    <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-6 h-6 text-emerald-600" />
+                    </div>
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
+                      Wallet Connected
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      {address?.slice(0, 6)}...{address?.slice(-4)}
                     </p>
                   </div>
-                </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-                    Welcome Back,
-                    <br />
-                    <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                      Creator
-                    </span>
-                  </h2>
-                  <p className="text-xl text-muted-foreground mb-8">
-                    Continue building your digital empire. Your dashboard is
-                    waiting for you.
-                  </p>
-                </motion.div>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="space-y-6"
-              >
-                <h3 className="font-semibold text-lg">
-                  Why creators choose Vendio
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">
-                        Instant Crypto Payments
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Get paid instantly in USDC
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">
-                    <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                      <Shield className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">
-                        Secure & Decentralized
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Built on Base blockchain
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">
-                    <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">No Monthly Fees</p>
-                      <p className="text-xs text-muted-foreground">
-                        Only pay when you sell
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3 p-4 rounded-xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20">
-                    <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-                      <Wallet className="w-4 h-4 text-orange-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">Global Reach</p>
-                      <p className="text-xs text-muted-foreground">
-                        Sell to anyone, anywhere
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right Side - Sign In Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full max-w-md mx-auto"
-            >
-              <Card className="shadow-2xl border-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-                <CardContent className="p-8">
-                  <AnimatePresence mode="wait">
-                    {!isConnected ? (
-                      <motion.div
-                        key="connect"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="space-y-6"
-                      >
-                        <div className="text-center mb-8">
-                          <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                            <Wallet className="w-8 h-8 text-white" />
-                          </div>
-                          <h3 className="text-2xl font-bold mb-2">
-                            Connect Your Wallet
-                          </h3>
-                          <p className="text-muted-foreground">
-                            Connect your wallet to access your account
-                          </p>
-                        </div>
-
-                        <div className="space-y-3">
-                          {walletOptions.map((wallet) => (
-                            <motion.button
-                              key={wallet.id}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                              onClick={() => handleWalletConnect(wallet.id)}
-                              disabled={selectedWallet === wallet.id}
-                              className="w-full p-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm group disabled:opacity-50"
-                            >
-                              <div className="flex items-center space-x-4">
-                                <div
-                                  className={`w-12 h-12 rounded-xl bg-gradient-to-r ${wallet.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow`}
-                                >
-                                  {selectedWallet === wallet.id ? (
-                                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                                  ) : (
-                                    <span className="text-white font-bold text-lg">
-                                      {wallet.name.charAt(0)}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex-1 text-left">
-                                  <div className="flex items-center space-x-2">
-                                    <span className="font-semibold">
-                                      {wallet.name}
-                                    </span>
-                                    {wallet.popular && (
-                                      <Crown className="w-4 h-4 text-yellow-500" />
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">
-                                    {wallet.description}
-                                  </p>
-                                </div>
-                                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 transition-colors" />
-                              </div>
-                            </motion.button>
-                          ))}
-                        </div>
-
-                        <div className="text-center pt-4">
-                          <div className="flex items-center justify-center space-x-2 text-sm text-muted-foreground">
-                            <Shield className="w-4 h-4" />
-                            <span>Secured by Base blockchain</span>
-                          </div>
-                        </div>
-                      </motion.div>
+                  <Button
+                    onClick={handleSignIn}
+                    disabled={loading}
+                    className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900"
+                  >
+                    {loading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white dark:border-slate-900 border-t-transparent"></div>
+                        <span>Signing in...</span>
+                      </div>
                     ) : (
-                      <motion.div
-                        key="signin"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="space-y-6"
-                      >
-                        <div className="text-center mb-8">
-                          <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                            <CheckCircle className="w-8 h-8 text-white" />
-                          </div>
-                          <h3 className="text-2xl font-bold mb-2">
-                            Wallet Connected
-                          </h3>
-                          <p className="text-muted-foreground">
-                            Ready to access your dashboard
-                          </p>
-                        </div>
-
-                        <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800 mb-6">
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                            <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                              Successfully Connected
-                            </span>
-                          </div>
-                          <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                            {address?.slice(0, 6)}...{address?.slice(-4)}
-                          </p>
-                        </div>
-
-                        <Button
-                          onClick={handleSignIn}
-                          disabled={loading}
-                          className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
-                        >
-                          {loading ? (
-                            <div className="flex items-center space-x-2">
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                              <span>Signing in...</span>
-                            </div>
-                          ) : (
-                            <>
-                              Access Dashboard
-                              <ArrowRight className="ml-2 h-4 w-4" />
-                            </>
-                          )}
-                        </Button>
-                      </motion.div>
+                      <>
+                        Continue to Dashboard
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
                     )}
-                  </AnimatePresence>
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                  <div className="text-center text-sm mt-6 pt-6 border-t">
-                    Don't have an account?{" "}
-                    <Link
-                      href="/auth/signup"
-                      className="text-purple-600 hover:text-purple-700 font-medium"
-                    >
-                      Sign up
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
+            <div className="text-center text-sm mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span className="text-slate-600 dark:text-slate-400">
+                Don't have an account?{" "}
+              </span>
+              <Link
+                href="/auth/signup"
+                className="text-slate-900 dark:text-white font-medium hover:underline"
+              >
+                Sign up
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

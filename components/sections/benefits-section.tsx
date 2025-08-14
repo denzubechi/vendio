@@ -20,65 +20,54 @@ const benefits = [
     title: "No monthly fees",
     description: "Only pay when you sell - 1.3% per transaction",
     highlight: "Save $300+/year",
-    color: "from-green-500 to-emerald-500",
   },
   {
     icon: Zap,
     title: "Instant crypto payments",
     description: "Get paid in USDC with instant blockchain settlements",
     highlight: "< 3 seconds",
-    color: "from-blue-500 to-cyan-500",
   },
   {
     icon: Shield,
     title: "Built-in wallet creation",
     description: "Customers can create wallets seamlessly during checkout",
     highlight: "Zero friction",
-    color: "from-purple-500 to-violet-500",
   },
   {
     icon: TrendingUp,
     title: "Mobile-responsive storefronts",
     description: "Beautiful stores that work perfectly on all devices",
     highlight: "80% mobile traffic",
-    color: "from-orange-500 to-red-500",
   },
   {
     icon: Sparkles,
     title: "Real-time payment tracking",
     description: "Monitor all transactions with detailed analytics",
     highlight: "Live updates",
-    color: "from-pink-500 to-rose-500",
   },
   {
     icon: CheckCircle,
     title: "Decentralized and secure",
     description: "Built on Base blockchain for maximum security",
     highlight: "Bank-level security",
-    color: "from-indigo-500 to-blue-500",
   },
   {
     icon: TrendingUp,
     title: "Global accessibility",
     description: "Sell to customers in 190+ countries worldwide",
     highlight: "No borders",
-    color: "from-teal-500 to-green-500",
   },
   {
     icon: Zap,
     title: "No coding required",
     description: "Build professional stores with our drag-and-drop builder",
     highlight: "5min setup",
-    color: "from-yellow-500 to-orange-500",
   },
 ];
 
 export function BenefitsSection() {
   return (
-    <section
-      id="benefits"
-      className="py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-gray-900 dark:to-blue-950/30"
-    >
+    <section id="benefits" className="py-24 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -117,12 +106,10 @@ export function BenefitsSection() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-start space-x-4 p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-300"
+                    className="flex items-start space-x-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300"
                   >
-                    <div
-                      className={`w-10 h-10 rounded-lg bg-gradient-to-r ${benefit.color} flex items-center justify-center flex-shrink-0`}
-                    >
-                      <benefit.icon className="w-5 h-5 text-white" />
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <benefit.icon className="w-5 h-5 text-purple-600" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
@@ -157,7 +144,6 @@ export function BenefitsSection() {
               </motion.div>
             </motion.div>
 
-            {/* Right Content - Benefits Grid */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -175,18 +161,14 @@ export function BenefitsSection() {
                     viewport={{ once: true }}
                     className="group"
                   >
-                    <Card className="h-full overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                    <Card className="h-full overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-500 bg-white dark:bg-slate-900">
                       <CardContent className="p-6">
                         <div className="space-y-4">
-                          <div
-                            className={`w-12 h-12 rounded-xl bg-gradient-to-r ${benefit.color} flex items-center justify-center`}
-                          >
-                            <benefit.icon className="w-6 h-6 text-white" />
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+                            <benefit.icon className="w-6 h-6 text-purple-600" />
                           </div>
 
-                          <Badge
-                            className={`bg-gradient-to-r ${benefit.color} text-white border-0`}
-                          >
+                          <Badge className="bg-gray-200 text-gray-700 border-0">
                             {benefit.highlight}
                           </Badge>
 
@@ -212,16 +194,18 @@ export function BenefitsSection() {
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                 }}
-                className="absolute -top-4 -right-4 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 p-4 w-48"
+                className="absolute -top-4 -right-4 bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-4 w-48"
               >
                 <div className="flex items-center space-x-2 mb-2">
-                  <TrendingUp className="w-5 h-5 text-green-500" />
-                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                  <TrendingUp className="w-5 h-5 text-purple-600" />
+                  <div className="text-sm font-medium text-slate-900 dark:text-white">
                     Success Rate
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-green-600">94.7%</div>
-                <div className="text-xs text-gray-500">
+                <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  94.7%
+                </div>
+                <div className="text-xs text-muted-foreground">
                   Creators profitable in 30 days
                 </div>
               </motion.div>
