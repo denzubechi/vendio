@@ -10,7 +10,7 @@ export interface AuthUser {
 
 export async function requireAuth(request: NextRequest): Promise<string> {
   try {
-    const token = request.cookies.get("auth-token")?.value;
+    const token = request.cookies.get("vendio-auth-token")?.value;
 
     if (!token) {
       throw new Error("Authentication required");
@@ -39,7 +39,7 @@ export async function getAuthUser(
   request: NextRequest
 ): Promise<AuthUser | null> {
   try {
-    const token = request.cookies.get("auth-token")?.value;
+    const token = request.cookies.get("vendio-auth-token")?.value;
 
     if (!token) return null;
 

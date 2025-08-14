@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const token = generateToken(authUserPayload);
 
-    cookies().set("auth-token", token, {
+    cookies().set("vendio-auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

@@ -220,7 +220,7 @@ export function ModernSidebar({
               alt={user.name}
             />
             <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-              {user.name
+              {(user.name || "BaseUser")
                 .split(" ")
                 .map((n) => n[0])
                 .join("")}

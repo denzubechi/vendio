@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
-
+import { ImageUpload } from "@/components/ui/image-upload";
 interface UserData {
   id: string;
   name: string | null;
@@ -30,6 +30,7 @@ export function SettingsTab() {
     email: "",
     username: "",
   });
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [notifications, setNotifications] = useState({
     email: true,
     orders: true,
@@ -63,6 +64,7 @@ export function SettingsTab() {
           email: data.email || "",
           username: data.username || "",
         });
+        setAvatarUrl(data.avatar);
       }
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -73,7 +75,6 @@ export function SettingsTab() {
   };
 
   const validateUsername = (username: string) => {
-    // Only allow alphanumeric characters and underscores
     const regex = /^[a-zA-Z0-9_]+$/;
     return regex.test(username);
   };
@@ -100,15 +101,18 @@ export function SettingsTab() {
           name: formData.name,
           email: formData.email,
           username: formData.username,
+          avatar: avatarUrl,
         }),
       });
 
       if (response.ok) {
         const updatedUser = await response.json();
         setUserData(updatedUser);
+        setAvatarUrl(updatedUser.avatar);
         toast.success("Profile updated successfully!");
       } else {
         const error = await response.json();
+        console.log("Error updating profile:", error);
         toast.error(error.message || "Failed to update profile");
       }
     } catch (error) {
@@ -183,6 +187,17 @@ export function SettingsTab() {
             <CardTitle>Profile Settings</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Avatar</Label>
+              <ImageUpload
+                value={avatarUrl ? [avatarUrl] : []}
+                onChange={(urls) => setAvatarUrl(urls[0] || null)}
+                multiple={false}
+                maxFiles={1}
+                label="Avatar"
+                className="w-full"
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="display-name">Display Name</Label>
               <Input

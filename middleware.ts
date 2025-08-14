@@ -36,7 +36,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const tokenCookie = req.cookies.get("auth-token");
+  const tokenCookie = req.cookies.get("vendio-auth-token");
   const token = tokenCookie ? tokenCookie.value : null;
 
   const isAuthPath = AUTH_PATHS.includes(pathname);

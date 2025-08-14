@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAccount, useConnect } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import logo from "@/public/vendio.png";
 import coinbaseLogo from "@/public/wallet/coinbase.svg";
 import metamaskLogo from "@/public/wallet/metamask.svg";
@@ -38,6 +38,7 @@ export default function SignUpPage() {
     username: "",
   });
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
@@ -70,6 +71,8 @@ export default function SignUpPage() {
       return;
     }
 
+    setIsLoading(true);
+
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
@@ -91,6 +94,8 @@ export default function SignUpPage() {
       }
     } catch (error) {
       toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -222,6 +227,7 @@ export default function SignUpPage() {
                       }
                       placeholder="Your name"
                       required
+                      disabled={isLoading}
                     />
                   </div>
 
@@ -236,6 +242,7 @@ export default function SignUpPage() {
                       }
                       placeholder="your@email.com"
                       required
+                      disabled={isLoading}
                     />
                   </div>
 
@@ -249,12 +256,22 @@ export default function SignUpPage() {
                       }
                       placeholder="username"
                       required
+                      disabled={isLoading}
                     />
                   </div>
 
-                  <Button type="submit" className="w-full">
-                    Create Account
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Create Account
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
                   </Button>
                 </form>
               </motion.div>

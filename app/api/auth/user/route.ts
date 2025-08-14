@@ -43,15 +43,16 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 export async function PUT(request: NextRequest) {
   try {
     const userId = await requireAuth(request);
     const { name, email, username, avatar } = await request.json();
 
-    if (username) {
+    let newUsername = username;
+
+    if (newUsername) {
       const usernameRegex = /^[a-zA-Z0-9_]+$/;
-      if (!usernameRegex.test(username)) {
+      if (!usernameRegex.test(newUsername)) {
         return NextResponse.json(
           {
             error:
@@ -63,9 +64,9 @@ export async function PUT(request: NextRequest) {
 
       const existingUser = await prisma.user.findFirst({
         where: {
-          username: username,
+          username: newUsername,
           id: {
-            not: userId, 
+            not: userId,
           },
         },
       });
@@ -80,17 +81,17 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    const updateData: any = { updatedAt: new Date() };
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (newUsername !== undefined) updateData.username = newUsername;
+    if (avatar !== undefined) updateData.avatar = avatar;
+
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId, 
+        id: userId,
       },
-      data: {
-        name: name || null,
-        email: email || null,
-        username: username || null,
-        avatar: avatar || null,
-        updatedAt: new Date(),
-      },
+      data: updateData,
       select: {
         id: true,
         name: true,
@@ -102,6 +103,26 @@ export async function PUT(request: NextRequest) {
         updatedAt: true,
       },
     });
+
+    if (newUsername) {
+      await prisma.store.updateMany({
+        where: {
+          userId: updatedUser.id,
+        },
+        data: {
+          slug: newUsername,
+        },
+      });
+
+      await prisma.linkInBio.updateMany({
+        where: {
+          userId: updatedUser.id,
+        },
+        data: {
+          slug: newUsername,
+        },
+      });
+    }
 
     return NextResponse.json(updatedUser);
   } catch (error) {

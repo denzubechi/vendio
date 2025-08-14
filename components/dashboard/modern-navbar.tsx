@@ -63,7 +63,7 @@ export function ModernNavbar() {
                 order.amount || "0.00"
               }`,
               time: formatTimeAgo(new Date(order.createdAt || Date.now())),
-              unread: index < 2, 
+              unread: index < 2,
             })) || [];
 
           setNotifications(recentNotifications);
@@ -191,7 +191,7 @@ export function ModernNavbar() {
         </DropdownMenu>
 
         {/* Theme Toggle */}
-        <ThemeToggle />
+        {/* <ThemeToggle /> */}
       </div>
     </header>
   );

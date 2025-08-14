@@ -56,7 +56,7 @@ export default async function BioPage({ params }: BioPageProps) {
     );
     notFound();
   }
-  
+
   const userWithTypedData = {
     ...user,
     linkInBio: user.linkInBio
