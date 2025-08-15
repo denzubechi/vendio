@@ -30,6 +30,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { createBaseAccountSDK, pay } from "@base-org/account";
 import { BasePayButton } from "@base-org/account-ui/react";
+import logo from "@/public/vendio.png";
+import Image from "next/image";
 
 interface LinkInBioLink {
   id: string;
@@ -186,7 +188,6 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
           transition={{ duration: 0.6 }}
           className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
         >
-          {/* Profile Section */}
           <div className="p-6 text-center border-b border-slate-100">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -207,9 +208,9 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   </span>
                 )}
               </div>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white">
+              {/* <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-white">
                 <div className="w-2 h-2 bg-white rounded-full" />
-              </div>
+              </div> */}
             </motion.div>
 
             <motion.div
@@ -227,7 +228,6 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
               )}
             </motion.div>
 
-            {/* Social Links */}
             {bio.socialUrls &&
               Object.values(bio.socialUrls).some((url) => url) && (
                 <motion.div
@@ -258,8 +258,7 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
           </div>
 
           <div className="p-6 space-y-4">
-            {/* Featured Products */}
-            {store && store.products.length > 0 && (
+            {/* {store && store.products.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -302,60 +301,14 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   </motion.div>
                 ))}
               </motion.div>
-            )}
+            )} */}
 
-            {/* Projects Section */}
-            {bio.projects && bio.projects.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="space-y-3"
-              >
-                <h2 className="text-sm font-medium text-slate-700 mb-3">
-                  Featured Projects
-                </h2>
-                {bio.projects.slice(0, 3).map((project: any, index: number) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                  >
-                    <Card className="border-slate-200 hover:border-slate-300 transition-colors">
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          {project.image && (
-                            <img
-                              src={project.image || "/placeholder.svg"}
-                              alt={project.title}
-                              className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-slate-900 text-sm mb-1 truncate">
-                              {project.title}
-                            </h3>
-                            <p className="text-xs text-slate-600 line-clamp-2">
-                              {project.description}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-
-            {/* Action Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 }}
               className="space-y-3"
             >
-              {/* Store Link */}
               {store && (
                 <Link href={`/store/${store.slug}`}>
                   <motion.div
@@ -364,8 +317,8 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                     className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <ShoppingBag className="w-5 h-5 text-emerald-600" />
+                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <ShoppingBag className="w-5 h-5 text-purple-600" />
                       </div>
                       <div className="text-left flex-1 min-w-0">
                         <p className="font-medium text-slate-900 text-sm">
@@ -381,16 +334,15 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                 </Link>
               )}
 
-              {/* Tip Button */}
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 onClick={() => setTipModalOpen(true)}
-                className="bg-emerald-50 rounded-xl p-4 hover:bg-emerald-100 transition-colors cursor-pointer border border-emerald-200"
+                className="bg-purple-50 rounded-xl p-4 hover:bg-purple-100 transition-colors cursor-pointer border border-purple-200"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Heart className="w-5 h-5 text-emerald-600" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-5 h-5 text-purple-600" />
                   </div>
                   <div className="text-left flex-1 min-w-0">
                     <p className="font-medium text-slate-900 text-sm">
@@ -398,11 +350,10 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                     </p>
                     <p className="text-xs text-slate-600">Show your support</p>
                   </div>
-                  <Zap className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  <Zap className="w-4 h-4 text-purple-500 flex-shrink-0" />
                 </div>
               </motion.div>
 
-              {/* Custom Links */}
               {bio.links &&
                 bio.links
                   .filter((link: any) => link.isActive)
@@ -431,35 +382,93 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   ))}
             </motion.div>
           </div>
-
-          {/* Footer */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1 }}
-            className="px-6 py-4 border-t border-slate-100 text-center"
-          >
-            <p className="text-slate-500 text-xs">
-              Powered by Selar Onchain ⚡
-            </p>
-          </motion.div>
         </motion.div>
+
+        {bio.projects && bio.projects.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="space-y-3"
+          >
+            <h2 className="text-sm font-medium text-slate-700 mb-3">
+              Featured Projects
+            </h2>
+            {bio.projects.slice(0, 3).map((project: any, index: number) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+              >
+                <Link
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Card className="border-slate-200 hover:border-slate-300 transition-colors">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        {project.image && (
+                          <img
+                            src={project.image || "/placeholder.svg"}
+                            alt={project.title}
+                            className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-slate-900 text-sm mb-1 truncate">
+                            {project.title}
+                          </h3>
+                          <p className="text-xs text-slate-600 line-clamp-2">
+                            {project.description}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
 
-      {/* Tip Modal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 1.2 }}
+        className="fixed bottom-4 left-4 z-50"
+      >
+        <Link href="https://tryvendio.vercel.app">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-slate-200/50 px-3 py-2">
+            <div className="flex items-center space-x-2">
+              <span>Powered by </span>
+              <div className="flex items-center space-x-1">
+                <Image
+                  src={logo || "/placeholder.svg"}
+                  alt="Vendio"
+                  className="w-4 h-4 object-contain"
+                />
+                <span className="text-slate-800 font-bold">Vendio</span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+
       <Dialog open={tipModalOpen} onOpenChange={setTipModalOpen}>
         <DialogContent className="sm:max-w-md mx-4">
           <DialogHeader>
             <DialogTitle className="flex items-center text-lg">
-              <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-                <Heart className="w-4 h-4 text-emerald-600" />
+              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                <Heart className="w-4 h-4 text-purple-600" />
               </div>
               Send a Tip to {bio.title}
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
-            {/* Quick Amount Presets */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Quick Amount (USD)</Label>
               <div className="grid grid-cols-4 gap-2">
@@ -477,7 +486,6 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
               </div>
             </div>
 
-            {/* Custom Amount */}
             <div className="space-y-2">
               <Label htmlFor="tip-amount" className="text-sm font-medium">
                 Custom Amount (USD)
@@ -492,7 +500,6 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
               />
             </div>
 
-            {/* Tipper Info */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="tipper-name" className="text-sm font-medium">
@@ -519,7 +526,6 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
               </div>
             </div>
 
-            {/* Message */}
             <div className="space-y-2">
               <Label htmlFor="tip-message" className="text-sm font-medium">
                 Message (Optional)

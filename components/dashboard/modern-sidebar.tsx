@@ -189,12 +189,12 @@ export function ModernSidebar({
   ];
 
   const linkItems = [
-    {
-      id: "events",
-      label: "Events",
-      icon: Calendar,
-      href: "/dashboard/events",
-    },
+    // {
+    //   id: "events",
+    //   label: "Events",
+    //   icon: Calendar,
+    //   href: "/dashboard/events",
+    // },
     {
       id: "link-in-bio-preview",
       label: "Link in Bio Preview",

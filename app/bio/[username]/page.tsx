@@ -62,7 +62,6 @@ export default async function BioPage({ params }: BioPageProps) {
     linkInBio: user.linkInBio
       ? {
           ...user.linkInBio,
-          // Use type assertions to cast the generic JsonValue to specific types
           theme: user.linkInBio.theme as LinkInBioTheme | null,
           links: user.linkInBio.links as LinkInBioLink[] | null,
           projects: user.linkInBio.projects as any[] | null,

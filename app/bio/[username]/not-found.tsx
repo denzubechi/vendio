@@ -4,7 +4,7 @@ import { User, ArrowLeft, Home } from "lucide-react";
 
 export default function BioNotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 via-purple-600 to-blue-600 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-purple-950/30 flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <div className="mb-8">
           <div className="w-24 h-24 mx-auto mb-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">

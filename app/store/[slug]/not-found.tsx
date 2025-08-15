@@ -36,13 +36,17 @@ export default function StoreNotFound() {
           </div>
 
           <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+            <h3 className="font-semibold text-gray-900 dark:text-blue-100 mb-2">
               Looking to create your own store?
             </h3>
-            <p className="text-sm text-blue-700 dark:text-blue-200 mb-3">
+            <p className="text-sm text-purple-700 dark:text-blue-200 mb-3">
               Start selling your digital products with Vendio today.
             </p>
-            <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+            <Button
+              asChild
+              size="sm"
+              className="bg-purple-600 hover:bg-purple-700"
+            >
               <Link href="/auth/signup">Get Started</Link>
             </Button>
           </div>

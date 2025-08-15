@@ -4,9 +4,7 @@ import { requireAuth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = await requireAuth(request); // Authenticate the user
-
-    // Find the user and their linkInBio using the authenticated userId
+    const userId = await requireAuth(request);
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -98,10 +96,19 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const userId = await requireAuth(request); // Authenticate the user
+    const userId = await requireAuth(request);
 
-    const { linkInBioId, title, description, avatar, theme, links, isActive } =
-      await request.json();
+    const {
+      linkInBioId,
+      title,
+      description,
+      avatar,
+      theme,
+      links,
+      socialUrls,
+      projects,
+      isActive,
+    } = await request.json();
 
     // Ensure the linkInBioId belongs to the authenticated user
     const existingLinkInBio = await prisma.linkInBio.findUnique({
@@ -123,8 +130,10 @@ export async function PUT(request: NextRequest) {
         description,
         avatar,
         theme,
+        socialUrls,
         links,
         isActive,
+        projects,
         updatedAt: new Date(),
       },
     });

@@ -1,5 +1,3 @@
-// /app/api/payment-links/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { OrderStatus } from "@prisma/client";
 import { requireAuth } from "@/lib/auth";

@@ -30,6 +30,7 @@ import {
 import { toast } from "sonner";
 import { useStore } from "@/lib/store";
 import { useAccount } from "wagmi";
+import { url } from "inspector";
 
 const bioThemes = [
   {
@@ -85,6 +86,7 @@ interface ProjectItem {
   id: string;
   title: string;
   description: string;
+  url: string;
   image: string;
   isActive: boolean;
 }
@@ -113,17 +115,11 @@ export function LinkInBioTab() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [linkDialog, setLinkDialog] = useState({
-    open: false,
-    editing: null as string | null,
-    title: "",
-    url: "",
-  });
-
   const [projectDialog, setProjectDialog] = useState({
     open: false,
     editing: null as string | null,
     title: "",
+    url: "",
     description: "",
     image: "",
   });
@@ -138,6 +134,7 @@ export function LinkInBioTab() {
         title: linkInBio.title || "",
         description: linkInBio.description || "",
         avatar: linkInBio.avatar || "",
+
         theme: linkInBio.theme
           ? bioThemes.find((t) => t.id === linkInBio.theme.id) || bioThemes[0]
           : bioThemes[0],
@@ -238,6 +235,7 @@ export function LinkInBioTab() {
               ? {
                   ...project,
                   title: projectDialog.title,
+                  url: projectDialog.url || "",
                   description: projectDialog.description,
                   image: projectDialog.image,
                 }
@@ -248,6 +246,7 @@ export function LinkInBioTab() {
         const newProject: ProjectItem = {
           id: Date.now().toString(),
           title: projectDialog.title,
+          url: projectDialog.url || "",
           description: projectDialog.description,
           image: projectDialog.image,
           isActive: true,
@@ -258,6 +257,7 @@ export function LinkInBioTab() {
         open: false,
         editing: null,
         title: "",
+        url: "",
         description: "",
         image: "",
       });
@@ -269,6 +269,7 @@ export function LinkInBioTab() {
       open: true,
       editing: project.id,
       title: project.title,
+      url: project.url,
       description: project.description,
       image: project.image,
     });
@@ -494,7 +495,7 @@ export function LinkInBioTab() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Links</CardTitle>
+                <CardTitle>Special Links</CardTitle>
                 <Button size="sm" onClick={addLink}>
                   <Plus className="mr-2 h-4 w-4" />
                   Add Link
@@ -545,7 +546,6 @@ export function LinkInBioTab() {
                     </div>
                   </div>
                 ))}
-
                 {links.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <p>No links added yet</p>
@@ -559,7 +559,6 @@ export function LinkInBioTab() {
             </CardContent>
           </Card>
 
-          {/* Projects Management */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -578,6 +577,7 @@ export function LinkInBioTab() {
                           open: true,
                           editing: null,
                           title: "",
+                          url: "",
                           description: "",
                           image: "",
                         })
@@ -627,6 +627,20 @@ export function LinkInBioTab() {
                         />
                       </div>
                       <div className="space-y-2">
+                        <Label htmlFor="projectDescription">Url</Label>
+                        <Input
+                          id="projectUrl"
+                          value={projectDialog.url}
+                          onChange={(e) =>
+                            setProjectDialog({
+                              ...projectDialog,
+                              url: e.target.value,
+                            })
+                          }
+                          placeholder="Link to your project"
+                        />
+                      </div>
+                      <div className="space-y-2">
                         <Label htmlFor="projectDescription">Description</Label>
                         <Textarea
                           id="projectDescription"
@@ -649,6 +663,7 @@ export function LinkInBioTab() {
                               open: false,
                               editing: null,
                               title: "",
+                              url: "",
                               description: "",
                               image: "",
                             })
@@ -834,7 +849,7 @@ export function LinkInBioTab() {
       </div>
 
       {/* Theme Selection */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Theme Selection</CardTitle>
         </CardHeader>
@@ -858,7 +873,7 @@ export function LinkInBioTab() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }
