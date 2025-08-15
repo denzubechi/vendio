@@ -285,7 +285,7 @@ export function StorefrontTab() {
         </Card>
       </div>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Theme Selection</CardTitle>
         </CardHeader>
@@ -323,10 +323,10 @@ export function StorefrontTab() {
             ))}
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Preview */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Preview</CardTitle>
         </CardHeader>
@@ -386,7 +386,7 @@ export function StorefrontTab() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

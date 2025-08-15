@@ -290,14 +290,14 @@ export function LinkInBioTab() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Link in Bio</h1>
           <div className="flex space-x-2">
-            <Button disabled>
+            {/* <Button disabled>
               <Copy className="mr-2 h-4 w-4" />
               Copy URL
-            </Button>
-            <Button disabled>
+            </Button> */}
+            {/* <Button disabled>
               <ExternalLink className="mr-2 h-4 w-4" />
               Preview
-            </Button>
+            </Button> */}
             <Button disabled>
               <Save className="mr-2 h-4 w-4" />
               Save Changes
