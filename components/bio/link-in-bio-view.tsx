@@ -208,9 +208,9 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   </span>
                 )}
               </div>
-              {/* <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-white">
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-700 rounded-full flex items-center justify-center border-2 border-white">
                 <div className="w-2 h-2 bg-white rounded-full" />
-              </div> */}
+              </div>
             </motion.div>
 
             <motion.div
@@ -325,7 +325,7 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                           Visit My Store
                         </p>
                         <p className="text-xs text-slate-600">
-                          Browse all products
+                          Browse all my products
                         </p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-slate-400 flex-shrink-0" />

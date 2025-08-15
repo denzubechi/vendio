@@ -139,8 +139,8 @@ model Event {
   mode        EventMode        @default(ONLINE)
   price       Float            @default(0)
   currency    String           @default("USDC")
-  location    String?          // for physical venue
-  onlineUrl   String?          // for online link
+  location    String?         
+  onlineUrl   String?         
   startAt     DateTime
   endAt       DateTime?
   capacity    Int?
