@@ -68,12 +68,10 @@ interface LinkInBio {
 }
 
 interface StoreState {
-  // User state
   user: User | null;
   setUser: (user: User | null) => void;
   updateUser: (updates: Partial<User>) => void;
 
-  // Products state
   products: Product[];
   setProducts: (products: Product[]) => void;
   addProduct: (product: Product) => void;
@@ -82,17 +80,14 @@ interface StoreState {
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
 
-  // Store state
   store: Store | null;
   setStore: (store: Store | null) => void;
   updateStore: (updates: Partial<Store>) => void;
 
-  // Link in Bio state
   linkInBio: LinkInBio | null;
   setLinkInBio: (linkInBio: LinkInBio | null) => void;
   updateLinkInBio: (updates: Partial<LinkInBio>) => void;
 
-  // Cart state
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (productId: string) => void;
@@ -101,13 +96,11 @@ interface StoreState {
   getCartTotal: () => number;
   getCartCount: () => number;
 
-  // UI state
   activeTab: string;
   setActiveTab: (tab: string) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
 
-  // Filters
   productFilters: {
     search: string;
     category: string;
@@ -116,7 +109,6 @@ interface StoreState {
   };
   setProductFilters: (filters: Partial<StoreState["productFilters"]>) => void;
 
-  // Modal states
   showAddProductModal: boolean;
   setShowAddProductModal: (show: boolean) => void;
   showEditProductModal: boolean;
@@ -126,7 +118,6 @@ interface StoreState {
 export const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
-      // User state
       user: null,
       setUser: (user) => set({ user }),
       updateUser: (updates) =>
@@ -134,7 +125,6 @@ export const useStore = create<StoreState>()(
           user: state.user ? { ...state.user, ...updates } : null,
         })),
 
-      // Products state
       products: [],
       setProducts: (products) => set({ products }),
       addProduct: (product) =>
@@ -154,7 +144,6 @@ export const useStore = create<StoreState>()(
       selectedProduct: null,
       setSelectedProduct: (product) => set({ selectedProduct: product }),
 
-      // Store state
       store: null,
       setStore: (store) => set({ store }),
       updateStore: (updates) =>
@@ -162,7 +151,6 @@ export const useStore = create<StoreState>()(
           store: state.store ? { ...state.store, ...updates } : null,
         })),
 
-      // Link in Bio state
       linkInBio: null,
       setLinkInBio: (linkInBio) => set({ linkInBio }),
       updateLinkInBio: (updates) =>
@@ -172,7 +160,6 @@ export const useStore = create<StoreState>()(
             : null,
         })),
 
-      // Cart state
       cart: [],
       addToCart: (item) =>
         set((state) => {
@@ -236,7 +223,6 @@ export const useStore = create<StoreState>()(
           productFilters: { ...state.productFilters, ...filters },
         })),
 
-      // Modal states
       showAddProductModal: false,
       setShowAddProductModal: (show) => set({ showAddProductModal: show }),
       showEditProductModal: false,

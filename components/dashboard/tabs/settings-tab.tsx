@@ -308,23 +308,23 @@ export function SettingsTab() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <Label htmlFor="auto-withdraw">Auto Withdraw</Label>
             <Switch id="auto-withdraw" />
-          </div>
+          </div> */}
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="withdraw-threshold">
               Withdraw Threshold (USDC)
             </Label>
             <Input id="withdraw-threshold" type="number" defaultValue="100" />
           </div>
 
-          <Button>Save Payment Settings</Button>
+          <Button>Save Payment Settings</Button> */}
         </CardContent>
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Danger Zone</CardTitle>
         </CardHeader>
@@ -338,7 +338,7 @@ export function SettingsTab() {
             <Button variant="destructive">Delete Account</Button>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

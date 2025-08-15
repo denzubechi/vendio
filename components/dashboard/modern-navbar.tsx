@@ -94,10 +94,27 @@ export function ModernNavbar() {
     return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     disconnect();
-    router.push("/");
-    toast.success("Disconnected successfully");
+
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        toast.success("Logged out successfully");
+        router.push("/");
+      } else {
+        toast.error("Logout failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Logout API call error:", error);
+      toast.error("An error occurred during logout.");
+    }
   };
 
   const unreadCount = notifications.filter((n) => n.unread).length;

@@ -55,39 +55,14 @@ export function CTASection() {
             their skills with Vendio. Start your journey today - it's free to
             get started!
           </motion.p>
-          {/* <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
-          >
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">
-                $0
-              </div>
-              <div className="text-white/80">Setup Cost</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">
-                5min
-              </div>
-              <div className="text-white/80">To Get Started</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">
-                24/7
-              </div>
-              <div className="text-white/80">Global Payments</div>
-            </div>
-          </motion.div> */}
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
             viewport={{ once: true }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            // Centralize the single button
+            className="flex justify-center"
           >
             <Link href="/auth/signup">
               <Button
@@ -96,15 +71,6 @@ export function CTASection() {
               >
                 Start Your Store Now
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/auth/signin">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-white/30 text-white  backdrop-blur-sm px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 bg-transparent"
-              >
-                Sign In
               </Button>
             </Link>
           </motion.div>

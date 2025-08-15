@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const { name, email, username, walletAddress } = await request.json();
 
-    // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [{ email }, { username }, { walletAddress }],
@@ -20,7 +19,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create new user
     const user = await prisma.user.create({
       data: {
         name,
@@ -30,7 +28,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Create default store
     const store = await prisma.store.create({
       data: {
         name: `${name}'s Store`,
@@ -40,7 +37,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Create default link in bio
     await prisma.linkInBio.create({
       data: {
         title: name,
@@ -51,7 +47,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send welcome email
     try {
       const welcomeEmail = emailTemplates.welcome(name, username);
       await sendEmail({
@@ -60,7 +55,6 @@ export async function POST(request: Request) {
       });
     } catch (emailError) {
       console.error("Failed to send welcome email:", emailError);
-      // Don't fail the signup if email fails
     }
 
     return NextResponse.json({

@@ -161,7 +161,6 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                   </p>
                 )}
 
-                {/* Store Stats */}
                 <div className="flex flex-wrap items-center gap-6">
                   <Badge
                     variant="secondary"

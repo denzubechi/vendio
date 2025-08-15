@@ -19,11 +19,14 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Relations
   stores        Store[]
   products      Product[]
   orders        Order[]
   linkInBio     LinkInBio?
+  paymentLinks      PaymentLink[]
+
+  events        Event[]         
+  registrations EventRegistration[] @relation("UserEventRegistrations")
 
   @@map("users")
 }
@@ -40,7 +43,6 @@ model Store {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   userId      String   @db.ObjectId
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   products    Product[]
@@ -58,13 +60,12 @@ model Product {
   type        ProductType
   category    String?
   imageUrls   String[]
-  files       String[]    // For digital products
+  files       String[]    
   isActive    Boolean     @default(true)
-  inventory   Int?        // For physical products
+  inventory   Int?        
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  // Relations
   userId      String      @db.ObjectId
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   storeId     String      @db.ObjectId
@@ -84,11 +85,10 @@ model Order {
   paymentHash   String?
   buyerEmail    String
   buyerName     String?
-  buyerAddress  String?     // Wallet address
+  buyerAddress  String?    
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
-  // Relations
   sellerId      String      @db.ObjectId
   seller        User        @relation(fields: [sellerId], references: [id])
   items         OrderItem[]
@@ -101,7 +101,6 @@ model OrderItem {
   quantity  Int    @default(1)
   price     Float
   
-  // Relations
   orderId   String  @db.ObjectId
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId String  @db.ObjectId
@@ -116,21 +115,107 @@ model LinkInBio {
   description String?
   avatar      String?
   theme       Json?
-slug        String   @unique
-    links       Json          @default("[]")
+  slug        String   @unique
+  links       Json          @default("[]")
   projects    Json          @default("[]")
   socialUrls  Json          @default("{}")
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // Relations
   userId      String   @unique @db.ObjectId
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("link_in_bio")
 }
 
+model Event {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String           @unique
+  description String?
+  banner      String?
+  type        EventType        @default(FREE)
+  mode        EventMode        @default(ONLINE)
+  price       Float            @default(0)
+  currency    String           @default("USDC")
+  location    String?          // for physical venue
+  onlineUrl   String?          // for online link
+  startAt     DateTime
+  endAt       DateTime?
+  capacity    Int?
+  visibility  EventVisibility  @default(PUBLIC)
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  creatorId   String           @db.ObjectId
+  creator     User             @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  registrations EventRegistration[]
+
+  @@map("events")
+}
+model EventRegistration {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  code        String      @unique
+  attendeeName  String?
+  attendeeEmail String
+  attendeeWalletAddress String?
+  status      RegistrationStatus @default(CONFIRMED)
+  paymentTxHash String?
+  createdAt   DateTime    @default(now())
+
+  eventId     String      @db.ObjectId
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId      String?     @db.ObjectId
+  user        User?       @relation("UserEventRegistrations", fields: [userId], references: [id])
+
+  @@unique([eventId, attendeeEmail])
+  @@map("event_registrations")
+}
+
+
+model PaymentLink {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  description    String?
+  type           String
+  price          Float
+  currency       String      @default("USDC")
+  slug           String      @unique
+  imageUrl       String?
+  digitalFileUrl String?
+  allowTips      Boolean     @default(false)
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  creatorId      String      @db.ObjectId
+  creator        User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  purchases      Purchase[]  
+
+  @@map("payment_links")
+}
+
+model Purchase {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  purchaseNumber  String      @unique
+  totalAmount   Float
+  currency      String      @default("USDC")
+  status        OrderStatus @default(PENDING)
+  paymentHash   String?
+  buyerEmail    String
+  buyerName     String?
+  buyerAddress  String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  paymentLinkId String      @db.ObjectId
+  paymentLink   PaymentLink @relation(fields: [paymentLinkId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
+}
 enum ProductType {
   DIGITAL
   PHYSICAL
@@ -145,4 +230,24 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   REFUNDED
+}
+enum EventType {
+  FREE
+  PAID
+}
+
+enum EventMode {
+  ONLINE
+  PHYSICAL
+}
+
+enum EventVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum RegistrationStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CANCELLED
 }

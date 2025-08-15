@@ -55,7 +55,7 @@ interface PaymentLink {
   revenue: number;
 }
 
-export default function PaymentLinksPage() {
+export default function PaymentLinkTab() {
   const [paymentLinks, setPaymentLinks] = useState<PaymentLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -97,7 +97,7 @@ export default function PaymentLinksPage() {
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin  border-primary" />
       </div>
     );
   }

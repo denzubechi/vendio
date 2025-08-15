@@ -10,9 +10,9 @@ import logo from "@/public/vendio.png";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vendio - Sell Digital Products with Crypto",
+  title: "Vendio - Turn Your Creativity into Crypto",
   description:
-    "Create your digital storefront and sell products with cryptocurrency payments on Base blockchain. Instant, secure, and global.",
+    "Empower your creativity with Vendio's suite of creator and business tools. Build a digital storefront, sell courses, accept crypto tips, and get paid instantly on the Base blockchain.",
   keywords: [
     "digital products",
     "sell",
@@ -34,15 +34,31 @@ export const metadata: Metadata = {
     "Vendio",
     "Vendio.co",
     "onchain",
+    "creator tools",
+    "business tools",
+    "digital products",
+    "online selling",
+    "crypto payments",
+    "Base blockchain",
+    "e-commerce",
+    "digital storefront",
+    "creator economy",
+    "web3",
+    "link in bio",
+    "global tips",
+    "course creation",
+    "payment links",
+    "analytics dashboard",
+    "Vendio",
   ],
   icons: {
     icon: "/vendio.png",
   },
   authors: [{ name: "Vendio Team" }],
   openGraph: {
-    title: "Vendio - Sell Digital Products with Crypto",
+    title: "Vendio - Your All-in-One Creator Platform",
     description:
-      "Create your digital storefront and sell products with cryptocurrency payments on Base blockchain. Instant, secure, and global.",
+      "Showcase your work, sell digital products, and manage your business with Vendio's powerful creator tools. Instant crypto payments, secure storefronts, and detailed analytics.",
     url: "https://tryvendio.vercel.app",
     siteName: "Vendio",
     images: [
@@ -60,7 +76,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Vendio - Sell Digital Products with Crypto",
     description:
-      "Create your digital storefront and sell products with cryptocurrency payments on Base blockchain. Instant, secure, and global.",
+      "Build your brand and monetize your creativity with Vendio. From custom 'Link in Bio' pages to smart storefronts and instant crypto payments, we've got you covered.",
     images: ["/vendio.png"],
   },
   robots: {
