@@ -79,19 +79,6 @@ export default function DashboardPage() {
     fetchUserData();
   }, [address, isConnected]);
 
-  // if (!isConnected) {
-  //   return (
-  //     <div className="flex min-h-screen items-center justify-center">
-  //       <div className="text-center">
-  //         <h1 className="text-2xl font-bold mb-4">Connect Your Wallet</h1>
-  //         <p className="text-muted-foreground">
-  //           Please connect your wallet to access the dashboard.
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
