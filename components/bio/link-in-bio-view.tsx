@@ -389,11 +389,9 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="space-y-3"
+            className="space-y-3 mt-4"
           >
-            <h2 className="text-sm font-medium text-slate-700 mb-3">
-              Featured Projects
-            </h2>
+            <h2 className="font-bold text-slate-700 my-3">Featured Projects</h2>
             {bio.projects.slice(0, 3).map((project: any, index: number) => (
               <motion.div
                 key={project.id}
