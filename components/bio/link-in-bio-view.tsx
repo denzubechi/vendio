@@ -22,6 +22,7 @@ import {
   Sparkles,
   Instagram,
   Linkedin,
+  Wallet,
   Zap,
   Shield,
 } from "lucide-react";
@@ -29,8 +30,12 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { createBaseAccountSDK, pay } from "@base-org/account";
-import { BasePayButton } from "@base-org/account-ui/react";
+import {
+  SignInWithBaseButton,
+  BasePayButton,
+} from "@base-org/account-ui/react";
 import logo from "@/public/vendio.png";
+import { useAccount } from "wagmi";
 
 import Image from "next/image";
 interface LinkInBioLink {
@@ -99,6 +104,8 @@ const getSocialIcon = (platform: string) => {
 };
 
 export function LinkInBioView({ user }: LinkInBioViewProps) {
+  const { address, isConnected } = useAccount();
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [tipModalOpen, setTipModalOpen] = useState(false);
   const [tipAmount, setTipAmount] = useState("");
   const [tipMessage, setTipMessage] = useState("");
@@ -111,6 +118,17 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
   const sdk = createBaseAccountSDK({
     appName: "Vendio",
   });
+
+  const handleSignIn = async () => {
+    try {
+      await sdk.getProvider().request({ method: "wallet_connect" });
+      setIsSignedIn(true);
+      toast.success("Connected to Base Account!");
+    } catch (error) {
+      console.error("Sign in failed:", error);
+      toast.error("Failed to connect wallet");
+    }
+  };
 
   const handleTip = async () => {
     if (!tipAmount || !tipperName || !tipperEmail) {
@@ -402,7 +420,7 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
       </motion.div>
 
       <Dialog open={tipModalOpen} onOpenChange={setTipModalOpen}>
-        <DialogContent className="sm:max-w-lg mx-4 bg-white/95 backdrop-blur-md border-white/20 rounded-2xl">
+        <DialogContent className="sm:max-w-lg mx-4 bg-white/95 backdrop-blur-md border-white/20 rounded-2xl overflow-y-auto max-h-[90vh]">
           <DialogHeader className="pb-6">
             <DialogTitle className="flex items-center text-xl">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
@@ -502,8 +520,32 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
             </div>
 
             <div className="space-y-4 pt-2">
-              <BasePayButton colorScheme="light" onClick={handleTip} />
-
+              {!isSignedIn ? (
+                <div className="text-center p-6 border-2 border-dashed border-muted rounded-lg">
+                  <Wallet className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground mb-4">
+                    Connect your Base Account to continue
+                  </p>
+                  <SignInWithBaseButton
+                    align="center"
+                    variant="solid"
+                    colorScheme="light"
+                    onClick={handleSignIn}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                        ✅ Wallet Connected
+                      </span>
+                    </div>
+                  </div>
+                  <BasePayButton colorScheme="light" onClick={handleTip} />
+                </div>
+              )}
               <div className="flex items-center justify-center space-x-6 text-xs text-slate-500">
                 <div className="flex items-center space-x-2">
                   <Shield className="w-4 h-4" />

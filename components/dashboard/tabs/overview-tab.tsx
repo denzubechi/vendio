@@ -207,7 +207,7 @@ export function OverviewTab() {
             <Link href="/dashboard?tab=products">
               <Button className="w-full justify-start">
                 <Plus className="mr-2 h-4 w-4" />
-                Add New Product
+                Create Payment Link
               </Button>
             </Link>
             <Link href="/dashboard?tab=orders">

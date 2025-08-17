@@ -250,7 +250,6 @@ export function CheckoutModal({
                     </div>
                   </div>
 
-                  {/* Base Account Integration */}
                   <div className="space-y-4">
                     {!isSignedIn ? (
                       <div className="text-center p-6 border-2 border-dashed border-muted rounded-lg">
@@ -271,7 +270,7 @@ export function CheckoutModal({
                           <div className="flex items-center space-x-2">
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                             <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                              ✅ Connected to Base Account
+                              ✅ Wallet Connected
                             </span>
                           </div>
                         </div>

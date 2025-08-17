@@ -273,7 +273,7 @@ export function PaymentLinkDialog({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="USDC">USDC</SelectItem>
-                      <SelectItem value="ETH">ETH</SelectItem>
+                      {/* <SelectItem value="ETH">ETH</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </div>
