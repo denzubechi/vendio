@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useAccount } from "wagmi";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { ModernSidebar } from "@/components/dashboard/modern-sidebar";
@@ -21,7 +21,8 @@ interface UserData {
   } | null;
 }
 
-export default function DashboardPage() {
+// Create a separate component to handle the useSearchParams hook
+function DashboardPageContent() {
   const { address, isConnected } = useAccount();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
@@ -112,5 +113,14 @@ export default function DashboardPage() {
         </SidebarInset>
       </div>
     </SidebarProvider>
+  );
+}
+
+// The main page component that wraps the content in a Suspense boundary
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardPageContent />
+    </Suspense>
   );
 }
