@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -14,7 +13,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import logo from "@/public/vendio.png";
-import { ConnectWallet } from "@coinbase/onchainkit/wallet";
+
+import { WalletUI } from "@/components/WalletUI";
 
 export default function SignUpPage() {
   const [step, setStep] = useState(1);
@@ -27,7 +27,6 @@ export default function SignUpPage() {
   const { address, isConnected } = useAccount();
 
   useEffect(() => {
-    // This effect now simply checks for connection status to advance the step
     if (isConnected && step === 1) {
       setStep(2);
     }
@@ -134,9 +133,9 @@ export default function SignUpPage() {
                     Choose your wallet to continue
                   </p>
                 </div>
-                {/* Replace custom wallet buttons with ConnectWallet component */}
                 <div className="w-full">
-                  <ConnectWallet />
+                  {/* Use the new WalletUI component here */}
+                  <WalletUI />
                 </div>
               </motion.div>
             )}
@@ -209,7 +208,11 @@ export default function SignUpPage() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full rounded-md bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                  >
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

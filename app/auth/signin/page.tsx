@@ -11,7 +11,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import logo from "@/public/vendio.png";
-import { ConnectWallet } from "@coinbase/onchainkit/wallet";
+
+// Import the new WalletUI component
+import { WalletUI } from "@/components/WalletUI";
 
 export default function SignInPage() {
   const { address, isConnected } = useAccount();
@@ -93,9 +95,9 @@ export default function SignInPage() {
                       Choose your wallet to continue
                     </p>
                   </div>
-                  {/* The single ConnectWallet component replaces the custom buttons */}
+                  {/* The single WalletUI component replaces the custom buttons */}
                   <div className="w-full">
-                    <ConnectWallet />
+                    <WalletUI />
                   </div>
                 </motion.div>
               ) : (
