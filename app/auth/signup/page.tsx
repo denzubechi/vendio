@@ -133,7 +133,7 @@ export default function SignUpPage() {
                     Choose your wallet to continue
                   </p>
                 </div>
-                <div className="w-full">
+                <div className="w-full border border-slate-400 dark:border-slate-600 rounded-md p-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
                   {/* Use the new WalletUI component here */}
                   <WalletUI />
                 </div>

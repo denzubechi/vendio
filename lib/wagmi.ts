@@ -1,6 +1,12 @@
 import { http, createConfig } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
-import { coinbaseWallet, metaMask } from "wagmi/connectors";
+import {
+  coinbaseWallet,
+  metaMask,
+  walletConnect,
+  injected,
+  safe,
+} from "wagmi/connectors";
 
 export function getConfig() {
   return createConfig({
@@ -8,8 +14,17 @@ export function getConfig() {
     connectors: [
       coinbaseWallet({
         appName: "Vendio",
+        preference: "all",
       }),
       metaMask(),
+      walletConnect({
+        projectId:
+          process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ||
+          "4cc53a01d40ad4850a382034c72ea252",
+        showQrModal: false,
+      }),
+      injected(),
+      safe(),
     ],
     transports: {
       [base.id]: http(),

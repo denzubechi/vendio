@@ -95,8 +95,9 @@ export default function SignInPage() {
                       Choose your wallet to continue
                     </p>
                   </div>
-                  {/* The single WalletUI component replaces the custom buttons */}
-                  <div className="w-full">
+
+                  {/* The WalletUI component is wrapped in a div with button-like styling */}
+                  <div className="w-full border border-slate-400 dark:border-slate-600 rounded-md p-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
                     <WalletUI />
                   </div>
                 </motion.div>
