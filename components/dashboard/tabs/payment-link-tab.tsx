@@ -93,7 +93,7 @@ export default function PaymentLinkTab() {
   }, []);
 
   const copyLink = (slug: string) => {
-    const url = `${window.location.origin}/pay/${slug}`;
+    const url = `${window.location.origin}/pay-with-vendio/${slug}`;
     navigator.clipboard.writeText(url);
     toast({
       title: "Link copied!",
@@ -112,7 +112,7 @@ export default function PaymentLinkTab() {
   };
 
   const handleDialogSuccess = () => {
-    fetchPaymentLinks(); // Refresh the list
+    fetchPaymentLinks();
   };
 
   const filteredLinks = paymentLinks.filter((link) =>
@@ -290,7 +290,7 @@ export default function PaymentLinkTab() {
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
                               <a
-                                href={`/pay/${link.slug}`}
+                                href={`/pay-with-vendio/${link.slug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
