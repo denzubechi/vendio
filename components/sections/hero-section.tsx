@@ -237,14 +237,16 @@ export function HeroSection() {
                   </Button>
                 </Link>
 
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="px-8 py-4 text-lg bg-transparent w-full sm:w-auto"
-                >
-                  <Play className="mr-2 h-5 w-5" />
-                  Watch Demo
-                </Button>
+                <Link href="/bio/samuel">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="px-8 py-4 text-lg bg-transparent w-full sm:w-auto"
+                  >
+                    <Play className="mr-2 h-5 w-5" />
+                    View Demo
+                  </Button>
+                </Link>
               </motion.div>
 
               {/* Stats */}
