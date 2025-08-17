@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -8,13 +9,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import logo from "@/public/vendio.png";
+import coinbaseLogo from "@/public/wallet/coinbase.svg";
+import metamaskLogo from "@/public/wallet/metamask.svg";
 
-import { WalletUI } from "@/components/WalletUI";
+// Remove WalletConnect from the wallet options
+const walletOptions = [
+  {
+    id: "coinbaseWallet",
+    name: "Coinbase Wallet",
+    icon: coinbaseLogo,
+  },
+  {
+    id: "metaMask",
+    name: "MetaMask",
+    icon: metamaskLogo,
+  },
+];
 
 export default function SignUpPage() {
   const [step, setStep] = useState(1);
@@ -23,14 +38,30 @@ export default function SignUpPage() {
     email: "",
     username: "",
   });
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { address, isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
 
+  // Check for an existing connection on initial load
   useEffect(() => {
-    if (isConnected && step === 1) {
+    if (isConnected) {
       setStep(2);
     }
-  }, [isConnected, step]);
+  }, [isConnected]);
+
+  const handleWalletConnect = (walletId: string) => {
+    setSelectedWallet(walletId);
+
+    // Find the connector based on its id from the wagmi configuration
+    const connector = connectors.find((c) => c.id === walletId);
+
+    if (connector) {
+      connect({ connector });
+    } else {
+      toast.error(`Connector for ${walletId} not found.`);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,9 +164,30 @@ export default function SignUpPage() {
                     Choose your wallet to continue
                   </p>
                 </div>
-                <div className="w-full border border-slate-400 dark:border-slate-600 rounded-md p-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
-                  {/* Use the new WalletUI component here */}
-                  <WalletUI />
+
+                <div className="space-y-3">
+                  {walletOptions.map((wallet) => (
+                    <button
+                      key={wallet.id}
+                      onClick={() => handleWalletConnect(wallet.id)}
+                      disabled={selectedWallet === wallet.id}
+                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center p-2">
+                          <Image
+                            src={wallet.icon || "/placeholder.svg"}
+                            alt={`${wallet.name} logo`}
+                            width={24}
+                            height={24}
+                            className="w-6 h-6"
+                          />
+                        </div>
+                        <span className="font-medium">{wallet.name}</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 ml-auto" />
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </motion.div>
             )}
@@ -208,11 +260,7 @@ export default function SignUpPage() {
                     />
                   </div>
 
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full rounded-md bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

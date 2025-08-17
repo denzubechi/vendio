@@ -5,20 +5,59 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import logo from "@/public/vendio.png";
+import coinbaseLogo from "@/public/wallet/coinbase.svg";
+import metamaskLogo from "@/public/wallet/metamask.svg";
 
-// Import the new WalletUI component
-import { WalletUI } from "@/components/WalletUI";
+const walletOptions = [
+  {
+    id: "coinbaseWallet",
+    name: "Coinbase Wallet",
+    description: "Connect with Coinbase Wallet",
+    icon: coinbaseLogo,
+    popular: true,
+  },
+  {
+    id: "metaMask",
+    name: "MetaMask",
+    description: "Connect with MetaMask",
+    icon: metamaskLogo,
+    popular: false,
+  },
+];
 
 export default function SignInPage() {
   const { address, isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+
+  // Use useEffect to check for an existing connection on initial load
+  useEffect(() => {
+    // We don't need to do anything here. The !isConnected check handles the UI flow.
+    // The AnimatePresence component automatically handles the transition based on the isConnected state.
+  }, [isConnected]);
+
+  const handleWalletConnect = async (walletId: string) => {
+    setSelectedWallet(walletId);
+    // Find the connector based on its ID directly from the wagmi config
+    const connector = connectors.find((c) => c.id === walletId);
+
+    if (connector) {
+      try {
+        await connect({ connector });
+      } catch (error) {
+        toast.error("Failed to connect wallet");
+        setSelectedWallet(null);
+      }
+    }
+  };
 
   const handleSignIn = async () => {
     if (!isConnected) {
@@ -89,17 +128,40 @@ export default function SignInPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-4"
                 >
-                  <div className="text-center mb-6">
-                    <h3 className="text-lg font-medium mb-2">Connect Wallet</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Choose your wallet to continue
-                    </p>
-                  </div>
-
-                  {/* The WalletUI component is wrapped in a div with button-like styling */}
-                  <div className="w-full border border-slate-400 dark:border-slate-600 rounded-md p-1.5 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
-                    <WalletUI />
-                  </div>
+                  {walletOptions.map((wallet) => (
+                    <motion.button
+                      key={wallet.id}
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => handleWalletConnect(wallet.id)}
+                      disabled={selectedWallet === wallet.id}
+                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 relative">
+                          {selectedWallet === wallet.id ? (
+                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-slate-600"></div>
+                          ) : (
+                            <Image
+                              src={wallet.icon || "/placeholder.svg"}
+                              alt={`${wallet.name} icon`}
+                              fill
+                              style={{ objectFit: "contain" }}
+                            />
+                          )}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-slate-900 dark:text-white">
+                            {wallet.name}
+                          </div>
+                          <div className="text-sm text-slate-600 dark:text-slate-400">
+                            {wallet.description}
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                      </div>
+                    </motion.button>
+                  ))}
                 </motion.div>
               ) : (
                 <motion.div
