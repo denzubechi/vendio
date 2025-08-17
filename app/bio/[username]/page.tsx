@@ -10,6 +10,7 @@ interface LinkInBioLink {
   id: string;
   title: string;
   url: string;
+  isActive: boolean;
 }
 
 interface LinkInBioSocials {

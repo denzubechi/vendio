@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   Plus,
   Search,
@@ -42,6 +41,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { PaymentLinkDialog } from "../add-payment-link-dialog";
 
 interface PaymentLink {
   id: string;
@@ -50,9 +50,14 @@ interface PaymentLink {
   type: string;
   price: number;
   isActive: boolean;
-  views: number;
+  views?: number;
   purchases: number;
   revenue: number;
+  description?: string;
+  currency?: string;
+  allowTips?: boolean;
+  imageUrl?: string;
+  digitalFileUrl?: string;
 }
 
 export default function PaymentLinkTab() {
@@ -60,24 +65,30 @@ export default function PaymentLinkTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingPaymentLink, setEditingPaymentLink] =
+    useState<PaymentLink | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    async function fetchPaymentLinks() {
-      try {
-        const response = await fetch("/api/payment-links");
-        if (!response.ok) {
-          throw new Error("Failed to fetch payment links");
-        }
-        const data = await response.json();
-        setPaymentLinks(data);
-      } catch (error) {
-        setIsError(true);
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+  const fetchPaymentLinks = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/dashboard/payment-link");
+      if (!response.ok) {
+        throw new Error("Failed to fetch payment links");
       }
+      const data = await response.json();
+      setPaymentLinks(data);
+      setIsError(false);
+    } catch (error) {
+      setIsError(true);
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchPaymentLinks();
   }, []);
 
@@ -90,6 +101,20 @@ export default function PaymentLinkTab() {
     });
   };
 
+  const handleCreateNew = () => {
+    setEditingPaymentLink(null);
+    setDialogOpen(true);
+  };
+
+  const handleEdit = (paymentLink: PaymentLink) => {
+    setEditingPaymentLink(paymentLink);
+    setDialogOpen(true);
+  };
+
+  const handleDialogSuccess = () => {
+    fetchPaymentLinks(); // Refresh the list
+  };
+
   const filteredLinks = paymentLinks.filter((link) =>
     link.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -97,7 +122,7 @@ export default function PaymentLinkTab() {
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin  border-primary" />
+        <Loader2 className="h-8 w-8 animate-spin border-primary" />
       </div>
     );
   }
@@ -113,24 +138,24 @@ export default function PaymentLinkTab() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Payment Links</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Payment Links
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Create and manage payment links for your products, services, and
             invoices.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/payment-links/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Create Payment Link
-          </Link>
+        <Button onClick={handleCreateNew} className="w-full sm:w-auto">
+          <Plus className="mr-2 h-4 w-4" />
+          Create Payment Link
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Links</CardTitle>
@@ -142,19 +167,7 @@ export default function PaymentLinkTab() {
             </p>
           </CardContent>
         </Card>
-        {/* <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {paymentLinks
-                .reduce((sum, link) => sum + link.views, 0)
-                .toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">Across all links</p>
-          </CardContent>
-        </Card> */}
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
@@ -166,6 +179,7 @@ export default function PaymentLinkTab() {
             <p className="text-xs text-muted-foreground">Successful payments</p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -190,7 +204,7 @@ export default function PaymentLinkTab() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -200,23 +214,31 @@ export default function PaymentLinkTab() {
                 className="pl-8"
               />
             </div>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full sm:w-auto bg-transparent"
+            >
               <Filter className="mr-2 h-4 w-4" />
               Filter
             </Button>
           </div>
 
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Views</TableHead>
-                  <TableHead>Sales</TableHead>
-                  <TableHead>Revenue</TableHead>
+                  <TableHead className="min-w-[150px]">Title</TableHead>
+                  <TableHead className="min-w-[80px]">Type</TableHead>
+                  <TableHead className="min-w-[80px]">Price</TableHead>
+                  <TableHead className="min-w-[80px]">Status</TableHead>
+                  <TableHead className="min-w-[80px] hidden sm:table-cell">
+                    Views
+                  </TableHead>
+                  <TableHead className="min-w-[80px]">Sales</TableHead>
+                  <TableHead className="min-w-[100px] hidden md:table-cell">
+                    Revenue
+                  </TableHead>
                   <TableHead className="w-[70px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -225,10 +247,12 @@ export default function PaymentLinkTab() {
                   filteredLinks.map((link) => (
                     <TableRow key={link.id}>
                       <TableCell className="font-medium">
-                        {link.title}
+                        <div className="max-w-[200px] truncate">
+                          {link.title}
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="text-xs">
                           {link.type.toLowerCase()}
                         </Badge>
                       </TableCell>
@@ -236,13 +260,18 @@ export default function PaymentLinkTab() {
                       <TableCell>
                         <Badge
                           variant={link.isActive ? "default" : "secondary"}
+                          className="text-xs"
                         >
                           {link.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{link.views.toLocaleString()}</TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        {link.views?.toLocaleString() || 0}
+                      </TableCell>
                       <TableCell>{link.purchases}</TableCell>
-                      <TableCell>${link.revenue.toLocaleString()}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        ${link.revenue.toLocaleString()}
+                      </TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -260,27 +289,27 @@ export default function PaymentLinkTab() {
                               Copy link
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/pay/${link.slug}`} target="_blank">
+                              <a
+                                href={`/pay/${link.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <ExternalLink className="mr-2 h-4 w-4" />
                                 View page
-                              </Link>
+                              </a>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem asChild>
-                              <Link
-                                href={`/dashboard/payment-links/${link.id}/edit`}
-                              >
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </Link>
+                            <DropdownMenuItem onClick={() => handleEdit(link)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link
+                              <a
                                 href={`/dashboard/payment-links/${link.id}/analytics`}
                               >
                                 <Eye className="mr-2 h-4 w-4" />
                                 Analytics
-                              </Link>
+                              </a>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive">
@@ -304,6 +333,13 @@ export default function PaymentLinkTab() {
           </div>
         </CardContent>
       </Card>
+
+      <PaymentLinkDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        paymentLink={editingPaymentLink}
+        onSuccess={handleDialogSuccess}
+      />
     </div>
   );
 }

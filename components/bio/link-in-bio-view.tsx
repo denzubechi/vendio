@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
   ExternalLink,
   ShoppingBag,
@@ -20,6 +19,7 @@ import {
   Globe,
   Github,
   Twitter,
+  Sparkles,
   Instagram,
   Linkedin,
   Zap,
@@ -31,12 +31,13 @@ import { motion } from "framer-motion";
 import { createBaseAccountSDK, pay } from "@base-org/account";
 import { BasePayButton } from "@base-org/account-ui/react";
 import logo from "@/public/vendio.png";
-import Image from "next/image";
 
+import Image from "next/image";
 interface LinkInBioLink {
   id: string;
   title: string;
   url: string;
+  isActive: boolean;
 }
 
 interface LinkInBioSocials {
@@ -180,256 +181,201 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="container max-w-md mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-        >
-          <div className="p-6 text-center border-b border-slate-100">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative mb-4"
-            >
-              <div className="w-20 h-20 rounded-full bg-slate-100 mx-auto flex items-center justify-center overflow-hidden">
-                {bio.avatar ? (
-                  <img
-                    src={bio.avatar || "/placeholder.svg"}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-2xl font-semibold text-slate-600">
-                    {bio.title.charAt(0)}
-                  </span>
-                )}
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-200">
+      <div className="container max-w-md sm:max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 py-6 sm:py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-12 2xl:gap-16">
+          {/* Main Profile Card */}
+          <div className="lg:col-span-4 xl:col-span-3 2xl:col-span-3">
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden sticky top-6 animate-in slide-in-from-bottom duration-700">
+              <div className="relative p-8 text-center bg-gradient-to-br from-purple-50 via-white to-blue-50 border-b border-slate-100/50">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 to-blue-100/20" />
+
+                <div className="relative mb-6 animate-in zoom-in duration-500 delay-100">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 mx-auto flex items-center justify-center overflow-hidden shadow-lg ring-4 ring-white/50">
+                    {bio.avatar ? (
+                      <img
+                        src={bio.avatar || "/placeholder.svg"}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-3xl font-bold text-slate-600">
+                        {bio.title.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-purple-600 to-purple-700 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                </div>
+
+                <div className="animate-in slide-in-from-bottom duration-500 delay-200">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+                    {bio.title}
+                  </h1>
+                  {bio.description && (
+                    <p className="text-slate-600 text-base leading-relaxed mb-6 max-w-sm mx-auto">
+                      {bio.description}
+                    </p>
+                  )}
+                </div>
+
+                {bio.socialUrls &&
+                  Object.values(bio.socialUrls).some((url) => url) && (
+                    <div className="flex justify-center gap-3 animate-in slide-in-from-bottom duration-500 delay-300">
+                      {Object.entries(bio.socialUrls).map(([platform, url]) => {
+                        if (!url) return null;
+                        const IconComponent = getSocialIcon(platform);
+                        return (
+                          <a
+                            key={platform}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:bg-white hover:shadow-lg transition-all duration-200 border border-slate-200/50 hover:scale-110 hover:-translate-y-1"
+                          >
+                            <IconComponent className="w-5 h-5 text-slate-700" />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
               </div>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-700 rounded-full flex items-center justify-center border-2 border-white">
-                <div className="w-2 h-2 bg-white rounded-full" />
-              </div>
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <h1 className="text-xl font-semibold text-slate-900 mb-1">
-                {bio.title}
-              </h1>
-              {bio.description && (
-                <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                  {bio.description}
-                </p>
-              )}
-            </motion.div>
-
-            {bio.socialUrls &&
-              Object.values(bio.socialUrls).some((url) => url) && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="flex justify-center gap-2"
-                >
-                  {Object.entries(bio.socialUrls).map(([platform, url]) => {
-                    if (!url) return null;
-                    const IconComponent = getSocialIcon(platform);
-                    return (
-                      <motion.a
-                        key={platform}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-9 h-9 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors"
-                      >
-                        <IconComponent className="w-4 h-4 text-slate-600" />
-                      </motion.a>
-                    );
-                  })}
-                </motion.div>
-              )}
-          </div>
-
-          <div className="p-6 space-y-4">
-            {/* {store && store.products.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="space-y-3"
-              >
-                <h2 className="text-sm font-medium text-slate-700 mb-3">
-                  Featured Products
-                </h2>
-                {store.products.slice(0, 2).map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                  >
-                    <Card className="border-slate-200 hover:border-slate-300 transition-colors">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-slate-900 mb-1 text-sm truncate">
-                              {product.name}
-                            </h3>
-                            <Badge variant="secondary" className="text-xs">
-                              ${product.price} {product.currency}
-                            </Badge>
+              <div className="p-6 space-y-4">
+                <div className="space-y-3 animate-in slide-in-from-bottom duration-500 delay-400">
+                  {store && (
+                    <Link href={`/store/${store.slug}`}>
+                      <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-5 hover:from-purple-100 hover:to-blue-100 transition-all duration-300 cursor-pointer border border-purple-200/50 shadow-sm hover:shadow-md hover:scale-[1.02] hover:-translate-y-1">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                            <ShoppingBag className="w-6 h-6 text-white" />
                           </div>
-                          <Link href={`/store/${store.slug}`}>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="text-xs bg-transparent"
-                            >
-                              View
-                            </Button>
-                          </Link>
+                          <div className="text-left flex-1 min-w-0">
+                            <p className="font-semibold text-slate-900 text-base">
+                              Visit My Store
+                            </p>
+                            <p className="text-sm text-slate-600">
+                              Browse all my products
+                            </p>
+                          </div>
+                          <ExternalLink className="w-5 h-5 text-slate-400 flex-shrink-0" />
                         </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )} */}
+                      </div>
+                    </Link>
+                  )}
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="space-y-3"
-            >
-              {store && (
-                <Link href={`/store/${store.slug}`}>
-                  <motion.div
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200"
+                  <div
+                    onClick={() => setTipModalOpen(true)}
+                    className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-5 hover:from-pink-100 hover:to-purple-100 transition-all duration-300 cursor-pointer border border-pink-200/50 shadow-sm hover:shadow-md hover:scale-[1.02] hover:-translate-y-1"
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <ShoppingBag className="w-5 h-5 text-purple-600" />
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <Heart className="w-6 h-6 text-white" />
                       </div>
                       <div className="text-left flex-1 min-w-0">
-                        <p className="font-medium text-slate-900 text-sm">
-                          Visit My Store
+                        <p className="font-semibold text-slate-900 text-base">
+                          Send a Tip
                         </p>
-                        <p className="text-xs text-slate-600">
-                          Browse all my products
+                        <p className="text-sm text-slate-600">
+                          Show your support
                         </p>
                       </div>
-                      <ExternalLink className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                      <Zap className="w-5 h-5 text-purple-500 flex-shrink-0" />
                     </div>
-                  </motion.div>
-                </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Links and Projects Section */}
+          <div className="lg:col-span-8 xl:col-span-9 2xl:col-span-9 space-y-8">
+            {bio.links &&
+              bio.links.filter((link: any) => link.isActive).length > 0 && (
+                <div className="space-y-5 animate-in slide-in-from-bottom duration-500 delay-500">
+                  <h2 className="text-2xl font-bold text-slate-800 mb-6 px-2">
+                    Quick Links
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {bio.links
+                      .filter((link: any) => link.isActive)
+                      .map((link: any, index: number) => (
+                        <Link
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block group animate-in slide-in-from-bottom duration-500"
+                          style={{ animationDelay: `${600 + index * 100}ms` }}
+                        >
+                          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 hover:bg-white transition-all duration-300 border border-slate-200/50 shadow-sm hover:shadow-lg group-hover:border-slate-300/50 hover:scale-[1.02] hover:-translate-y-1">
+                            <div className="flex items-center space-x-4">
+                              <div className="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-slate-200 group-hover:to-slate-300 transition-all duration-300">
+                                <Globe className="w-6 h-6 text-slate-600" />
+                              </div>
+                              <span className="font-semibold text-slate-900 text-base flex-1 min-w-0 truncate group-hover:text-slate-700 transition-colors">
+                                {link.title}
+                              </span>
+                              <ExternalLink className="w-5 h-5 text-slate-400 flex-shrink-0 group-hover:text-slate-600 transition-colors" />
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                  </div>
+                </div>
               )}
 
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => setTipModalOpen(true)}
-                className="bg-purple-50 rounded-xl p-4 hover:bg-purple-100 transition-colors cursor-pointer border border-purple-200"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Heart className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div className="text-left flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 text-sm">
-                      Send a Tip
-                    </p>
-                    <p className="text-xs text-slate-600">Show your support</p>
-                  </div>
-                  <Zap className="w-4 h-4 text-purple-500 flex-shrink-0" />
+            {bio.projects && bio.projects.length > 0 && (
+              <div className="space-y-5 animate-in slide-in-from-bottom duration-500 delay-700">
+                <h2 className="text-2xl font-bold text-slate-800 mb-6 px-2">
+                  Featured Projects
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+                  {bio.projects
+                    .slice(0, 6)
+                    .map((project: any, index: number) => (
+                      <div
+                        key={project.id}
+                        className="group animate-in slide-in-from-bottom duration-500"
+                        style={{ animationDelay: `${800 + index * 100}ms` }}
+                      >
+                        <Link
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Card className="border-slate-200/50 hover:border-slate-300/50 transition-all duration-300 bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm hover:shadow-lg overflow-hidden hover:scale-[1.02] hover:-translate-y-1 h-full">
+                            <CardContent className="p-6">
+                              <div className="flex items-start gap-4">
+                                {project.image && (
+                                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-slate-100 to-slate-200">
+                                    <img
+                                      src={project.image || "/placeholder.svg"}
+                                      alt={project.title}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-slate-900 text-lg mb-2 truncate group-hover:text-slate-700 transition-colors">
+                                    {project.title}
+                                  </h3>
+                                  <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
+                                    {project.description}
+                                  </p>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      </div>
+                    ))}
                 </div>
-              </motion.div>
-
-              {bio.links &&
-                bio.links
-                  .filter((link: any) => link.isActive)
-                  .map((link: any, index: number) => (
-                    <motion.a
-                      key={link.id}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="block"
-                    >
-                      <div className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors border border-slate-200">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Globe className="w-5 h-5 text-slate-600" />
-                          </div>
-                          <span className="font-medium text-slate-900 text-sm flex-1 min-w-0 truncate">
-                            {link.title}
-                          </span>
-                          <ExternalLink className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                        </div>
-                      </div>
-                    </motion.a>
-                  ))}
-            </motion.div>
+              </div>
+            )}
           </div>
-        </motion.div>
-
-        {bio.projects && bio.projects.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="space-y-3 mt-4"
-          >
-            <h2 className="font-bold text-slate-700 my-3">Featured Projects</h2>
-            {bio.projects.slice(0, 3).map((project: any, index: number) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-              >
-                <Link
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Card className="border-slate-200 hover:border-slate-300 transition-colors">
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        {project.image && (
-                          <img
-                            src={project.image || "/placeholder.svg"}
-                            alt={project.title}
-                            className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
-                          />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-slate-900 text-sm mb-1 truncate">
-                            {project.title}
-                          </h3>
-                          <p className="text-xs text-slate-600 line-clamp-2">
-                            {project.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
+        </div>
       </div>
 
       <motion.div
@@ -456,26 +402,28 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
       </motion.div>
 
       <Dialog open={tipModalOpen} onOpenChange={setTipModalOpen}>
-        <DialogContent className="sm:max-w-md mx-4">
-          <DialogHeader>
-            <DialogTitle className="flex items-center text-lg">
-              <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                <Heart className="w-4 h-4 text-purple-600" />
+        <DialogContent className="sm:max-w-lg mx-4 bg-white/95 backdrop-blur-md border-white/20 rounded-2xl">
+          <DialogHeader className="pb-6">
+            <DialogTitle className="flex items-center text-xl">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                <Heart className="w-5 h-5 text-white" />
               </div>
               Send a Tip to {bio.title}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Quick Amount (USD)</Label>
-              <div className="grid grid-cols-4 gap-2">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold text-slate-700">
+                Quick Amount (USD)
+              </Label>
+              <div className="grid grid-cols-4 gap-3">
                 {["5", "10", "25", "50"].map((amount) => (
                   <Button
                     key={amount}
                     variant={tipAmount === amount ? "default" : "outline"}
                     onClick={() => setTipAmount(amount)}
-                    className="h-10 text-sm"
+                    className="h-12 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
                     size="sm"
                   >
                     ${amount}
@@ -484,8 +432,11 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tip-amount" className="text-sm font-medium">
+            <div className="space-y-3">
+              <Label
+                htmlFor="tip-amount"
+                className="text-sm font-semibold text-slate-700"
+              >
                 Custom Amount (USD)
               </Label>
               <Input
@@ -495,12 +446,16 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                 value={tipAmount}
                 onChange={(e) => setTipAmount(e.target.value)}
                 placeholder="Enter amount"
+                className="h-12 rounded-xl border-slate-200 focus:border-purple-300 focus:ring-purple-200 transition-all duration-200"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="tipper-name" className="text-sm font-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <Label
+                  htmlFor="tipper-name"
+                  className="text-sm font-semibold text-slate-700"
+                >
                   Your Name *
                 </Label>
                 <Input
@@ -508,10 +463,14 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   value={tipperName}
                   onChange={(e) => setTipperName(e.target.value)}
                   placeholder="Your name"
+                  className="h-12 rounded-xl border-slate-200 focus:border-purple-300 focus:ring-purple-200 transition-all duration-200"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="tipper-email" className="text-sm font-medium">
+              <div className="space-y-3">
+                <Label
+                  htmlFor="tipper-email"
+                  className="text-sm font-semibold text-slate-700"
+                >
                   Your Email *
                 </Label>
                 <Input
@@ -520,12 +479,16 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                   value={tipperEmail}
                   onChange={(e) => setTipperEmail(e.target.value)}
                   placeholder="your@email.com"
+                  className="h-12 rounded-xl border-slate-200 focus:border-purple-300 focus:ring-purple-200 transition-all duration-200"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tip-message" className="text-sm font-medium">
+            <div className="space-y-3">
+              <Label
+                htmlFor="tip-message"
+                className="text-sm font-semibold text-slate-700"
+              >
                 Message (Optional)
               </Label>
               <Textarea
@@ -534,23 +497,24 @@ export function LinkInBioView({ user }: LinkInBioViewProps) {
                 onChange={(e) => setTipMessage(e.target.value)}
                 placeholder="Say something nice..."
                 rows={3}
+                className="rounded-xl border-slate-200 focus:border-purple-300 focus:ring-purple-200 resize-none transition-all duration-200"
               />
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4 pt-2">
               <BasePayButton colorScheme="light" onClick={handleTip} />
 
-              <div className="flex items-center justify-center space-x-4 text-xs text-slate-500">
-                <div className="flex items-center space-x-1">
-                  <Shield className="w-3 h-3" />
+              <div className="flex items-center justify-center space-x-6 text-xs text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4" />
                   <span>Secure</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Zap className="w-3 h-3" />
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-4 h-4" />
                   <span>Instant</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Globe className="w-3 h-3" />
+                <div className="flex items-center space-x-2">
+                  <Globe className="w-4 h-4" />
                   <span>Global</span>
                 </div>
               </div>

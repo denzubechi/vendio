@@ -328,7 +328,7 @@ export function LinkInBioTab() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Link in Bio</h1>
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={copyBioUrl}>
+          {/* <Button variant="outline" onClick={copyBioUrl}>
             <Copy className="mr-2 h-4 w-4" />
             Copy URL
           </Button>
@@ -338,7 +338,7 @@ export function LinkInBioTab() {
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             Preview
-          </Button>
+          </Button> */}
           <Button onClick={handleSave} disabled={saving}>
             <Save className="mr-2 h-4 w-4" />
             {saving ? "Saving..." : "Save Changes"}

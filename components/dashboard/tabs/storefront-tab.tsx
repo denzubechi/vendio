@@ -157,10 +157,10 @@ export function StorefrontTab() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Storefront</h1>
           <div className="flex gap-2">
-            <Button disabled>
+            {/* <Button disabled>
               <ExternalLink className="mr-2 h-4 w-4" />
               Preview Store
-            </Button>
+            </Button> */}
             <Button disabled>
               <Save className="mr-2 h-4 w-4" />
               Save Changes
@@ -191,13 +191,13 @@ export function StorefrontTab() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Storefront</h1>
         <div className="flex gap-2">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={() => window.open(storeUrl, "_blank")}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             Preview Store
-          </Button>
+          </Button> */}
           <Button onClick={handleSave} disabled={saving}>
             <Save className="mr-2 h-4 w-4" />
             {saving ? "Saving..." : "Save Changes"}
