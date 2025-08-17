@@ -30,7 +30,7 @@ interface PaymentLinkViewProps {
   };
 }
 
-export function SimplePaymentView({ paymentLink }: PaymentLinkViewProps) {
+export function PaymentLinkView({ paymentLink }: PaymentLinkViewProps) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   const formatPrice = (price: number, currency: string) => {

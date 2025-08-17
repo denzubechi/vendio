@@ -9,26 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import logo from "@/public/vendio.png";
-import coinbaseLogo from "@/public/wallet/coinbase.svg";
-import metamaskLogo from "@/public/wallet/metamask.svg";
-
-const walletOptions = [
-  {
-    id: "coinbaseWallet",
-    name: "Coinbase Wallet",
-    icon: coinbaseLogo,
-  },
-  {
-    id: "metaMask",
-    name: "MetaMask",
-    icon: metamaskLogo,
-  },
-];
+import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 
 export default function SignUpPage() {
   const [step, setStep] = useState(1);
@@ -37,31 +23,15 @@ export default function SignUpPage() {
     email: "",
     username: "",
   });
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
 
   useEffect(() => {
+    // This effect now simply checks for connection status to advance the step
     if (isConnected && step === 1) {
       setStep(2);
     }
   }, [isConnected, step]);
-
-  const handleWalletConnect = (walletId: string) => {
-    setSelectedWallet(walletId);
-    const connector = connectors.find(
-      (c) =>
-        c.name.toLowerCase().includes(walletId.toLowerCase()) ||
-        (walletId === "coinbaseWallet" &&
-          c.name.toLowerCase().includes("coinbase")) ||
-        (walletId === "metaMask" && c.name.toLowerCase().includes("metamask"))
-    );
-
-    if (connector) {
-      connect({ connector });
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,30 +134,9 @@ export default function SignUpPage() {
                     Choose your wallet to continue
                   </p>
                 </div>
-
-                <div className="space-y-3">
-                  {walletOptions.map((wallet) => (
-                    <button
-                      key={wallet.id}
-                      onClick={() => handleWalletConnect(wallet.id)}
-                      disabled={selectedWallet === wallet.id}
-                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center p-2">
-                          <Image
-                            src={wallet.icon || "/placeholder.svg"}
-                            alt={`${wallet.name} logo`}
-                            width={24}
-                            height={24}
-                            className="w-6 h-6"
-                          />
-                        </div>
-                        <span className="font-medium">{wallet.name}</span>
-                        <ArrowRight className="w-4 h-4 text-slate-400 ml-auto" />
-                      </div>
-                    </button>
-                  ))}
+                {/* Replace custom wallet buttons with ConnectWallet component */}
+                <div className="w-full">
+                  <ConnectWallet />
                 </div>
               </motion.div>
             )}

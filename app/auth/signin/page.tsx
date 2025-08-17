@@ -1,63 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import logo from "@/public/vendio.png";
-import coinbaseLogo from "@/public/wallet/coinbase.svg";
-import metamaskLogo from "@/public/wallet/metamask.svg";
-
-const walletOptions = [
-  {
-    id: "coinbaseWallet",
-    name: "Coinbase Wallet",
-    description: "Connect with Coinbase Wallet",
-    icon: coinbaseLogo,
-    popular: true,
-  },
-  {
-    id: "metaMask",
-    name: "MetaMask",
-    description: "Connect with MetaMask",
-    icon: metamaskLogo,
-    popular: false,
-  },
-];
+import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 
 export default function SignInPage() {
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
-
-  const handleWalletConnect = async (walletId: string) => {
-    setSelectedWallet(walletId);
-    const connector = connectors.find(
-      (c) =>
-        c.name.toLowerCase().includes(walletId.toLowerCase()) ||
-        (walletId === "coinbaseWallet" &&
-          c.name.toLowerCase().includes("coinbase")) ||
-        (walletId === "walletConnect" &&
-          c.name.toLowerCase().includes("walletconnect"))
-    );
-
-    if (connector) {
-      try {
-        await connect({ connector });
-      } catch (error) {
-        toast.error("Failed to connect wallet");
-        setSelectedWallet(null);
-      }
-    }
-  };
 
   const handleSignIn = async () => {
     if (!isConnected) {
@@ -128,40 +87,16 @@ export default function SignInPage() {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-4"
                 >
-                  {walletOptions.map((wallet) => (
-                    <motion.button
-                      key={wallet.id}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      onClick={() => handleWalletConnect(wallet.id)}
-                      disabled={selectedWallet === wallet.id}
-                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 relative">
-                          {selectedWallet === wallet.id ? (
-                            <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-slate-600"></div>
-                          ) : (
-                            <Image
-                              src={wallet.icon || "/placeholder.svg"}
-                              alt={`${wallet.name} icon`}
-                              fill
-                              style={{ objectFit: "contain" }}
-                            />
-                          )}
-                        </div>
-                        <div className="flex-1 text-left">
-                          <div className="font-medium text-slate-900 dark:text-white">
-                            {wallet.name}
-                          </div>
-                          <div className="text-sm text-slate-600 dark:text-slate-400">
-                            {wallet.description}
-                          </div>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400" />
-                      </div>
-                    </motion.button>
-                  ))}
+                  <div className="text-center mb-6">
+                    <h3 className="text-lg font-medium mb-2">Connect Wallet</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Choose your wallet to continue
+                    </p>
+                  </div>
+                  {/* The single ConnectWallet component replaces the custom buttons */}
+                  <div className="w-full">
+                    <ConnectWallet />
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
