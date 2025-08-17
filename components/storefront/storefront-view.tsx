@@ -146,7 +146,7 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                     </span>
                   )}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                   <div className="w-2 h-2 bg-white rounded-full" />
                 </div>
               </div>
@@ -387,7 +387,6 @@ export function StorefrontView({ store }: StorefrontViewProps) {
         )}
       </div>
 
-      {/* Cart Drawer */}
       <CartDrawer
         open={cartOpen}
         onOpenChange={setCartOpen}

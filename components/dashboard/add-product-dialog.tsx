@@ -25,6 +25,7 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { toast } from "sonner";
 import { useAccount } from "wagmi";
 import { useStore } from "@/lib/store";
+import { FileUpload } from "@/components/ui/file-upload";
 
 interface AddProductDialogProps {
   open: boolean;
@@ -44,11 +45,21 @@ export function AddProductDialog({
     type: "",
     category: "",
     imageUrls: [] as string[],
+    productUrl: "" as string,
     isActive: true,
   });
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
   const { addProduct } = useStore();
+
+  const handleTypeChange = (value: string) => {
+    // When the type changes, we reset the digital product URL to avoid issues
+    setFormData({
+      ...formData,
+      type: value,
+      productUrl: "",
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +74,10 @@ export function AddProductDialog({
         body: JSON.stringify({
           ...formData,
           price: Number.parseFloat(formData.price),
+          // Conditionally add the productUrl based on type
+          ...(formData.type === "DIGITAL" && {
+            productUrl: formData.productUrl,
+          }),
           walletAddress: address,
         }),
       });
@@ -80,6 +95,7 @@ export function AddProductDialog({
           type: "",
           category: "",
           imageUrls: [],
+          productUrl: "",
           isActive: true,
         });
       } else {
@@ -108,6 +124,19 @@ export function AddProductDialog({
             maxFiles={5}
             label="Product Images"
           />
+
+          {/* Conditionally render the FileUpload component */}
+          {formData.type === "DIGITAL" && (
+            <FileUpload
+              value={formData.productUrl ? [formData.productUrl] : []}
+              onChange={(urls) =>
+                setFormData({ ...formData, productUrl: urls[0] || "" })
+              }
+              multiple={false}
+              maxFiles={1}
+              label="Digital Product File"
+            />
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -158,9 +187,8 @@ export function AddProductDialog({
               <Label htmlFor="type">Product Type *</Label>
               <Select
                 value={formData.type}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, type: value })
-                }
+                // Use the new handler here
+                onValueChange={handleTypeChange}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
@@ -168,9 +196,9 @@ export function AddProductDialog({
                 <SelectContent>
                   <SelectItem value="DIGITAL">Digital Product</SelectItem>
                   <SelectItem value="PHYSICAL">Physical Product</SelectItem>
-                  <SelectItem value="COURSE">Online Course</SelectItem>
-                  <SelectItem value="SERVICE">Service</SelectItem>
-                  <SelectItem value="EVENT">Event Ticket</SelectItem>
+                  {/* <SelectItem value="COURSE">Online Course</SelectItem> */}
+                  {/* <SelectItem value="SERVICE">Service</SelectItem> */}
+                  {/* <SelectItem value="EVENT">Event Ticket</SelectItem> */}
                 </SelectContent>
               </Select>
             </div>
