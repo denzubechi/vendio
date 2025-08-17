@@ -73,3 +73,50 @@ export default async function BioPage({ params }: BioPageProps) {
 
   return <LinkInBioView user={userWithTypedData} />;
 }
+
+export async function generateMetadata({ params }: BioPageProps) {
+  const user = await prisma.user.findUnique({
+    where: { username: params.username },
+    include: {
+      linkInBio: {
+        select: {
+          title: true,
+          description: true,
+          avatar: true,
+          slug: true,
+        },
+      },
+    },
+  });
+
+  if (!user || !user.linkInBio) {
+    return {
+      title: "Page Not Found",
+      description: "This bio link page does not exist.",
+    };
+  }
+
+  const { title, description, avatar } = user.linkInBio;
+  const username = user.username;
+  const pageTitle = title || `${username}'s Bio Link`;
+  const pageDescription =
+    description ||
+    `Follow ${username} on their bio link page to discover their latest projects, content, and links.`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      images: avatar ? [avatar] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      creator: `@${username}`,
+      title: pageTitle,
+      description: pageDescription,
+      images: avatar ? [avatar] : [],
+    },
+  };
+}

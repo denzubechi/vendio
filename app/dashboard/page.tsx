@@ -6,6 +6,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { ModernSidebar } from "@/components/dashboard/modern-sidebar";
 import { ModernNavbar } from "@/components/dashboard/modern-navbar";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
+import { useSearchParams } from "next/navigation";
 
 interface UserData {
   id?: string;
@@ -22,9 +23,17 @@ interface UserData {
 
 export default function DashboardPage() {
   const { address, isConnected } = useAccount();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab");
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchUserData = async () => {

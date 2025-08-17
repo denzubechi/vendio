@@ -42,3 +42,30 @@ export default async function StorePage({ params }: StorePageProps) {
 
   return <StorefrontView store={storeWithTypedTheme} />;
 }
+
+export async function generateMetadata({ params }: StorePageProps) {
+  const store = await prisma.store.findUnique({
+    where: {
+      slug: params.slug,
+      isActive: true,
+    },
+  });
+
+  if (!store) {
+    return {
+      title: "Store Not Found",
+    };
+  }
+
+  return {
+    title: `${store.name} - Store`,
+    description:
+      store.description || `Browse the products at ${store.name}'s store.`,
+    openGraph: {
+      title: store.name,
+      description:
+        store.description || `Browse the products at ${store.name}'s store.`,
+      images: store.logo ? [store.logo] : [],
+    },
+  };
+}

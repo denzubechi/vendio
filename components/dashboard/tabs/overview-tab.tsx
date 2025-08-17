@@ -3,7 +3,14 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, DollarSign, ShoppingBag, Users, TrendingUp } from "lucide-react";
+import {
+  Plus,
+  DollarSign,
+  ShoppingBag,
+  Users,
+  TrendingUp,
+  Link2,
+} from "lucide-react";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 
@@ -204,10 +211,10 @@ export function OverviewTab() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Link href="/dashboard?tab=products">
-              <Button className="w-full justify-start">
-                <Plus className="mr-2 h-4 w-4" />
-                Create Payment Link
+            <Link href="/dashboard?tab=payment-link">
+              <Button className="w-full justify-start" variant="outline">
+                <Link2 className="mr-2 h-4 w-4" />
+                View Payment Links
               </Button>
             </Link>
             <Link href="/dashboard?tab=orders">

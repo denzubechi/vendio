@@ -214,14 +214,14 @@ export default function PaymentLinkTab() {
                 className="pl-8"
               />
             </div>
-            <Button
+            {/* <Button
               variant="outline"
               size="sm"
               className="w-full sm:w-auto bg-transparent"
             >
               <Filter className="mr-2 h-4 w-4" />
               Filter
-            </Button>
+            </Button> */}
           </div>
 
           <div className="rounded-md border overflow-x-auto">
@@ -232,9 +232,9 @@ export default function PaymentLinkTab() {
                   <TableHead className="min-w-[80px]">Type</TableHead>
                   <TableHead className="min-w-[80px]">Price</TableHead>
                   <TableHead className="min-w-[80px]">Status</TableHead>
-                  <TableHead className="min-w-[80px] hidden sm:table-cell">
+                  {/* <TableHead className="min-w-[80px] hidden sm:table-cell">
                     Views
-                  </TableHead>
+                  </TableHead> */}
                   <TableHead className="min-w-[80px]">Sales</TableHead>
                   <TableHead className="min-w-[100px] hidden md:table-cell">
                     Revenue
@@ -265,9 +265,9 @@ export default function PaymentLinkTab() {
                           {link.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        {link.views?.toLocaleString() || 0}
-                      </TableCell>
+                      {/* <TableCell className="hidden sm:table-cell">
+                        // {link.views?.toLocaleString() || 0}
+                      </TableCell> */}
                       <TableCell>{link.purchases}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         ${link.revenue.toLocaleString()}

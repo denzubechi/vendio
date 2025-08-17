@@ -27,6 +27,7 @@ import {
   Settings,
   Home,
   DollarSign,
+  Plus,
   CreditCard,
   Calendar,
 } from "lucide-react";
@@ -361,8 +362,8 @@ export function ModernSidebar({
           onClick={() => setShowAddDialog(true)}
           className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
         >
-          <CreditCard className="h-4 w-4 mr-2" />
-          Create Payment Link
+          <Plus className="h-4 w-4 mr-2" />
+          Create Product
         </Button>
       </SidebarFooter>
 
