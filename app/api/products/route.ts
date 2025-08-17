@@ -35,13 +35,21 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireAuth(request);
 
-    const { name, description, price, type, category, isActive } =
-      await request.json();
+    // Destructure imageUrls and productUrl from the request body
+    const {
+      name,
+      description,
+      price,
+      type,
+      category,
+      imageUrls,
+      productUrl,
+      isActive,
+    } = await request.json();
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -75,6 +83,9 @@ export async function POST(request: NextRequest) {
         currency: "USDC",
         userId: user.id,
         storeId: store.id,
+
+        imageUrls,
+        productUrl,
       },
     });
 

@@ -59,6 +59,7 @@ model Product {
   currency    String      @default("USDC")
   type        ProductType
   category    String?
+  productUrl String?
   imageUrls   String[]
   files       String[]    
   isActive    Boolean     @default(true)
