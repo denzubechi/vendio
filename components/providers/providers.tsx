@@ -23,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             },
           }}
         >
-          <MiniKitContextProvider>{children}</MiniKitContextProvider>
+          {children}
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
