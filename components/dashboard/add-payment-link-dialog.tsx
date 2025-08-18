@@ -283,7 +283,7 @@ export function PaymentLinkDialog({
                 <Label htmlFor="slug">Custom URL</Label>
                 <div className="flex">
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">
-                    /pay/
+                    /pay-with-vendio/
                   </span>
                   <Input
                     id="slug"
