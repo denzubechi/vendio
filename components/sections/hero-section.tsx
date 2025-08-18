@@ -237,7 +237,7 @@ export function HeroSection() {
                   </Button>
                 </Link>
 
-                <Link href="/bio/samuel">
+                <Link href="/bio/Samuel">
                   <Button
                     size="lg"
                     variant="outline"
