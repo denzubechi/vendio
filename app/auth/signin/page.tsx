@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -38,16 +38,16 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
 
-  // Use useEffect to check for an existing connection on initial load
-  useEffect(() => {
-    // We don't need to do anything here. The !isConnected check handles the UI flow.
-    // The AnimatePresence component automatically handles the transition based on the isConnected state.
-  }, [isConnected]);
-
   const handleWalletConnect = async (walletId: string) => {
     setSelectedWallet(walletId);
-    // Find the connector based on its ID directly from the wagmi config
-    const connector = connectors.find((c) => c.id === walletId);
+    const connector = connectors.find(
+      (c) =>
+        c.name.toLowerCase().includes(walletId.toLowerCase()) ||
+        (walletId === "coinbaseWallet" &&
+          c.name.toLowerCase().includes("coinbase")) ||
+        (walletId === "walletConnect" &&
+          c.name.toLowerCase().includes("walletconnect"))
+    );
 
     if (connector) {
       try {
