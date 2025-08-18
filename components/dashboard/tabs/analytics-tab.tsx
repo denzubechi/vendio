@@ -51,7 +51,9 @@ export function AnalyticsTab() {
     if (!address) return;
 
     try {
-      const response = await fetch(`/api/dashboard/analytics`);
+      const response = await fetch(
+        `/api/dashboard/analytics?walletAddress=${address}`
+      );
       if (response.ok) {
         const data = await response.json();
         setAnalyticsData(data);

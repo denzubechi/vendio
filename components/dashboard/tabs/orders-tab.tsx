@@ -40,7 +40,9 @@ export function OrdersTab() {
     if (!address) return;
 
     try {
-      const response = await fetch(`/api/dashboard/orders`);
+      const response = await fetch(
+        `/api/dashboard/orders?walletAddress=${address}`
+      );
       if (response.ok) {
         const data = await response.json();
         setOrders(data);

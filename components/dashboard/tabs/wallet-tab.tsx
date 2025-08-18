@@ -57,7 +57,9 @@ export function WalletTab() {
     if (!address) return;
 
     try {
-      const response = await fetch(`/api/dashboard/wallet`);
+      const response = await fetch(
+        `/api/dashboard/wallet?walletAddress=${address}`
+      );
       if (response.ok) {
         const data = await response.json();
         setTransactions(data.transactions);

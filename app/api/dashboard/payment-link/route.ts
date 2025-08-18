@@ -19,10 +19,18 @@ const createPaymentLinkSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = await requireAuth(request);
+    const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get("walletAddress");
+
+    if (!walletAddress) {
+      return NextResponse.json(
+        { error: "Wallet address is required" },
+        { status: 400 }
+      );
+    }
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { walletAddress: walletAddress },
     });
 
     if (!user) {
@@ -98,10 +106,18 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = await requireAuth(request);
+    const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get("walletAddress");
+
+    if (!walletAddress) {
+      return NextResponse.json(
+        { error: "Wallet address is required" },
+        { status: 400 }
+      );
+    }
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { walletAddress: walletAddress },
     });
 
     if (!user) {

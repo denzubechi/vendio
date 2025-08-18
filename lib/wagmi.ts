@@ -7,11 +7,13 @@ import {
   injected,
   safe,
 } from "wagmi/connectors";
+import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 
 export function getConfig() {
   return createConfig({
     chains: [base, baseSepolia],
     connectors: [
+      farcasterMiniApp(),
       coinbaseWallet({
         appName: "Vendio",
         preference: "all",

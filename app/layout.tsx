@@ -1,12 +1,15 @@
+import "@coinbase/onchainkit/styles.css";
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { headers } from "next/headers";
 import { Providers } from "@/components/providers/providers";
-import logo from "@/public/vendio.png";
 
+import { cookieToInitialState } from "wagmi";
+import { getConfig } from "@/lib/wagmi";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -97,6 +100,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = cookieToInitialState(
+    getConfig(),
+    headers().get("cookie")
+  );
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

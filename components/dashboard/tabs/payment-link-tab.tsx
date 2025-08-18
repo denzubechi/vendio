@@ -42,7 +42,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentLinkDialog } from "../add-payment-link-dialog";
-
+import { useAccount } from "wagmi";
 interface PaymentLink {
   id: string;
   title: string;
@@ -69,11 +69,19 @@ export default function PaymentLinkTab() {
   const [editingPaymentLink, setEditingPaymentLink] =
     useState<PaymentLink | null>(null);
   const { toast } = useToast();
+  const { address } = useAccount();
 
+  useEffect(() => {
+    fetchPaymentLinks();
+  }, [address]);
   const fetchPaymentLinks = async () => {
+    if (!address) return;
+
     try {
       setIsLoading(true);
-      const response = await fetch("/api/dashboard/payment-link");
+      const response = await fetch(
+        `/api/dashboard/payment-link?walletAddress=${address}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch payment links");
       }
@@ -87,10 +95,6 @@ export default function PaymentLinkTab() {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchPaymentLinks();
-  }, []);
 
   const copyLink = (slug: string) => {
     const url = `${window.location.origin}/pay-with-vendio/${slug}`;

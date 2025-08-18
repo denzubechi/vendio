@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { ArrowRight, CheckCircle } from "lucide-react";
 import logo from "@/public/vendio.png";
 import coinbaseLogo from "@/public/wallet/coinbase.svg";
 import metamaskLogo from "@/public/wallet/metamask.svg";
+import { sdk } from "@farcaster/miniapp-sdk"; // 👈 Import the Farcaster mini-app SDK
 
 const walletOptions = [
   {
@@ -32,11 +33,30 @@ const walletOptions = [
 ];
 
 export default function SignInPage() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector: activeConnector } = useAccount();
   const { connect, connectors } = useConnect();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const [isFarcaster, setIsFarcaster] = useState(false); // 👈 New state to track Farcaster env
+
+  // 👈 Effect to detect Farcaster environment and trigger auto-connect
+  useEffect(() => {
+    const checkFarcaster = async () => {
+      const isMiniApp = await sdk.isInMiniApp();
+      setIsFarcaster(isMiniApp);
+
+      if (isMiniApp && !isConnected) {
+        const farcasterConnector = connectors.find(
+          (c) => c.id === "farcasterMiniApp"
+        );
+        if (farcasterConnector) {
+          connect({ connector: farcasterConnector });
+        }
+      }
+    };
+    checkFarcaster();
+  }, [connect, connectors, isConnected]);
 
   const handleWalletConnect = async (walletId: string) => {
     setSelectedWallet(walletId);
@@ -91,6 +111,8 @@ export default function SignInPage() {
     }
   };
 
+  const isFarcasterConnected = isConnected && isFarcaster;
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -120,7 +142,8 @@ export default function SignInPage() {
         <Card className="border border-slate-200 dark:border-slate-800">
           <CardContent className="p-6">
             <AnimatePresence mode="wait">
-              {!isConnected ? (
+              {/* 👈 Conditionally render based on connection status and environment */}
+              {!isFarcasterConnected && !isConnected ? (
                 <motion.div
                   key="connect"
                   initial={{ opacity: 0, y: 10 }}

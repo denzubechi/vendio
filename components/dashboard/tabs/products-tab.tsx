@@ -46,7 +46,7 @@ export function ProductsTab() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/products`);
+      const response = await fetch(`/api/products?walletAddress=${address}`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);

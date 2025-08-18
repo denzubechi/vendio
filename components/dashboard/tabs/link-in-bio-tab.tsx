@@ -168,20 +168,23 @@ export function LinkInBioTab() {
 
     setSaving(true);
     try {
-      const response = await fetch("/api/link-in-bio", {
-        method: linkInBio ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...bioData,
-          links,
-          projects,
-          socialUrls,
-          walletAddress: address,
-          linkInBioId: linkInBio?.id,
-        }),
-      });
+      const response = await fetch(
+        `/api/link-in-bio?walletAddress=${address}`,
+        {
+          method: linkInBio ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...bioData,
+            links,
+            projects,
+            socialUrls,
+            walletAddress: address,
+            linkInBioId: linkInBio?.id,
+          }),
+        }
+      );
 
       if (response.ok) {
         const updatedLinkInBio = await response.json();

@@ -42,7 +42,9 @@ export function CustomersTab() {
     if (!address) return;
 
     try {
-      const response = await fetch(`/api/dashboard/customers`);
+      const response = await fetch(
+        `/api/dashboard/customers?walletAddress=${address}`
+      );
       if (response.ok) {
         const data = await response.json();
         setCustomers(data);

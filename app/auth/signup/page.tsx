@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -16,6 +15,7 @@ import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import logo from "@/public/vendio.png";
 import coinbaseLogo from "@/public/wallet/coinbase.svg";
 import metamaskLogo from "@/public/wallet/metamask.svg";
+import { sdk } from "@farcaster/miniapp-sdk"; // Import the mini-app SDK
 
 const walletOptions = [
   {
@@ -39,10 +39,20 @@ export default function SignUpPage() {
   });
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { address, isConnected } = useAccount();
+  const [isFarcaster, setIsFarcaster] = useState(false);
+  const { address, isConnected, connector: activeConnector } = useAccount();
   const { connect, connectors } = useConnect();
 
   useEffect(() => {
+    const checkFarcaster = async () => {
+      const isMiniApp = await sdk.isInMiniApp();
+      setIsFarcaster(isMiniApp);
+    };
+    checkFarcaster();
+  }, []);
+
+  useEffect(() => {
+    // If connected, move to the next step
     if (isConnected && step === 1) {
       setStep(2);
     }
@@ -82,6 +92,8 @@ export default function SignUpPage() {
         body: JSON.stringify({
           ...formData,
           walletAddress: address,
+          // You may also want to send the Farcaster FID if available
+          // fid: isFarcaster ? (await sdk.context.user.fid) : null,
         }),
       });
 
@@ -98,6 +110,15 @@ export default function SignUpPage() {
       setIsLoading(false);
     }
   };
+
+  const farcasterConnector = connectors.find((c) => c.id === "farcaster");
+
+  // New useEffect to handle automatic Farcaster connection
+  useEffect(() => {
+    if (isFarcaster && farcasterConnector && !isConnected) {
+      connect({ connector: farcasterConnector });
+    }
+  }, [isFarcaster, farcasterConnector, isConnected, connect]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center p-4">
@@ -165,30 +186,42 @@ export default function SignUpPage() {
                   </p>
                 </div>
 
-                <div className="space-y-3">
-                  {walletOptions.map((wallet) => (
-                    <button
-                      key={wallet.id}
-                      onClick={() => handleWalletConnect(wallet.id)}
-                      disabled={selectedWallet === wallet.id}
-                      className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center p-2">
-                          <Image
-                            src={wallet.icon || "/placeholder.svg"}
-                            alt={`${wallet.name} logo`}
-                            width={24}
-                            height={24}
-                            className="w-6 h-6"
-                          />
+                {/* Conditionally render wallet options */}
+                {isFarcaster && isConnected ? (
+                  <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800 mb-6 text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm text-green-700 dark:text-green-300">
+                        Farcaster Wallet Connected
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {walletOptions.map((wallet) => (
+                      <button
+                        key={wallet.id}
+                        onClick={() => handleWalletConnect(wallet.id)}
+                        disabled={selectedWallet === wallet.id}
+                        className="w-full p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors disabled:opacity-50"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center p-2">
+                            <Image
+                              src={wallet.icon || "/placeholder.svg"}
+                              alt={`${wallet.name} logo`}
+                              width={24}
+                              height={24}
+                              className="w-6 h-6"
+                            />
+                          </div>
+                          <span className="font-medium">{wallet.name}</span>
+                          <ArrowRight className="w-4 h-4 text-slate-400 ml-auto" />
                         </div>
-                        <span className="font-medium">{wallet.name}</span>
-                        <ArrowRight className="w-4 h-4 text-slate-400 ml-auto" />
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             )}
 

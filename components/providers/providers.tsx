@@ -13,18 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={getConfig()}>
       <QueryClientProvider client={queryClient}>
-        <OnchainKitProvider
-          apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-          chain={base}
-          config={{
-            appearance: {
-              mode: "auto",
-              theme: "default",
-            },
-          }}
-        >
-          <MiniKitContextProvider>{children}</MiniKitContextProvider>
-        </OnchainKitProvider>
+        <MiniKitContextProvider>{children}</MiniKitContextProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
