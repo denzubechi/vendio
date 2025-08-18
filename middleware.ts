@@ -11,7 +11,7 @@ const PUBLIC_PATHS_EXACT = [
   "/projects",
 ];
 
-const PUBLIC_PATHS_DYNAMIC_PREFIXES = ["/bio/", "/store/"];
+const PUBLIC_PATHS_DYNAMIC_PREFIXES = ["/bio/", "/store/","pay-with-vendio","pay"];
 
 const AUTH_PATHS = ["/auth/signin", "/auth/signup"];
 
