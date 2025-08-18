@@ -17,7 +17,6 @@ import logo from "@/public/vendio.png";
 import coinbaseLogo from "@/public/wallet/coinbase.svg";
 import metamaskLogo from "@/public/wallet/metamask.svg";
 
-// Remove WalletConnect from the wallet options
 const walletOptions = [
   {
     id: "coinbaseWallet",
@@ -43,23 +42,24 @@ export default function SignUpPage() {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
-  // Check for an existing connection on initial load
   useEffect(() => {
-    if (isConnected) {
+    if (isConnected && step === 1) {
       setStep(2);
     }
-  }, [isConnected]);
+  }, [isConnected, step]);
 
   const handleWalletConnect = (walletId: string) => {
     setSelectedWallet(walletId);
-
-    // Find the connector based on its id from the wagmi configuration
-    const connector = connectors.find((c) => c.id === walletId);
+    const connector = connectors.find(
+      (c) =>
+        c.name.toLowerCase().includes(walletId.toLowerCase()) ||
+        (walletId === "coinbaseWallet" &&
+          c.name.toLowerCase().includes("coinbase")) ||
+        (walletId === "metaMask" && c.name.toLowerCase().includes("metamask"))
+    );
 
     if (connector) {
       connect({ connector });
-    } else {
-      toast.error(`Connector for ${walletId} not found.`);
     }
   };
 
