@@ -5,11 +5,21 @@ import { requireAuth } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireAuth(request);
+  const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get("walletAddress");
 
+    if (!walletAddress) {
+      return NextResponse.json(
+        { error: "Wallet address is required" },
+        { status: 400 }
+      );
+    }
+
+    
     // Find user by the authenticated userId
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        walletAddress: walletAddress,
       },
       select: {
         id: true,
