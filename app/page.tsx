@@ -9,14 +9,10 @@ import { CTASection } from "@/components/sections/cta-section";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { useEffect } from "react";
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
+
 
 export default function HomePage() {
-  const { setFrameReady, isFrameReady } = useMiniKit();
-
-  useEffect(() => {
-    if (!isFrameReady) setFrameReady();
-  }, [isFrameReady, setFrameReady]);
+  
 
   return (
     <div className="min-h-screen bg-background">
