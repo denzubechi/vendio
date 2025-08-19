@@ -99,7 +99,7 @@ export default function SignUpPage() {
 
       if (response.ok) {
         toast.success("Account created successfully!");
-        window.location.href = "/dashboard";
+        window.location.href = "/auth/signin";
       } else {
         const error = await response.json();
         toast.error(error.message || "Failed to create account");
