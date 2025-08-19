@@ -4,7 +4,7 @@ import { requireAuth } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = await requireAuth(request);
+    
   const { searchParams } = new URL(request.url);
     const walletAddress = searchParams.get("walletAddress");
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 }
 export async function PUT(request: NextRequest) {
   try {
-    const userId = await requireAuth(request);
+    
     const { name, email, username, avatar } = await request.json();
    const { searchParams } = new URL(request.url);
     const walletAddress = searchParams.get("walletAddress");
