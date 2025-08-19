@@ -68,7 +68,7 @@ export function AddProductDialog({
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/products?walletAddress=${walletAdress}`, {
+      const response = await fetch(`/api/products?walletAddress=${address}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
