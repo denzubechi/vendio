@@ -329,9 +329,9 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                       </CardTitle>
                       <div className="flex items-center space-x-1 flex-shrink-0">
                         <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                        <span className="text-sm text-gray-600 font-medium">
+                        {/* <span className="text-sm text-gray-600 font-medium">
                           4.8
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </CardHeader>
@@ -362,7 +362,7 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                     </div>
 
                     {/* Product Features */}
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    {/* <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-1">
                           <Zap className="w-3 h-3 text-emerald-500" />
@@ -378,7 +378,7 @@ export function StorefrontView({ store }: StorefrontViewProps) {
                         </div>
                       </div>
                       <div className="text-xs text-gray-500">23 sold</div>
-                    </div>
+                    </div> */}
                   </CardContent>
                 </Card>
               </motion.div>

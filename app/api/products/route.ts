@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-const walletAddress = searchParams.get("walletAddress");
+    const walletAddress = searchParams.get("walletAddress");
 
     if (!walletAddress) {
       return NextResponse.json(
@@ -98,7 +98,6 @@ const walletAddress = searchParams.get("walletAddress");
         currency: "USDC",
         userId: user.id,
         storeId: store.id,
-
         imageUrls,
         productUrl,
       },

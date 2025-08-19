@@ -35,6 +35,33 @@ export async function sendEmail({ to, subject, html, text }: EmailTemplate) {
   }
 }
 
+const getDownloadLinksHtml = (orderItems: any[]) => {
+  const digitalProducts = orderItems.filter((item) => item.product.productUrl);
+  if (digitalProducts.length === 0) {
+    return "";
+  }
+
+  const linksHtml = digitalProducts
+    .map(
+      (item) => `
+    <p style="margin: 0 0 10px;">
+      <strong>${item.product.name}:</strong>
+      <a href="${item.product.productUrl}" style="color: #10b981; text-decoration: none; word-break: break-all;">
+        Click to Download
+      </a>
+    </p>
+  `
+    )
+    .join("");
+
+  return `
+    <h3>Your Digital Downloads</h3>
+    <div style="background: #e6f7f2; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <p style="font-weight: 600; color: #059669; margin-top: 0;">Access your digital products here:</p>
+      ${linksHtml}
+    </div>
+  `;
+};
 // Email Templates
 export const emailTemplates = {
   welcome: (name: string, username: string) => ({
@@ -169,6 +196,8 @@ export const emailTemplates = {
                 </div>
               </div>
               
+              ${getDownloadLinksHtml(order.items)}
+              
               ${
                 order.paymentHash
                   ? `
@@ -178,7 +207,7 @@ export const emailTemplates = {
                   : ""
               }
               
-              <p>Your digital products will be available for download shortly. If you have any questions, please don't hesitate to contact us.</p>
+              <p>If you have any questions, please don't hesitate to contact us.</p>
               
               <a href="https://tryvendio.vercel.app/orders/${
                 order.id
