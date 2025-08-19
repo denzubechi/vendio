@@ -111,7 +111,7 @@ const { address } = useAccount();
         setProductFileUrls([]);
       }
     }
-  }, [open, paymentLink]);
+  }, [open, address,paymentLink]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({
