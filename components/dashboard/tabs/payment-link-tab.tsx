@@ -17,7 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { useAccount } from "wagmi"
-import { PaymentLinkDialog } from "./add-payment-link-dialog"
+import { PaymentLinkDialog } from "../add-payment-link-dialog"
 
 interface PaymentLink {
   id: string
