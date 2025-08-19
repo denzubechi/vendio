@@ -70,12 +70,15 @@ export function ModernSidebar({
       if (!address) return;
 
       try {
-        const response = await fetch("/api/dashboard/overview", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `/api/dashboard/overview?walletAddress=${address}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -371,6 +374,7 @@ export function ModernSidebar({
 
       <AddProductDialog
         open={showAddDialog}
+        walletAddress={address || ""}
         onOpenChange={setShowAddDialog}
         onProductAdded={fetchProducts}
       />

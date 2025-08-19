@@ -30,24 +30,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    if (user.email) {
-      const emailHtml = `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <h2>New Sign-in to Your Vendio Account</h2>
-          <p>Hi ${user.username || user.email},</p>
-          <p>We noticed a new sign-in to your account on a new device.</p>
-          <p><strong>Device:</strong> ${userAgent}</p>
-          <p>If this was you, you can ignore this email. If you did not sign in, please contact support immediately.</p>
-          <p>Thank you,<br/>The Vendio Team</p>
-        </div>
-      `;
+    // if (user.email) {
+    //   const emailHtml = `
+    //     <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+    //       <h2>New Sign-in to Your Vendio Account</h2>
+    //       <p>Hi ${user.username || user.email},</p>
+    //       <p>We noticed a new sign-in to your account on a new device.</p>
+    //       <p><strong>Device:</strong> ${userAgent}</p>
+    //       <p>If this was you, you can ignore this email. If you did not sign in, please contact support immediately.</p>
+    //       <p>Thank you,<br/>The Vendio Team</p>
+    //     </div>
+    //   `;
 
-      await sendEmail({
-        to: user.email,
-        subject: "New Sign-in Notification",
-        html: emailHtml,
-      });
-    }
+    //   await sendEmail({
+    //     to: user.email,
+    //     subject: "New Sign-in Notification",
+    //     html: emailHtml,
+    //   });
+    // }
 
     const authUserPayload: any = {
       userId: user.id,

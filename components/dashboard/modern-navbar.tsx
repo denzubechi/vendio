@@ -42,17 +42,20 @@ export function ModernNavbar() {
       if (!address) return;
 
       try {
-        const ordersResponse = await fetch("/api/dashboard/orders", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // body: JSON.stringify({
-          //   walletAddress: address,
-          //   limit: 5,
-          // }),
-        });
-
+        const ordersResponse = await fetch(
+          `/api/dashboard/orders?walletAddress=${address}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //   walletAddress: address,
+            //   limit: 5,
+            // }),
+          }
+        );
+        let recentOrdersNotifications: Notification[] = [];
         if (ordersResponse.ok) {
           const ordersData = await ordersResponse.json();
           const recentNotifications =
@@ -65,9 +68,23 @@ export function ModernNavbar() {
               time: formatTimeAgo(new Date(order.createdAt || Date.now())),
               unread: index < 2,
             })) || [];
-
-          setNotifications(recentNotifications);
         }
+
+        const customDomainNotification: Notification = {
+          id: "custom-domain-feature",
+          title: "New Feature Coming Soon!",
+          message:
+            "Custom domain support is launching soon. Get ready to personalize your store!",
+          time: formatTimeAgo(new Date()),
+          unread: true,
+        };
+
+        const allNotifications = [
+          customDomainNotification,
+          ...recentOrdersNotifications,
+        ];
+
+        setNotifications(allNotifications);
       } catch (error) {
         console.error("Error fetching navbar data:", error);
         setNotifications([]);
