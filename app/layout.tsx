@@ -93,6 +93,25 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+
+  other: {
+    "fc:frame": JSON.stringify({
+      version: "next",
+      imageUrl:
+        "https://tryvendio.vercel.app/_next/static/media/vendio.bba301e7.png",
+      button: {
+        title: `Launch Vendio`,
+        action: {
+          type: "launch_frame",
+          name: "Vendio",
+          url: URL,
+          splashImageUrl:
+            "https://tryvendio.vercel.app/_next/static/media/vendio.bba301e7.png",
+          splashBackgroundColor: "#FFFFFF",
+        },
+      },
+    }),
+  },
 };
 
 export default function RootLayout({
