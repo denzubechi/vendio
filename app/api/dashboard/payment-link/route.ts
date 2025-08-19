@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     try {
       const paymentLinks = await prisma.paymentLink.findMany({
         where: {
-          creatorId: userId,
+          creatorId: user.id,
         },
         include: {
           purchases: {
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
         digitalFileUrl,
         allowTips,
         isActive,
-        creatorId: userId,
+        creatorId: user.id,
         slug,
       },
     });
