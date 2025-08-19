@@ -29,6 +29,7 @@ import { FileUpload } from "@/components/ui/file-upload";
 
 interface AddProductDialogProps {
   open: boolean;
+  walletAdress:string;
   onOpenChange: (open: boolean) => void;
   onProductAdded: () => void;
 }
@@ -66,7 +67,7 @@ export function AddProductDialog({
     setLoading(true);
 
     try {
-      const response = await fetch("/api/products", {
+      const response = await fetch(`/api/products?walletAddress=${walletAdress}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
