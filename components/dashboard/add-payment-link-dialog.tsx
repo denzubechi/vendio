@@ -44,6 +44,7 @@ interface PaymentLink {
 
 interface PaymentLinkDialogProps {
   open: boolean;
+  walletAddress:string;
   onOpenChange: (open: boolean) => void;
   paymentLink?: PaymentLink | null;
   onSuccess: () => void;
@@ -51,6 +52,7 @@ interface PaymentLinkDialogProps {
 
 export function PaymentLinkDialog({
   open,
+  walletAddress,
   onOpenChange,
   paymentLink,
   onSuccess,
@@ -146,9 +148,9 @@ export function PaymentLinkDialog({
         digitalFileUrl: productFileUrls[0] || undefined,
       };
 
-      const url = isEditing
-        ? `/api/dashboard/payment-link/${paymentLink.id}`
-        : "/api/dashboard/payment-link";
+      const url = isEditing 
+        ? `/api/dashboard/payment-link/${paymentLink.id}?walletAddress=${walletAddress}`
+        : `/api/dashboard/payment-link?walletAddress=${walletAddress}`;
 
       const method = isEditing ? "PUT" : "POST";
 
