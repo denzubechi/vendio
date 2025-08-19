@@ -7,6 +7,7 @@ import { ModernSidebar } from "@/components/dashboard/modern-sidebar";
 import { ModernNavbar } from "@/components/dashboard/modern-navbar";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface UserData {
   id?: string;
@@ -21,10 +22,10 @@ interface UserData {
   } | null;
 }
 
-// Create a separate component to handle the useSearchParams hook
 function DashboardPageContent() {
   const { address, isConnected } = useAccount();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,9 +38,16 @@ function DashboardPageContent() {
   }, [searchParams]);
 
   useEffect(() => {
+    if (!isConnected) {
+      setLoading(false);
+      router.push("/");
+      return;
+    }
+
     const fetchUserData = async () => {
       if (!address || !isConnected) {
         setLoading(false);
+        router.push("/");
         return;
       }
 
@@ -54,47 +62,36 @@ function DashboardPageContent() {
         console.log("User data response:", response);
         if (response.ok) {
           const userData: UserData = await response.json();
-          setUser(userData);
+          if (userData && userData.id) {
+            setUser(userData);
+          } else {
+            router.push("/");
+          }
         } else {
-          setUser({
-            name: `Creator ${address.slice(0, 6)}`,
-            email: `${address.slice(0, 8)}@https://tryvendio.vercel.app`,
-            username: address.slice(0, 10),
-            avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
-              0,
-              2
-            )}`,
-            walletAddress: address,
-            store: null,
-          });
+          console.error("Failed to fetch user data:", response.status, await response.text());
+          router.push("/");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setUser({
-          name: `Creator ${address.slice(0, 6)}`,
-          email: `${address.slice(0, 8)}@https://tryvendio.vercel.app`,
-          username: address.slice(0, 10),
-          avatar: `/placeholder.svg?height=40&width=40&text=${address.slice(
-            0,
-            2
-          )}`,
-          walletAddress: address,
-          store: null,
-        });
+        router.push("/");
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [address, isConnected]);
+  }, [address, isConnected, router]);
 
-  if (loading || !user) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
+  }
+
+  if (!user) {
+      return null;
   }
 
   return (
@@ -116,7 +113,6 @@ function DashboardPageContent() {
   );
 }
 
-// The main page component that wraps the content in a Suspense boundary
 export default function DashboardPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -124,3 +120,4 @@ export default function DashboardPage() {
     </Suspense>
   );
 }
+
