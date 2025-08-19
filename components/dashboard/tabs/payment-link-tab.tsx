@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import {
   Plus,
   Search,
-  Filter,
   MoreHorizontal,
-  Eye,
   Edit,
   Trash2,
   Copy,
@@ -43,6 +41,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentLinkDialog } from "../add-payment-link-dialog";
 import { useAccount } from "wagmi";
+
 interface PaymentLink {
   id: string;
   title: string;
@@ -76,7 +75,10 @@ export default function PaymentLinkTab() {
   }, [address]);
 
   const fetchPaymentLinks = async () => {
-    if (!address) return;
+    if (!address) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -127,14 +129,14 @@ export default function PaymentLinkTab() {
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin border-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="flex h-96 items-center justify-center text-center text-red-500">
+      <div className="flex h-96 items-center justify-center px-4 text-center text-red-500">
         <p>
           There was an error loading your payment links. Please try again later.
         </p>
@@ -144,12 +146,12 @@ export default function PaymentLinkTab() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+      <div className="flex flex-col space-y-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:px-0">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Payment Links
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-sm text-muted-foreground sm:text-base">
             Create and manage payment links for your products, services, and
             invoices.
           </p>
@@ -160,7 +162,7 @@ export default function PaymentLinkTab() {
         </Button>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 sm:px-0">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Links</CardTitle>
@@ -202,16 +204,16 @@ export default function PaymentLinkTab() {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="px-4 pt-4 sm:px-6 sm:pt-6">
           <CardTitle>Your Payment Links</CardTitle>
           <CardDescription>
             Manage your payment links and track their performance.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0 mb-4">
+        <CardContent className="p-0 sm:p-6">
+          <div className="flex flex-col space-y-2 px-4 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0 mb-4 sm:px-0">
             <div className="relative flex-1">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search payment links..."
                 value={searchQuery}
@@ -219,29 +221,28 @@ export default function PaymentLinkTab() {
                 className="pl-8"
               />
             </div>
-            {/* <Button
-              variant="outline"
-              size="sm"
-              className="w-full sm:w-auto bg-transparent"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button> */}
           </div>
 
           <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[150px]">Title</TableHead>
-                  <TableHead className="min-w-[80px]">Type</TableHead>
-                  <TableHead className="min-w-[80px]">Price</TableHead>
-                  <TableHead className="min-w-[80px]">Status</TableHead>
-                  {/* <TableHead className="min-w-[80px] hidden sm:table-cell">
-                    Views
-                  </TableHead> */}
-                  <TableHead className="min-w-[80px]">Sales</TableHead>
-                  <TableHead className="min-w-[100px] hidden md:table-cell">
+                  <TableHead className="min-w-[150px] font-semibold">
+                    Title
+                  </TableHead>
+                  <TableHead className="min-w-[80px] font-semibold">
+                    Type
+                  </TableHead>
+                  <TableHead className="min-w-[80px] font-semibold">
+                    Price
+                  </TableHead>
+                  <TableHead className="min-w-[80px] font-semibold">
+                    Status
+                  </TableHead>
+                  <TableHead className="min-w-[80px] font-semibold">
+                    Sales
+                  </TableHead>
+                  <TableHead className="min-w-[100px] hidden font-semibold md:table-cell">
                     Revenue
                   </TableHead>
                   <TableHead className="w-[70px]"></TableHead>
@@ -257,7 +258,10 @@ export default function PaymentLinkTab() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="text-xs capitalize"
+                        >
                           {link.type.toLowerCase()}
                         </Badge>
                       </TableCell>
@@ -270,9 +274,6 @@ export default function PaymentLinkTab() {
                           {link.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      {/* <TableCell className="hidden sm:table-cell">
-                        // {link.views?.toLocaleString() || 0}
-                      </TableCell> */}
                       <TableCell>{link.purchases}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         ${link.revenue.toLocaleString()}
@@ -308,14 +309,6 @@ export default function PaymentLinkTab() {
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
                             </DropdownMenuItem>
-                            {/* <DropdownMenuItem asChild>
-                              <a
-                                href={`/dashboard/payment-links/${link.id}/analytics`}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                Analytics
-                              </a>
-                            </DropdownMenuItem> */}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive">
                               <Trash2 className="mr-2 h-4 w-4" />
