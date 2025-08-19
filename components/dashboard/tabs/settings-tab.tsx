@@ -48,7 +48,7 @@ export function SettingsTab() {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/user", {
+      const response = await fetch(`/api/auth/user?walletAddress=${address}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export function SettingsTab() {
 
     setSaving(true);
     try {
-      const response = await fetch("/api/auth/user", {
+      const response = await fetch(`/api/auth/user?walletAddress=${address}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
