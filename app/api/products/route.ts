@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
 }
 export async function POST(request: NextRequest) {
   try {
-    const userId = await requireAuth(request);
+    
 const walletAddress = searchParams.get("walletAddress");
 
     if (!walletAddress) {
