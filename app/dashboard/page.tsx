@@ -44,7 +44,7 @@ function DashboardPageContent() {
       }
 
       try {
-        const response = await fetch("/api/auth/user", {
+        const response = await fetch(`/api/auth/user?walletAddress=${address}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
