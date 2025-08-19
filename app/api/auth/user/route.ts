@@ -57,7 +57,15 @@ export async function PUT(request: NextRequest) {
   try {
     const userId = await requireAuth(request);
     const { name, email, username, avatar } = await request.json();
+   const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get("walletAddress");
 
+    if (!walletAddress) {
+      return NextResponse.json(
+        { error: "Wallet address is required" },
+        { status: 400 }
+      );
+    }
     let newUsername = username;
 
     if (newUsername) {
@@ -75,8 +83,8 @@ export async function PUT(request: NextRequest) {
       const existingUser = await prisma.user.findFirst({
         where: {
           username: newUsername,
-          id: {
-            not: userId,
+          walletAddress: {
+            not: walletAddress,
           },
         },
       });
@@ -99,7 +107,7 @@ export async function PUT(request: NextRequest) {
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId,
+        walletAddress: walletAddress,
       },
       data: updateData,
       select: {
