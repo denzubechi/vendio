@@ -45,7 +45,7 @@ interface PaymentLink {
 
 interface PaymentLinkDialogProps {
   open: boolean;
-  walletAddress:string;
+  walletAddress: string;
   onOpenChange: (open: boolean) => void;
   paymentLink?: PaymentLink | null;
   onSuccess: () => void;
@@ -62,7 +62,7 @@ export function PaymentLinkDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [productFileUrls, setProductFileUrls] = useState<string[]>([]);
-const { address } = useAccount();
+  const { address } = useAccount();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -111,7 +111,7 @@ const { address } = useAccount();
         setProductFileUrls([]);
       }
     }
-  }, [open, address,paymentLink]);
+  }, [open, address, paymentLink]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({
@@ -149,7 +149,7 @@ const { address } = useAccount();
         digitalFileUrl: productFileUrls[0] || undefined,
       };
 
-      const url = isEditing 
+      const url = isEditing
         ? `/api/dashboard/payment-link/${paymentLink.id}?walletAddress=${address}`
         : `/api/dashboard/payment-link?walletAddress=${address}`;
 

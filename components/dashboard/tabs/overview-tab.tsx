@@ -243,6 +243,7 @@ export function OverviewTab() {
 
       <AddProductDialog
         open={showAddDialog}
+        walletAddress={address || ""}
         onOpenChange={setShowAddDialog}
         onProductAdded={() => console.log("Product added")}
       />

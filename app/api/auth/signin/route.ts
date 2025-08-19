@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
-import { generateToken, AuthUser } from "@/lib/auth";
+import { generateToken } from "@/lib/auth";
+import { sendEmail } from "@/lib/email"; // Make sure to import the sendEmail function
+
 export async function POST(request: Request) {
   try {
     const { walletAddress, email } = await request.json();
+    const userAgent = request.headers.get("user-agent") || "Unknown Device";
 
     let user = null;
-
     if (walletAddress) {
       user = await prisma.user.findUnique({
         where: { walletAddress },
@@ -27,10 +29,29 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+
+    if (user.email) {
+      const emailHtml = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2>New Sign-in to Your Vendio Account</h2>
+          <p>Hi ${user.username || user.email},</p>
+          <p>We noticed a new sign-in to your account on a new device.</p>
+          <p><strong>Device:</strong> ${userAgent}</p>
+          <p>If this was you, you can ignore this email. If you did not sign in, please contact support immediately.</p>
+          <p>Thank you,<br/>The Vendio Team</p>
+        </div>
+      `;
+
+      await sendEmail({
+        to: user.email,
+        subject: "New Sign-in Notification",
+        html: emailHtml,
+      });
+    }
+
     const authUserPayload: any = {
       userId: user.id,
       email: user.email,
-
       walletAddress: user.walletAddress || "",
     };
 

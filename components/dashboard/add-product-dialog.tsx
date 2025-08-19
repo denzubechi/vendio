@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,14 +29,14 @@ import { FileUpload } from "@/components/ui/file-upload";
 
 interface AddProductDialogProps {
   open: boolean;
-  walletAdress:string;
+  walletAddress: string;
   onOpenChange: (open: boolean) => void;
   onProductAdded: () => void;
 }
 
 export function AddProductDialog({
   open,
-  walletAdress,
+  walletAddress,
   onOpenChange,
   onProductAdded,
 }: AddProductDialogProps) {
@@ -53,7 +53,7 @@ export function AddProductDialog({
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
   const { addProduct } = useStore();
-useEffect(() => {
+  useEffect(() => {
     console.log("fetching wallet");
   }, [address]);
 
