@@ -340,6 +340,7 @@ export default function PaymentLinkTab() {
 
       <PaymentLinkDialog
         open={dialogOpen}
+        walletAddress={address}
         onOpenChange={setDialogOpen}
         paymentLink={editingPaymentLink}
         onSuccess={handleDialogSuccess}
