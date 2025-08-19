@@ -18,7 +18,7 @@ model User {
   isVerified    Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  fid           Int      @unique
+  
   stores        Store[]
   products      Product[]
   orders        Order[]
