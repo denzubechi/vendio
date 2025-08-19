@@ -145,13 +145,13 @@ export default function PaymentLinkTab() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col space-y-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 sm:px-0">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+    <div className="space-y-4 sm:space-y-6 ">
+      <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">
             Payment Links
           </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+          <p className="text-sm text-muted-foreground">
             Create and manage payment links for your products, services, and
             invoices.
           </p>
@@ -162,13 +162,15 @@ export default function PaymentLinkTab() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 sm:px-0">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Links</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{paymentLinks.length}</div>
+            <div className="text-xl font-bold sm:text-2xl">
+              {paymentLinks.length}
+            </div>
             <p className="text-xs text-muted-foreground">
               {paymentLinks.filter((l) => l.isActive).length} active
             </p>
@@ -180,19 +182,19 @@ export default function PaymentLinkTab() {
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-xl font-bold sm:text-2xl">
               {paymentLinks.reduce((sum, link) => sum + link.purchases, 0)}
             </div>
             <p className="text-xs text-muted-foreground">Successful payments</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="sm:col-span-2 lg:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-xl font-bold sm:text-2xl">
               $
               {paymentLinks
                 .reduce((sum, link) => sum + link.revenue, 0)
@@ -204,130 +206,217 @@ export default function PaymentLinkTab() {
       </div>
 
       <Card>
-        <CardHeader className="px-4 pt-4 sm:px-6 sm:pt-6">
-          <CardTitle>Your Payment Links</CardTitle>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg">Your Payment Links</CardTitle>
           <CardDescription>
             Manage your payment links and track their performance.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-0 sm:p-6">
-          <div className="flex flex-col space-y-2 px-4 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0 mb-4 sm:px-0">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search payment links..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
-              />
-            </div>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search payment links..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
           </div>
 
-          <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[150px] font-semibold">
-                    Title
-                  </TableHead>
-                  <TableHead className="min-w-[80px] font-semibold">
-                    Type
-                  </TableHead>
-                  <TableHead className="min-w-[80px] font-semibold">
-                    Price
-                  </TableHead>
-                  <TableHead className="min-w-[80px] font-semibold">
-                    Status
-                  </TableHead>
-                  <TableHead className="min-w-[80px] font-semibold">
-                    Sales
-                  </TableHead>
-                  <TableHead className="min-w-[100px] hidden font-semibold md:table-cell">
-                    Revenue
-                  </TableHead>
-                  <TableHead className="w-[70px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredLinks.length > 0 ? (
-                  filteredLinks.map((link) => (
-                    <TableRow key={link.id}>
-                      <TableCell className="font-medium">
-                        <div className="max-w-[200px] truncate">
-                          {link.title}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className="text-xs capitalize"
-                        >
-                          {link.type.toLowerCase()}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>${link.price.toFixed(2)}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={link.isActive ? "default" : "secondary"}
-                          className="text-xs"
-                        >
-                          {link.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{link.purchases}</TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        ${link.revenue.toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              onClick={() => copyLink(link.slug)}
-                            >
-                              <Copy className="mr-2 h-4 w-4" />
-                              Copy link
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <a
-                                href={`/pay-with-vendio/${link.slug}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <ExternalLink className="mr-2 h-4 w-4" />
-                                View page
-                              </a>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleEdit(link)}>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+          <div className="space-y-4">
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <div className="rounded-md border overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-semibold">Title</TableHead>
+                      <TableHead className="font-semibold">Type</TableHead>
+                      <TableHead className="font-semibold">Price</TableHead>
+                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold">Sales</TableHead>
+                      <TableHead className="font-semibold">Revenue</TableHead>
+                      <TableHead className="w-[70px]"></TableHead>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8} className="h-24 text-center">
-                      No payment links found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredLinks.length > 0 ? (
+                      filteredLinks.map((link) => (
+                        <TableRow key={link.id}>
+                          <TableCell className="font-medium">
+                            <div className="max-w-[200px] truncate">
+                              {link.title}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="secondary"
+                              className="text-xs capitalize"
+                            >
+                              {link.type.toLowerCase()}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>${link.price.toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={link.isActive ? "default" : "secondary"}
+                              className="text-xs"
+                            >
+                              {link.isActive ? "Active" : "Inactive"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{link.purchases}</TableCell>
+                          <TableCell>
+                            ${link.revenue.toLocaleString()}
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                  <span className="sr-only">Open menu</span>
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem
+                                  onClick={() => copyLink(link.slug)}
+                                >
+                                  <Copy className="mr-2 h-4 w-4" />
+                                  Copy link
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <a
+                                    href={`/pay-with-vendio/${link.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    View page
+                                  </a>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleEdit(link)}
+                                >
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-destructive">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center">
+                          No payment links found.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
+              {filteredLinks.length > 0 ? (
+                filteredLinks.map((link) => (
+                  <Card key={link.id} className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm truncate pr-2">
+                          {link.title}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge
+                            variant="secondary"
+                            className="text-xs capitalize"
+                          >
+                            {link.type.toLowerCase()}
+                          </Badge>
+                          <Badge
+                            variant={link.isActive ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {link.isActive ? "Active" : "Inactive"}
+                          </Badge>
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="h-8 w-8 p-0 shrink-0"
+                          >
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem onClick={() => copyLink(link.slug)}>
+                            <Copy className="mr-2 h-4 w-4" />
+                            Copy link
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <a
+                              href={`/pay-with-vendio/${link.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="mr-2 h-4 w-4" />
+                              View page
+                            </a>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => handleEdit(link)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Price:</span>
+                        <div className="font-medium">
+                          ${link.price.toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Sales:</span>
+                        <div className="font-medium">{link.purchases}</div>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-muted-foreground">Revenue:</span>
+                        <div className="font-medium">
+                          ${link.revenue.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              ) : (
+                <Card className="p-8">
+                  <div className="text-center text-muted-foreground">
+                    No payment links found.
+                  </div>
+                </Card>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
