@@ -290,6 +290,7 @@ export function ProductsTab() {
 
       <AddProductDialog
         open={showAddProductModal}
+        walletAddress={address}
         onOpenChange={setShowAddProductModal}
         onProductAdded={fetchProducts}
       />
