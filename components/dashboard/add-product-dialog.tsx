@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -53,6 +53,9 @@ export function AddProductDialog({
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
   const { addProduct } = useStore();
+useEffect(() => {
+    console.log("fetching wallet");
+  }, [address]);
 
   const handleTypeChange = (value: string) => {
     // When the type changes, we reset the digital product URL to avoid issues
