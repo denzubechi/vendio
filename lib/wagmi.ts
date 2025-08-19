@@ -19,12 +19,12 @@ export function getConfig() {
         preference: "all",
       }),
       metaMask(),
-      // walletConnect({
-      //   projectId:
-      //     process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ||
-      //     "4cc53a01d40ad4850a382034c72ea252",
-      //   showQrModal: false,
-      // }),
+      walletConnect({
+        projectId:
+          process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ||
+          "4cc53a01d40ad4850a382034c72ea252",
+        showQrModal: false,
+      }),
       injected(),
       safe(),
     ],
