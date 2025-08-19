@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { PaymentLinkDialog } from "../add-payment-link-dialog"
 import { useAccount } from "wagmi"
+import { PaymentLinkDialog } from "./add-payment-link-dialog"
 
 interface PaymentLink {
   id: string
@@ -112,49 +112,47 @@ export default function PaymentLinkTab() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
-      <div className="flex flex-col space-y-3 sm:space-y-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight">Payment Links</h1>
-          <p className="text-xs sm:text-sm lg:text-base text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Payment Links</h1>
+          <p className="text-sm text-muted-foreground max-w-2xl">
             Create and manage payment links for your products, services, and invoices.
           </p>
         </div>
-        <Button onClick={handleCreateNew} className="w-full sm:w-auto min-w-[160px] h-10 sm:h-9">
+        <Button onClick={handleCreateNew} className="w-full sm:w-auto shrink-0">
           <Plus className="mr-2 h-4 w-4" />
-          <span className="text-sm">Create Payment Link</span>
+          Create Payment Link
         </Button>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="min-h-[100px]">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-6">
-            <CardTitle className="text-xs sm:text-sm font-medium">Total Links</CardTitle>
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Links</CardTitle>
           </CardHeader>
-          <CardContent className="px-4 sm:px-6">
-            <div className="text-xl sm:text-2xl font-bold">{paymentLinks.length}</div>
+          <CardContent>
+            <div className="text-2xl font-bold">{paymentLinks.length}</div>
             <p className="text-xs text-muted-foreground">{paymentLinks.filter((l) => l.isActive).length} active</p>
           </CardContent>
         </Card>
 
-        <Card className="min-h-[100px]">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-6">
-            <CardTitle className="text-xs sm:text-sm font-medium">Total Sales</CardTitle>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
           </CardHeader>
-          <CardContent className="px-4 sm:px-6">
-            <div className="text-xl sm:text-2xl font-bold">
-              {paymentLinks.reduce((sum, link) => sum + link.purchases, 0)}
-            </div>
+          <CardContent>
+            <div className="text-2xl font-bold">{paymentLinks.reduce((sum, link) => sum + link.purchases, 0)}</div>
             <p className="text-xs text-muted-foreground">Successful payments</p>
           </CardContent>
         </Card>
 
-        <Card className="min-h-[100px] sm:col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 sm:px-6">
-            <CardTitle className="text-xs sm:text-sm font-medium">Total Revenue</CardTitle>
+        <Card className="sm:col-span-2 lg:col-span-1">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
           </CardHeader>
-          <CardContent className="px-4 sm:px-6">
-            <div className="text-xl sm:text-2xl font-bold">
+          <CardContent>
+            <div className="text-2xl font-bold">
               ${paymentLinks.reduce((sum, link) => sum + link.revenue, 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">All time earnings</p>
@@ -163,105 +161,179 @@ export default function PaymentLinkTab() {
       </div>
 
       <Card>
-        <CardHeader className="px-4 sm:px-6">
-          <CardTitle className="text-lg sm:text-xl">Your Payment Links</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
-            Manage your payment links and track their performance.
-          </CardDescription>
+        <CardHeader>
+          <CardTitle>Your Payment Links</CardTitle>
+          <CardDescription>Manage your payment links and track their performance.</CardDescription>
         </CardHeader>
-        <CardContent className="px-4 sm:px-6">
-          <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0 mb-4">
-            <div className="relative flex-1">
+        <CardContent>
+          <div className="mb-6">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search payment links..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-10 text-sm"
+                className="pl-10"
               />
             </div>
           </div>
 
-          <div className="rounded-md border overflow-hidden">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="min-w-[120px] px-3 sm:px-4">Title</TableHead>
-                    <TableHead className="min-w-[70px] px-2 sm:px-4">Type</TableHead>
-                    <TableHead className="min-w-[70px] px-2 sm:px-4">Price</TableHead>
-                    <TableHead className="min-w-[70px] px-2 sm:px-4">Status</TableHead>
-                    <TableHead className="min-w-[60px] px-2 sm:px-4">Sales</TableHead>
-                    <TableHead className="min-w-[80px] px-2 sm:px-4 hidden md:table-cell">Revenue</TableHead>
-                    <TableHead className="w-[50px] px-2"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredLinks.length > 0 ? (
-                    filteredLinks.map((link) => (
-                      <TableRow key={link.id}>
-                        <TableCell className="font-medium px-3 sm:px-4">
-                          <div className="max-w-[100px] sm:max-w-[150px] truncate text-sm">{link.title}</div>
-                        </TableCell>
-                        <TableCell className="px-2 sm:px-4">
-                          <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-                            {link.type.toLowerCase()}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-2 sm:px-4 text-sm">${link.price.toFixed(2)}</TableCell>
-                        <TableCell className="px-2 sm:px-4">
-                          <Badge variant={link.isActive ? "default" : "secondary"} className="text-xs px-1.5 py-0.5">
-                            {link.isActive ? "Active" : "Inactive"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="px-2 sm:px-4 text-sm">{link.purchases}</TableCell>
-                        <TableCell className="hidden md:table-cell px-2 sm:px-4 text-sm">
-                          ${link.revenue.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="px-2">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuLabel className="text-xs">Actions</DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => copyLink(link.slug)} className="text-sm py-2">
-                                <Copy className="mr-2 h-4 w-4" />
-                                Copy link
-                              </DropdownMenuItem>
-                              <DropdownMenuItem asChild className="text-sm py-2">
-                                <a href={`/pay-with-vendio/${link.slug}`} target="_blank" rel="noopener noreferrer">
-                                  <ExternalLink className="mr-2 h-4 w-4" />
-                                  View page
-                                </a>
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => handleEdit(link)} className="text-sm py-2">
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive text-sm py-2">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+          <div className="space-y-4">
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Sales</TableHead>
+                      <TableHead>Revenue</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredLinks.length > 0 ? (
+                      filteredLinks.map((link) => (
+                        <TableRow key={link.id}>
+                          <TableCell className="font-medium">
+                            <div className="max-w-[200px] truncate">{link.title}</div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="secondary" className="text-xs">
+                              {link.type.toLowerCase()}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>${link.price.toFixed(2)}</TableCell>
+                          <TableCell>
+                            <Badge variant={link.isActive ? "default" : "secondary"} className="text-xs">
+                              {link.isActive ? "Active" : "Inactive"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{link.purchases}</TableCell>
+                          <TableCell>${link.revenue.toLocaleString()}</TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                  <span className="sr-only">Open menu</span>
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => copyLink(link.slug)}>
+                                  <Copy className="mr-2 h-4 w-4" />
+                                  Copy link
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                  <a href={`/pay-with-vendio/${link.slug}`} target="_blank" rel="noopener noreferrer">
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    View page
+                                  </a>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleEdit(link)}>
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-destructive">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+                          No payment links found.
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="h-24 text-center text-sm text-muted-foreground">
-                        No payment links found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4">
+              {filteredLinks.length > 0 ? (
+                filteredLinks.map((link) => (
+                  <Card key={link.id}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium truncate pr-2">{link.title}</h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="secondary" className="text-xs">
+                              {link.type.toLowerCase()}
+                            </Badge>
+                            <Badge variant={link.isActive ? "default" : "secondary"} className="text-xs">
+                              {link.isActive ? "Active" : "Inactive"}
+                            </Badge>
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0 shrink-0">
+                              <span className="sr-only">Open menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => copyLink(link.slug)}>
+                              <Copy className="mr-2 h-4 w-4" />
+                              Copy link
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <a href={`/pay-with-vendio/${link.slug}`} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink className="mr-2 h-4 w-4" />
+                                View page
+                              </a>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => handleEdit(link)}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-muted-foreground text-xs">Price</p>
+                          <p className="font-medium">${link.price.toFixed(2)}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Sales</p>
+                          <p className="font-medium">{link.purchases}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground text-xs">Revenue</p>
+                          <p className="font-medium">${link.revenue.toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center text-muted-foreground">No payment links found.</CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </CardContent>
