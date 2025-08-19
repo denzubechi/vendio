@@ -36,6 +36,7 @@ interface AddProductDialogProps {
 
 export function AddProductDialog({
   open,
+  walletAdress,
   onOpenChange,
   onProductAdded,
 }: AddProductDialogProps) {
