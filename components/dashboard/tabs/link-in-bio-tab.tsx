@@ -151,7 +151,7 @@ export function LinkInBioTab() {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/link-in-bio`);
+      const response = await fetch(`/api/link-in-bio?walletAddress=${address}`);
       if (response.ok) {
         const data = await response.json();
         setLinkInBio(data);
