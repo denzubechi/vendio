@@ -4,16 +4,13 @@ import { useState, useEffect } from "react";
 import {
   Plus,
   Search,
-  Filter,
   MoreHorizontal,
-  Eye,
   Edit,
   Trash2,
   Copy,
   ExternalLink,
   Loader2,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,6 +40,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentLinkDialog } from "../add-payment-link-dialog";
 import { useAccount } from "wagmi";
+
 interface PaymentLink {
   id: string;
   title: string;
@@ -74,6 +72,7 @@ export default function PaymentLinkTab() {
   useEffect(() => {
     fetchPaymentLinks();
   }, [address]);
+
   const fetchPaymentLinks = async () => {
     if (!address) return;
 
@@ -218,14 +217,6 @@ export default function PaymentLinkTab() {
                 className="pl-8"
               />
             </div>
-            {/* <Button
-              variant="outline"
-              size="sm"
-              className="w-full sm:w-auto bg-transparent"
-            >
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button> */}
           </div>
 
           <div className="rounded-md border overflow-x-auto">
@@ -236,9 +227,6 @@ export default function PaymentLinkTab() {
                   <TableHead className="min-w-[80px]">Type</TableHead>
                   <TableHead className="min-w-[80px]">Price</TableHead>
                   <TableHead className="min-w-[80px]">Status</TableHead>
-                  {/* <TableHead className="min-w-[80px] hidden sm:table-cell">
-                    Views
-                  </TableHead> */}
                   <TableHead className="min-w-[80px]">Sales</TableHead>
                   <TableHead className="min-w-[100px] hidden md:table-cell">
                     Revenue
@@ -269,9 +257,6 @@ export default function PaymentLinkTab() {
                           {link.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      {/* <TableCell className="hidden sm:table-cell">
-                        // {link.views?.toLocaleString() || 0}
-                      </TableCell> */}
                       <TableCell>{link.purchases}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         ${link.revenue.toLocaleString()}
@@ -307,14 +292,6 @@ export default function PaymentLinkTab() {
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
                             </DropdownMenuItem>
-                            {/* <DropdownMenuItem asChild>
-                              <a
-                                href={`/dashboard/payment-links/${link.id}/analytics`}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                Analytics
-                              </a>
-                            </DropdownMenuItem> */}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive">
                               <Trash2 className="mr-2 h-4 w-4" />
@@ -327,7 +304,7 @@ export default function PaymentLinkTab() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8} className="h-24 text-center">
+                    <TableCell colSpan={7} className="h-24 text-center">
                       No payment links found.
                     </TableCell>
                   </TableRow>
@@ -348,3 +325,4 @@ export default function PaymentLinkTab() {
     </div>
   );
 }
+
