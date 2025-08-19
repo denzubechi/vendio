@@ -25,6 +25,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { FileUpload } from "../ui/file-upload";
+import { useAccount } from "wagmi";
 interface PaymentLink {
   id: string;
   title: string;
@@ -61,7 +62,7 @@ export function PaymentLinkDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [productFileUrls, setProductFileUrls] = useState<string[]>([]);
-
+const { address } = useAccount();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -149,8 +150,8 @@ export function PaymentLinkDialog({
       };
 
       const url = isEditing 
-        ? `/api/dashboard/payment-link/${paymentLink.id}?walletAddress=${walletAddress}`
-        : `/api/dashboard/payment-link?walletAddress=${walletAddress}`;
+        ? `/api/dashboard/payment-link/${paymentLink.id}?walletAddress=${address}`
+        : `/api/dashboard/payment-link?walletAddress=${address}`;
 
       const method = isEditing ? "PUT" : "POST";
 
