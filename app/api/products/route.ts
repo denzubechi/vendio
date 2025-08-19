@@ -46,7 +46,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireAuth(request);
+const walletAddress = searchParams.get("walletAddress");
 
+    if (!walletAddress) {
+      return NextResponse.json(
+        { error: "Wallet address is required" },
+        { status: 400 }
+      );
+    }
     // Destructure imageUrls and productUrl from the request body
     const {
       name,
@@ -60,7 +67,7 @@ export async function POST(request: NextRequest) {
     } = await request.json();
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { walletAddress: walletAddress },
       include: { stores: true },
     });
 
