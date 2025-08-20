@@ -16,10 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const URL = process.env.NEXT_PUBLIC_URL || "https://tryvendio.vercel.app";
   const appName = "Vendio";
   const imageUrl = `${URL}/vendio.png`;
-  const splashImageUrl = `${URL}/vendio.png`; // Reusing the same image for the splash screen
+  const splashImageUrl = `${URL}/vendio.png`;
   const splashBackgroundColor = "#000000";
 
-  // Build Mini App embed per latest docs
   const miniappEmbed = {
     version: "1",
     imageUrl,
@@ -35,7 +34,6 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 
-  // Build Farcaster Frame for backward compatibility
   const frameEmbed = {
     version: "1",
     imageUrl,
@@ -126,9 +124,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     other: {
-      // New embed tag as per the latest docs
       "fc:miniapp": JSON.stringify(miniappEmbed),
-      // Backward compatibility tag
       "fc:frame": JSON.stringify(frameEmbed),
     },
   };
